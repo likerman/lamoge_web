@@ -1,0 +1,15 @@
+---
+import type { Locale } from "../lib/i18n";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const altLocale = locale === "es" ? "en" : "es";
+---
+
+<div class="language-switcher" aria-label={locale === "es" ? "Selector de idioma" : "Language switcher"}>
+  <a href="/es/" class:list={["language-link", { active: locale === "es" }]} aria-current={locale === "es" ? "page" : undefined}>ES</a>
+  <a href="/en/" class:list={["language-link", { active: locale === "en" }]} aria-current={locale === "en" ? "page" : undefined}>EN</a>
+</div>

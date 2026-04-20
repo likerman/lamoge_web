@@ -1,0 +1,68 @@
+[
+  {
+    "title": {
+      "es": "Diseño y ejecución de modelado geológico",
+      "en": "Design and execution of geological modelling"
+    },
+    "summary": {
+      "es": "Placeholder: confirmar alcance exacto, escala de trabajo y modalidad de contratación.",
+      "en": "Placeholder: confirm exact scope, working scale and engagement modality."
+    },
+    "audience": {
+      "es": "Grupos académicos, organismos públicos y equipos técnicos especializados.",
+      "en": "Academic groups, public agencies and specialised technical teams."
+    },
+    "applications": {
+      "es": ["evaluación tectónica", "escenarios de deformación", "apoyo a investigación"],
+      "en": ["tectonic assessment", "deformation scenarios", "research support"]
+    },
+    "status": {
+      "es": "Requiere validación institucional",
+      "en": "Requires institutional validation"
+    }
+  },
+  {
+    "title": {
+      "es": "Consultoría científica y análisis estructural",
+      "en": "Scientific consulting and structural analysis"
+    },
+    "summary": {
+      "es": "Interpretación geológica y estructural orientada a proyectos académicos o aplicados.",
+      "en": "Geological and structural interpretation oriented to academic or applied projects."
+    },
+    "audience": {
+      "es": "Instituciones de investigación, organismos técnicos y terceros con necesidades específicas.",
+      "en": "Research institutions, technical agencies and external partners with specific needs."
+    },
+    "applications": {
+      "es": ["interpretación de datos", "síntesis estructural", "asesoramiento especializado"],
+      "en": ["data interpretation", "structural synthesis", "specialised advice"]
+    },
+    "status": {
+      "es": "Disponible bajo consulta",
+      "en": "Available on request"
+    }
+  },
+  {
+    "title": {
+      "es": "Capacitaciones y talleres",
+      "en": "Training courses and workshops"
+    },
+    "summary": {
+      "es": "Instancias de formación en herramientas, conceptos y metodologías del modelado geológico.",
+      "en": "Training activities in tools, concepts and methodologies for geological modelling."
+    },
+    "audience": {
+      "es": "Estudiantes, investigadores en formación y equipos técnicos.",
+      "en": "Students, early-career researchers and technical teams."
+    },
+    "applications": {
+      "es": ["formación de recursos humanos", "actualización metodológica", "talleres temáticos"],
+      "en": ["human resource training", "methodological updates", "thematic workshops"]
+    },
+    "status": {
+      "es": "Formato y frecuencia a definir",
+      "en": "Format and frequency to be defined"
+    }
+  }
+]

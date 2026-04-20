@@ -1,0 +1,44 @@
+---
+interface Props {
+  hero: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    summary: string;
+    primaryCta: string;
+    secondaryCta: string;
+    tertiaryCta: string;
+    stats: string[];
+  };
+}
+
+const { hero } = Astro.props;
+---
+
+<section class="hero">
+  <div class="hero-media">
+    <img src="/images/placeholders/hero-geology.svg" alt="" loading="eager" />
+  </div>
+  <div class="hero-overlay"></div>
+
+  <div class="container hero-content">
+    <div class="hero-copy" data-reveal>
+      <p class="eyebrow">{hero.eyebrow}</p>
+      <h1>{hero.title}</h1>
+      <p class="hero-subtitle">{hero.subtitle}</p>
+      <p class="hero-summary">{hero.summary}</p>
+
+      <div class="hero-actions">
+        <a class="button button-primary" href="#research">{hero.primaryCta}</a>
+        <a class="button button-secondary" href="#publications">{hero.secondaryCta}</a>
+        <a class="button button-tertiary" href="#contact">{hero.tertiaryCta}</a>
+      </div>
+    </div>
+
+    <ul class="hero-stats" data-reveal>
+      {hero.stats.map((item) => (
+        <li>{item}</li>
+      ))}
+    </ul>
+  </div>
+</section>

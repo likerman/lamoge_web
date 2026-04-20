@@ -1,0 +1,32 @@
+[
+  {
+    "question": {
+      "es": "¿El laboratorio ya presta servicios externos de manera formal?",
+      "en": "Does the laboratory already offer external services formally?"
+    },
+    "answer": {
+      "es": "La sección de servicios usa placeholders profesionales. Conviene validar institucionalmente el alcance exacto antes de publicar compromisos definitivos.",
+      "en": "The services section uses professional placeholders. The exact scope should be institutionally validated before publishing definitive commitments."
+    }
+  },
+  {
+    "question": {
+      "es": "¿Cómo se agregan nuevas publicaciones o integrantes?",
+      "en": "How are new publications or team members added?"
+    },
+    "answer": {
+      "es": "Solo hay que editar los archivos JSON correspondientes en `src/data/`. El diseño toma esos datos automáticamente.",
+      "en": "You only need to edit the corresponding JSON files in `src/data/`. The design reads those data files automatically."
+    }
+  },
+  {
+    "question": {
+      "es": "¿Puede crecer hacia un CMS liviano más adelante?",
+      "en": "Can this grow into a lightweight CMS later?"
+    },
+    "answer": {
+      "es": "Sí. La separación entre layout, componentes y contenido facilita integrar un CMS Git-based o una capa editorial liviana en una segunda etapa.",
+      "en": "Yes. The separation between layout, components and content makes it straightforward to integrate a Git-based CMS or a lightweight editorial layer later on."
+    }
+  }
+]

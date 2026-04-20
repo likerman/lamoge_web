@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lineaments from map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.6.2/proj4.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
+    <style>
+        #container {
+            display: flex;
+            width: 100%;
+        }
+        #map {
+            height: 600px;
+            width: 60%;
+            cursor: crosshair;
+        }
+        #info {
+            padding-left: 20px;
+            max-width: 40%;
+        }
+        /* Estilos para líneas */
+        .yellow-line {
+            stroke: yellow;
+            stroke-width: 2;
+        }
+        .blue-line {
+            stroke: blue;
+            stroke-width: 2;
+        }
+    </style>
+</head>
+<body>
+    <h2>Lineaments from map</h2>
+    <h4>Ernesto Cristallini - © 2024</h4>
+    <div id="container">
+        <div id="map"></div>
+        <div id="info">
+            <h3>Coordinates:</h3>
+            <p>Latitude: <span id="coordLat">0</span></p>
+            <p>Longitude: <span id="coordLng">0</span></p>
+            <p>UTM X: <span id="utmX">0</span></p>
+            <p>UTM Y: <span id="utmY">0</span></p>
+            <p>UTM zone: <span id="utmZone">0</span></p>
+            <label>
+                <input type="checkbox" id="useFixedZone"> Set zone and hemisphere from current position
+            </label>
+        </div>
+    </div>
+    <div id="below-map">
+        <button id="undoButton">Undo</button>
+        <button id="deleteLineamentButton" style="margin-right: 20px;">Delete last lineament</button>
+        <a id="helpLink" href="https://youtu.be/B9hREt6NlSw" target="_blank">Need help</a>
+        <p></p>
+        <div id="result-container" style="display: none; display: inline-flex; align-items: center; background-color: #f9f9f9; border: 1px solid #ccc; padding: 10px; border-radius: 5px;">
+            <p id="result" style="display: none; margin: 0;">Resultado</p>
+        </div>
+        <h3 id="addedPointsHeader" style="display: none;">Added points:</h3>
+        <ul id="pointList"></ul>
+        <button id="copyStrikeDipButton">Copy Strike/Length to clipboard</button>
+        <button id="exportKLM_Button">Save KLM</button>
+        <button id="saveSVG">Export SVG (UTM)</button><br><br>
+        <label>Open KML file</label>
+        <input type="file" id="kmlFileInput" accept=".kml" onchange="loadKML()" />
+        <p></p>
+        <button id="downloadButton" style="margin-right: 20px;">
+            Download file in "Estereografica Web" format
+        </button>
+        <a id="estereoLink" href="http://estereo.reyuntec.ar/" target="_blank">
+            Use this file in: "Estereografica Web"
+        </a>
+        <hr>
+        <a href="mailto:ecristallini@gmail.com?subject=Strike and dip app%20del%20Correo&body=Este%20es%20el%20contenido%20del%20correo">
+            If you want to make suggestions to the author, contact him at ecristallini@gmail.com
+        </a>
+        <p></p>
+        <a id="otherApplicationsLink" href="http://157.92.29.231/aplicaciones.html" target="_blank" onclick="openWithFallback(event)">Related applications</a>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

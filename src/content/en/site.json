@@ -1,0 +1,148 @@
+{
+  "meta": {
+    "title": "LaMoGe | Geological Modelling Laboratory",
+    "description": "Bilingual institutional landing page for the Geological Modelling Laboratory (LaMoGe), IDEAN, UBA-CONICET."
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "activities": "What we do",
+    "research": "Research",
+    "team": "Team",
+    "publications": "Publications",
+    "services": "Services",
+    "facilities": "Facilities",
+    "gallery": "Gallery",
+    "collaborations": "Collaborations",
+    "teaching": "Teaching",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "languageLabel": "Language"
+  },
+  "hero": {
+    "eyebrow": "IDEAN · UBA-CONICET",
+    "title": "Geological Modelling Laboratory",
+    "subtitle": "Advanced research in tectonics, geodynamics and integrated geological modelling.",
+    "summary": "LaMoGe combines analogue and numerical modelling, structural geology, data analysis and scientific training to address complex geological problems with academic and institutional projection.",
+    "primaryCta": "Explore research lines",
+    "secondaryCta": "Browse publications",
+    "tertiaryCta": "Contact the laboratory",
+    "stats": [
+      "Analogue and numerical modelling",
+      "Research, training and services",
+      "National and international scientific networks"
+    ]
+  },
+  "about": {
+    "eyebrow": "Institutional profile",
+    "title": "A laboratory for research, training and geoscientific knowledge transfer",
+    "description": "LaMoGe is conceived as an interdisciplinary platform to study geological and tectonic processes through experimentation, simulation and quantitative analysis.",
+    "missionTitle": "Mission",
+    "mission": "To develop frontier research in geological modelling, strengthen scientific training and provide applied tools for real-world geological problems.",
+    "visionTitle": "Vision",
+    "vision": "To become a regional and international reference node in geological modelling, geodynamics and applied experimentation.",
+    "historyTitle": "Trajectory",
+    "history": "This is a professional placeholder. Replace it with a concise history of the laboratory, institutional milestones and the evolution of its capabilities.",
+    "institutionTitle": "Institutional affiliation",
+    "institution": "Laboratory belonging to the Instituto de Estudios Andinos Don Pablo Groeber (IDEAN), academically linked to the University of Buenos Aires and CONICET."
+  },
+  "activities": {
+    "eyebrow": "Scientific capabilities",
+    "title": "What we do",
+    "description": "Experimental and computational research, geological interpretation, teaching, institutional collaboration and specialized services."
+  },
+  "research": {
+    "eyebrow": "Scientific agenda",
+    "title": "Research lines",
+    "description": "Each research line can be extended easily from data files. The following entries are illustrative and should be updated with validated information."
+  },
+  "team": {
+    "eyebrow": "People",
+    "title": "Team",
+    "description": "The structure is ready to distinguish leadership, researchers, fellows, students and collaborators.",
+    "filterLabel": "Filter by role",
+    "allRoles": "All"
+  },
+  "publications": {
+    "eyebrow": "Scientific output",
+    "title": "Publications",
+    "description": "Scalable listing with featured publications, filters by year, topic and type, and external links.",
+    "featuredLabel": "Featured",
+    "filterYear": "Year",
+    "filterTopic": "Topic",
+    "filterType": "Type",
+    "allYears": "All",
+    "allTopics": "All",
+    "allTypes": "All",
+    "viewAll": "View all publications"
+  },
+  "services": {
+    "eyebrow": "Outreach and transfer",
+    "title": "Services for external partners",
+    "description": "Scientific and technical services with clear placeholders to refine scope, conditions and responsible staff."
+  },
+  "facilities": {
+    "eyebrow": "Infrastructure",
+    "title": "Facilities, equipment and capabilities",
+    "description": "Experimental infrastructure, processing, software and technical resources available for research and collaboration."
+  },
+  "gallery": {
+    "eyebrow": "Multimedia",
+    "title": "Gallery",
+    "description": "Section ready to incorporate photographs, videos, animations and institutional material."
+  },
+  "collaborations": {
+    "eyebrow": "Networks",
+    "title": "Collaborations and projects",
+    "description": "Space to showcase national and international networks, partner institutions and active or highlighted projects."
+  },
+  "teaching": {
+    "eyebrow": "Training",
+    "title": "Teaching and training",
+    "description": "Participation in teaching, student supervision, theses, courses and technical training."
+  },
+  "faq": {
+    "eyebrow": "Useful information",
+    "title": "Frequently asked questions",
+    "description": "Short answers for visitors, potential collaborators and interested institutions."
+  },
+  "contact": {
+    "eyebrow": "Institutional contact",
+    "title": "Let us talk",
+    "description": "Section prepared for institutional enquiries, collaborations and requests for information.",
+    "emailLabel": "Institutional email",
+    "addressLabel": "Location",
+    "affiliationLabel": "Affiliation",
+    "formName": "Name",
+    "formEmail": "Email",
+    "formOrganization": "Institution or organization",
+    "formMessage": "Message",
+    "formSubmit": "Send enquiry",
+    "formNote": "Placeholder: connect this form to a backend or form service before publishing.",
+    "email": "lamoge@idean.uba.ar",
+    "address": "Ciudad Universitaria, Buenos Aires, Argentina",
+    "affiliation": "IDEAN · UBA · CONICET"
+  },
+  "footer": {
+    "tagline": "Advanced research laboratory in geological modelling.",
+    "quickLinks": "Quick links",
+    "backToTop": "Back to top",
+    "credits": "Base design and development prepared to grow with Git-editable content."
+  },
+  "sectionOrder": [
+    "about",
+    "activities",
+    "research",
+    "team",
+    "publications",
+    "services",
+    "facilities",
+    "gallery",
+    "collaborations",
+    "teaching",
+    "faq",
+    "contact"
+  ]
+}

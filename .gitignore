@@ -1,0 +1,16 @@
+.codex
+node_modules
+dist
+.astro
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.swo
+
+# Local logs and temporary files
+*.log
+*.tmp
+*.bak

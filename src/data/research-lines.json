@@ -1,0 +1,47 @@
+[
+  {
+    "title": {
+      "es": "Evolución tectónica andina y deformación cortical",
+      "en": "Andean tectonic evolution and crustal deformation"
+    },
+    "summary": {
+      "es": "Estudio integrado de estructuras, cinemática y control mecánico de la deformación en sistemas orogénicos.",
+      "en": "Integrated study of structures, kinematics and mechanical controls on deformation in orogenic systems."
+    },
+    "keywords": {
+      "es": ["tectónica andina", "deformación", "orógenos"],
+      "en": ["Andean tectonics", "deformation", "orogens"]
+    },
+    "image": "/images/placeholders/research-1.svg"
+  },
+  {
+    "title": {
+      "es": "Modelado análogo de procesos superficiales y profundos",
+      "en": "Analogue modelling of shallow and deep processes"
+    },
+    "summary": {
+      "es": "Experimentos físicos para explorar interacción entre tectónica, sedimentación y evolución del relieve.",
+      "en": "Physical experiments to explore the interaction between tectonics, sedimentation and landscape evolution."
+    },
+    "keywords": {
+      "es": ["modelado análogo", "geomorfología", "sedimentación"],
+      "en": ["analogue modelling", "geomorphology", "sedimentation"]
+    },
+    "image": "/images/placeholders/research-2.svg"
+  },
+  {
+    "title": {
+      "es": "Modelado numérico y análisis cuantitativo",
+      "en": "Numerical modelling and quantitative analysis"
+    },
+    "summary": {
+      "es": "Simulaciones y análisis de sensibilidad para evaluar hipótesis geodinámicas y escenarios tectónicos.",
+      "en": "Simulations and sensitivity analyses to evaluate geodynamic hypotheses and tectonic scenarios."
+    },
+    "keywords": {
+      "es": ["simulación", "geodinámica", "análisis cuantitativo"],
+      "en": ["simulation", "geodynamics", "quantitative analysis"]
+    },
+    "image": "/images/placeholders/research-3.svg"
+  }
+]

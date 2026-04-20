@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAMOGE - aplicaciones</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .software-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            width: 90%;
+            max-width: 800px;
+        }
+
+        .software-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+            .software-card h2 {
+                margin: 0;
+                color: #555;
+            }
+
+            .software-card p {
+                color: #666;
+            }
+
+        /* Estilo para el botón de "Open web application" */
+        .button-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            color: #fff;
+            background-color: #007BFF;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+            .button-link:hover {
+                background-color: #0056b3;
+            }
+
+        /* Estilo para el enlace normal de "Ver video" */
+        .normal-link {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+            .normal-link:hover {
+                text-decoration: underline;
+            }
+    </style>
+</head>
+
+<body>
+
+    <h1>LAMOGE - aplicaciones</h1>
+    <hr>
+    <div class="software-container" id="software-container"></div>
+
+    <script>
+        const softwareList = [
+            {
+                name: "Estereografica Web",
+                description: "Es una aplicación web de uso libre y gratuito que permite hacer todas las operaciones comunes en redes estereográficas y hacer análisis cinemáticos de fallas. Podrás: proyectar líneas, proyectar planos y sus polos, proyectar fallas con sus estrías y direcciones de movimiento, medir ángulos entre líneas, rotar los datos,  calcular el eje de un pliegue cilíndrico, hacer gráficos de densidades utilizando los métodos de Kamb y de Schmidt, hacer el análisis cinemático de una población de fallas, calculando los ejes P, T y B de cada una y dibujando la solución cinemática con los planos nodales y los ejes P, T y B del conjunto. <a href='https://www.youtube.com/watch?v=fHyX4JIv6PQ' target='_blank' class='normal-link'>Ver video</a>.<br><br><strong>IMPORTANTE:</strong> tenga en cuenta que si usa Estereográfica Web desde la FCEyN-UBA deberá configurar el proxy.fcen.uba.ar",
+                link: "http://estereo.reyuntec.ar/"
+            },
+            {
+                name: "Lineaments from map",
+                description: "Es una aplicación web gratuita y de acceso abierto que permite digitalizar lineamientos y fracturas desde un mapa global ESRI y extraer datos para estadísticas direccionales ponderadas por longitud. Los datos calculados pueden descargarse en formato de tabla o Estereografica Web, así como en archivos .klm y .svg con los lineamientos. <a href='https://youtu.be/B9hREt6NlSw?si=Eg7ZI_er4u_x3kX9' target='_blank' class='normal-link'>Ver video</a>.",
+                link: "http://157.92.29.231/apps/lineaments/lineaments.html"
+            },
+            {
+                name: "Strike and dip from map",
+                description: "Es una aplicación web gratuita y de acceso abierto que permite calcular el rumbo y el buzamiento de planos de estratificación mediante un mapa global ESRI. Se deben marcar al menos tres puntos en una capa geológica utilizando imágenes satelitales y una base topográfica de de acceso libre. El programa ajusta el plano óptimo a los puntos marcados y calcula el rumbo y el buzamiento. Los datos obtenidos se pueden descargar en formato de tabla o en formato Estereográfica Web <a href='https://www.youtube.com/watch?v=sk_G6pIfbTk' target='_blank' class='normal-link'>Ver video</a>",
+                link: "http://157.92.29.231/apps/strike_and_dip/strike_and_dip.html"
+            },
+            {
+                name: "Simple Easy Mapper",
+                description: "Es una aplicación web gratuita permite dibujar rapidamente y simplemente sobre un mapa global ESRI y salvar las polilineas como KMZ o SVG.",
+                link: "http://157.92.29.231/apps/simple_easy_mapper/simple_easy_mapper.html"
+            }, 
+            {
+                name: "Image to SEGY converter",
+                description: "Esta aplicación convierte una imagen jpg cualquiera en un archivo de sísmica 2D en formato SEGY.",
+                link: "https://ecristallini.pythonanywhere.com/"
+            },
+            {
+                name: "SketchCapture",
+                description: "Esta es una aplicación de escritorio que funciona en windows para hacer captura de pantalla, mediciones en la pantalla y dibujos en la pantalla. Es realmente práctica y se usa toda a traves de shortcuts de teclados y gestos. Una vez abierta ponga el mouse sobre el cuadradito rojo y obtendra una ayuda. <a href='https://www.youtube.com/watch?v=CwJPNRJw0cs&t=2s' target='_blank' class='normal-link'>Ver video</a>",
+                link: "https://www.dropbox.com/scl/fi/9xpcakiy9aqlyrb5b8x56/SketchCapture.exe?rlkey=mxuo8fxgjisqapml1w4ja5xrj&dl=0"
+            }  
+
+        ];
+
+        const container = document.getElementById("software-container");
+
+        softwareList.forEach(software => {
+            const card = document.createElement("div");
+            card.classList.add("software-card");
+
+            const title = document.createElement("h2");
+            title.textContent = software.name;
+            card.appendChild(title);
+
+            const description = document.createElement("p");
+            description.innerHTML = software.description;
+            card.appendChild(description);
+
+            const link = document.createElement("a");
+            link.href = software.link;
+            link.textContent = "Abrir aplicación web";
+            link.target = "_blank";
+            link.classList.add("button-link");
+            card.appendChild(link);
+
+            container.appendChild(card);
+        });
+    </script>
+
+</body>
+
+</html>

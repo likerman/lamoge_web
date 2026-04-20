@@ -1,0 +1,85 @@
+[
+  {
+    "category": "leadership",
+    "name": "Dra. Nombre Apellido",
+    "role": {
+      "es": "Directora del laboratorio",
+      "en": "Laboratory director"
+    },
+    "affiliation": "IDEAN · UBA · CONICET",
+    "area": {
+      "es": "Tectónica, geología estructural y coordinación científica",
+      "en": "Tectonics, structural geology and scientific coordination"
+    },
+    "email": "direccion.lamoge@idean.uba.ar",
+    "photo": "/images/placeholders/team-1.svg",
+    "links": [
+      {
+        "label": "ORCID",
+        "url": "https://orcid.org/"
+      },
+      {
+        "label": "Google Scholar",
+        "url": "https://scholar.google.com/"
+      }
+    ]
+  },
+  {
+    "category": "researchers",
+    "name": "Dr. Nombre Investigador",
+    "role": {
+      "es": "Investigador",
+      "en": "Researcher"
+    },
+    "affiliation": "IDEAN · CONICET",
+    "area": {
+      "es": "Modelado numérico y análisis de procesos",
+      "en": "Numerical modelling and process analysis"
+    },
+    "email": "investigador@idean.uba.ar",
+    "photo": "/images/placeholders/team-2.svg",
+    "links": [
+      {
+        "label": "CONICET",
+        "url": "https://www.conicet.gov.ar/"
+      }
+    ]
+  },
+  {
+    "category": "fellows",
+    "name": "Lic. Nombre Becaria",
+    "role": {
+      "es": "Becaria doctoral",
+      "en": "Doctoral fellow"
+    },
+    "affiliation": "UBA",
+    "area": {
+      "es": "Modelado análogo y evolución estructural",
+      "en": "Analogue modelling and structural evolution"
+    },
+    "email": "",
+    "photo": "/images/placeholders/team-3.svg",
+    "links": [
+      {
+        "label": "CV",
+        "url": "https://example.org/"
+      }
+    ]
+  },
+  {
+    "category": "students",
+    "name": "Nombre Estudiante",
+    "role": {
+      "es": "Estudiante de grado",
+      "en": "Undergraduate student"
+    },
+    "affiliation": "FCEN · UBA",
+    "area": {
+      "es": "Procesamiento de datos y visualización",
+      "en": "Data processing and visualisation"
+    },
+    "email": "",
+    "photo": "/images/placeholders/team-4.svg",
+    "links": []
+  }
+]

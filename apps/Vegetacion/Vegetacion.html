@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Conteo de Plantas - Rangos RGB - Satélite ESRI</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css"/>
+    <style>
+        #map { height: 100vh; }
+        #panel {
+            position: absolute;
+            top: 10px;
+            left: 70px;
+            z-index: 1000;
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: sans-serif;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            max-width: 360px;
+            width: 360px;
+        }
+        #panel label { 
+            display: inline-block; 
+            width: 40px; 
+            margin-bottom: 0;
+            font-size: 12px;
+        }
+        #panel input { 
+            width: 70px; 
+            margin-bottom: 0;
+            margin-right: 5px;
+        }
+        .range-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            gap: 8px;
+            flex-wrap: nowrap;
+        }
+        .range-group > div {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        button { 
+            margin-top: 8px; 
+            margin-right: 5px; 
+            margin-bottom: 5px;
+        }
+        #progress { margin-top: 10px; font-size: 12px; color: #333; display: none; }
+        .progress-bar { width: 100%; background-color: #f0f0f0; border-radius: 4px; margin-top: 5px; }
+        .progress-fill { height: 8px; background-color: #4caf50; width: 0%; border-radius: 4px; transition: width 0.2s; }
+        #info { margin-top: 10px; font-size: 11px; background: #f8f8f8; padding: 5px; border-radius: 4px; word-break: break-word; }
+        #avgInfo {
+            background: #e0f0ff;
+            margin-top: 8px;
+            padding: 5px;
+            font-size: 12px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px;
+            font-size: 12px;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            line-height: 14px;
+        }
+        .legend .box {
+            width: 160px;
+            height: 12px;
+            background: linear-gradient(to right, #00ff00, #ffff00, #ff0000);
+            margin-bottom: 6px;
+        }
+        .zoom-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .zoom-row label {
+            width: auto;
+        }
+        .split-row {
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+<div id="panel">
+    <div class="zoom-row">
+        <label>Nivel de zoom:</label>
+        <input id="zoomLevel" type="number" min="10" max="20" value="17" step="1" style="width:80px">
+    </div>
+
+    <div class="range-group">
+        <div><label>R min:</label> <input id="rMin" type="number" min="0" max="255" value="60" step="1"></div>
+        <div><label>R max:</label> <input id="rMax" type="number" min="0" max="255" value="120" step="1"></div>
+    </div>
+    <div class="range-group">
+        <div><label>G min:</label> <input id="gMin" type="number" min="0" max="255" value="60" step="1"></div>
+        <div><label>G max:</label> <input id="gMax" type="number" min="0" max="255" value="120" step="1"></div>
+    </div>
+    <div class="range-group">
+        <div><label>B min:</label> <input id="bMin" type="number" min="0" max="255" value="25" step="1"></div>
+        <div><label>B max:</label> <input id="bMax" type="number" min="0" max="255" value="60" step="1"></div>
+    </div>
+    <div id="avgInfo">Promedio del rango: ---</div>
+
+    <div class="split-row">
+        <label>Subdividir tile en 4:</label>
+        <input id="splitTiles" type="checkbox" checked>
+    </div>
+    <div>
+        <button id="run">Procesar Tiles</button>
+        <button id="download">Descargar XYZ</button>
+        <button id="testTile">Probar un tile</button>
+    </div>
+    <div id="progress">
+        <span id="progress-text">Procesando...</span>
+        <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+    </div>
+    <div id="info">Esperando procesamiento...</div>
+</div>
+<div id="map"></div>
+
+<!-- Panel RGB bajo el mouse -->
+<div id="pixelInfo" style=" position:absolute; bottom:20px; left:20px; background:white; padding:8px; font-size:12px; border-radius:6px; box-shadow:0 0 6px rgba(0,0,0,0.3); z-index:1200;">
+    R: - G: - B: - Prom: -
+</div>
+<div class="legend">
+    <b>Porcentaje (bajo → alto)</b><br>
+    <div class="box"></div>
+    Verde = mínimo %<br> Rojo = máximo %
+</div>
+
+<script>
+    // --------------------------------------------------------------
+    // 1. Inicializar mapa y capas
+    // --------------------------------------------------------------
+    var map = L.map('map').setView([-37.5, -69.15], 14);
+    var argenmap = L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        { maxZoom: 20, minZoom: 3, attribution: "Tiles © Esri — Source: Esri, Maxar, Earthstar Geographics" }
+    ).addTo(map);
+
+    var drawnItems = new L.FeatureGroup().addTo(map);
+    var drawControl = new L.Control.Draw({
+        draw: { polyline: false, polygon: false, marker: false, circle: false, circlemarker: false },
+        edit: { featureGroup: drawnItems }
+    });
+    map.addControl(drawControl);
+
+    var userRect = null;
+    var resultsLayer = L.layerGroup().addTo(map);
+    var testOverlay = null;
+
+    map.on(L.Draw.Event.CREATED, function (event) {
+        drawnItems.clearLayers();
+        userRect = event.layer;
+        drawnItems.addLayer(userRect);
+        resultsLayer.clearLayers();
+        if (testOverlay) {
+            map.removeLayer(testOverlay);
+            testOverlay = null;
+        }
+        document.getElementById("info").innerHTML = "Rectángulo seleccionado.";
+    });
+
+    // --------------------------------------------------------------
+    // 2. Funciones auxiliares (tiles, carga imagen)
+    // --------------------------------------------------------------
+    function getTilesInBounds(bounds, zoom) {
+        const sw = map.project(bounds.getSouthWest(), zoom);
+        const ne = map.project(bounds.getNorthEast(), zoom);
+        const tileSize = 256;
+        const minX = Math.floor(sw.x / tileSize);
+        const maxX = Math.floor(ne.x / tileSize);
+        const minY = Math.floor(ne.y / tileSize);
+        const maxY = Math.floor(sw.y / tileSize);
+        let tiles = [];
+        for (let x = minX; x <= maxX; x++) {
+            for (let y = minY; y <= maxY; y++) {
+                const topLeft = L.point(x * tileSize, y * tileSize);
+                const bottomRight = L.point((x + 1) * tileSize, (y + 1) * tileSize);
+                const northWest = map.unproject(topLeft, zoom);
+                const southEast = map.unproject(bottomRight, zoom);
+                const tileBounds = L.latLngBounds(
+                    L.latLng(southEast.lat, northWest.lng),
+                    L.latLng(northWest.lat, southEast.lng)
+                );
+                tiles.push({
+                    x, y,
+                    bounds: tileBounds,
+                    center: tileBounds.getCenter(),
+                    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/" + zoom + "/" + y + "/" + x
+                });
+            }
+        }
+        return tiles;
+    }
+
+    // Cuenta píxeles que cumplen rangos RGB
+    function countPixelsInRanges(imageData, rMin, rMax, gMin, gMax, bMin, bMax) {
+        let data = imageData.data;
+        let total = 0;
+        for (let i = 0; i < data.length; i += 4) {
+            let r = data[i];
+            let g = data[i+1];
+            let b = data[i+2];
+            if (r >= rMin && r <= rMax && g >= gMin && g <= gMax && b >= bMin && b <= bMax) {
+                total++;
+            }
+        }
+        return total;
+    }
+
+    function loadImage(url, timeout = 10000) {
+        return new Promise((resolve, reject) => {
+            let img = new Image();
+            img.crossOrigin = "Anonymous";
+            let timer = setTimeout(() => reject(new Error("Timeout")), timeout);
+            img.onload = () => {
+                clearTimeout(timer);
+                resolve(img);
+            };
+            img.onerror = () => {
+                clearTimeout(timer);
+                reject(new Error("Error de carga"));
+            };
+            img.src = url;
+        });
+    }
+
+    // --------------------------------------------------------------
+    // 3. Función para crear overlay de prueba con puntos fucsia
+    // --------------------------------------------------------------
+    async function createTestOverlay(tileInfo, ranges) {
+        let img = await loadImage(tileInfo.url);
+        let canvas = document.createElement("canvas");
+        canvas.width = 256;
+        canvas.height = 256;
+        let ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        let imageData = ctx.getImageData(0, 0, 256, 256);
+        let data = imageData.data;
+        ctx.fillStyle = "rgba(255, 0, 255, 0.7)";
+        for (let y = 0; y < 256; y++) {
+            for (let x = 0; x < 256; x++) {
+                let idx = (y * 256 + x) * 4;
+                let r = data[idx];
+                let g = data[idx+1];
+                let b = data[idx+2];
+                if (r >= ranges.rMin && r <= ranges.rMax &&
+                    g >= ranges.gMin && g <= ranges.gMax &&
+                    b >= ranges.bMin && b <= ranges.bMax) {
+                    ctx.fillRect(x, y, 2, 2);
+                }
+            }
+        }
+        let dataUrl = canvas.toDataURL();
+        return L.imageOverlay(dataUrl, tileInfo.bounds, { opacity: 1.0, interactive: false });
+    }
+
+    // --------------------------------------------------------------
+    // 4. Subdivisión en subtiles (devuelve lista con porcentaje)
+    // --------------------------------------------------------------
+    function processTileSubtiles(img, tile, ranges) {
+        let canvas = document.createElement("canvas");
+        canvas.width = 256;
+        canvas.height = 256;
+        let ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        let subtiles = [];
+        const TOTAL_PIXELS_SUBTILE = 128 * 128;
+        for (let i = 0; i < 2; i++) {
+            for (let j = 0; j < 2; j++) {
+                let x0 = i * 128;
+                let y0 = j * 128;
+                let imgData = ctx.getImageData(x0, y0, 128, 128);
+                let count = countPixelsInRanges(imgData, ranges.rMin, ranges.rMax, ranges.gMin, ranges.gMax, ranges.bMin, ranges.bMax);
+                let porcentaje = (count / TOTAL_PIXELS_SUBTILE) * 100;
+                let b = tile.bounds;
+                let latMid = (b.getNorth() + b.getSouth()) / 2;
+                let lngMid = (b.getEast() + b.getWest()) / 2;
+                let subBounds;
+                if (i === 0 && j === 0) subBounds = L.latLngBounds([latMid, b.getWest()], [b.getNorth(), lngMid]);
+                if (i === 1 && j === 0) subBounds = L.latLngBounds([latMid, lngMid], [b.getNorth(), b.getEast()]);
+                if (i === 0 && j === 1) subBounds = L.latLngBounds([b.getSouth(), b.getWest()], [latMid, lngMid]);
+                if (i === 1 && j === 1) subBounds = L.latLngBounds([b.getSouth(), lngMid], [latMid, b.getEast()]);
+                subtiles.push({
+                    lat: subBounds.getCenter().lat,
+                    lng: subBounds.getCenter().lng,
+                    bounds: subBounds,
+                    count: count,
+                    porcentaje: porcentaje
+                });
+            }
+        }
+        return subtiles;
+    }
+
+    // --------------------------------------------------------------
+    // 5. Procesamiento principal con dibujado temporal y repintado final
+    // --------------------------------------------------------------
+    let results = [];
+
+    async function processTiles() {
+        if (!userRect) {
+            alert("Dibuje un rectángulo primero");
+            return;
+        }
+
+        if (testOverlay) {
+            map.removeLayer(testOverlay);
+            testOverlay = null;
+        }
+
+        let ZOOM = parseInt(document.getElementById("zoomLevel").value);
+        let split = document.getElementById("splitTiles").checked;
+        map.fitBounds(userRect.getBounds(), { maxZoom: ZOOM });
+
+        resultsLayer.clearLayers();  // limpia rectángulos anteriores
+        results = [];
+
+        let bounds = userRect.getBounds();
+        let tiles = getTilesInBounds(bounds, ZOOM);
+        let totalTiles = tiles.length;
+        if (totalTiles === 0) {
+            alert("No hay tiles.");
+            return;
+        }
+
+        // Obtener rangos RGB
+        let ranges = {
+            rMin: parseInt(document.getElementById("rMin").value),
+            rMax: parseInt(document.getElementById("rMax").value),
+            gMin: parseInt(document.getElementById("gMin").value),
+            gMax: parseInt(document.getElementById("gMax").value),
+            bMin: parseInt(document.getElementById("bMin").value),
+            bMax: parseInt(document.getElementById("bMax").value)
+        };
+        for (let k in ranges) if (isNaN(ranges[k])) ranges[k] = 0;
+        if (ranges.rMin > ranges.rMax) { let t = ranges.rMin; ranges.rMin = ranges.rMax; ranges.rMax = t; }
+        if (ranges.gMin > ranges.gMax) { let t = ranges.gMin; ranges.gMin = ranges.gMax; ranges.gMax = t; }
+        if (ranges.bMin > ranges.bMax) { let t = ranges.bMin; ranges.bMin = ranges.bMax; ranges.bMax = t; }
+
+        let processed = 0;
+        let percentages = [];   // para guardar todos los porcentajes (min/max final)
+        let failed = 0;
+
+        let progressDiv = document.getElementById("progress");
+        let progressText = document.getElementById("progress-text");
+        let progressFill = document.getElementById("progress-fill");
+        progressDiv.style.display = "block";
+
+        for (let idx = 0; idx < tiles.length; idx++) {
+            let tile = tiles[idx];
+            processed++;
+            progressFill.style.width = (processed / totalTiles * 100) + "%";
+            progressText.innerText = `Tile ${processed}/${totalTiles}`;
+
+            let img;
+            try {
+                img = await loadImage(tile.url);
+            } catch (e) {
+                failed++;
+                continue;
+            }
+
+            if (split) {
+                let subtiles = processTileSubtiles(img, tile, ranges);
+                for (let s of subtiles) {
+                    percentages.push(s.porcentaje);
+                    results.push({
+                        lat: s.lat,
+                        lng: s.lng,
+                        porcentaje: s.porcentaje,
+                        count: s.count,
+                        bounds: s.bounds
+                    });
+                    // Dibujar temporalmente en gris claro
+                    L.rectangle(s.bounds, {
+                        color: "#cccccc",
+                        weight: 1,
+                        fillOpacity: 0.4
+                    }).addTo(resultsLayer);
+                }
+                continue;
+            }
+
+            // Caso normal (sin split) - tile completo
+            let canvas = document.createElement("canvas");
+            canvas.width = 256;
+            canvas.height = 256;
+            let ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            let imageData;
+            try {
+                imageData = ctx.getImageData(0, 0, 256, 256);
+            } catch(e) {
+                failed++;
+                continue;
+            }
+            let plantCount = countPixelsInRanges(imageData, ranges.rMin, ranges.rMax, ranges.gMin, ranges.gMax, ranges.bMin, ranges.bMax);
+            const TOTAL_PIXELS_TILE = 256 * 256;
+            let porcentaje = (plantCount / TOTAL_PIXELS_TILE) * 100;
+            percentages.push(porcentaje);
+            results.push({
+                lng: tile.center.lng,
+                lat: tile.center.lat,
+                count: plantCount,
+                porcentaje: porcentaje,
+                bounds: tile.bounds
+            });
+            // Dibujar temporalmente en gris claro
+            L.rectangle(tile.bounds, {
+                color: "#cccccc",
+                weight: 1,
+                fillOpacity: 0.4
+            }).addTo(resultsLayer);
+        }
+
+        progressDiv.style.display = "none";
+
+        if (!results.length) {
+            document.getElementById("info").innerHTML = "No se procesó ningún tile.";
+            alert("No se procesó ningún tile.");
+            return;
+        }
+
+        let maxPorcentaje = Math.max(...percentages);
+        let minPorcentaje = Math.min(...percentages);
+        
+        // Repintar todos los rectángulos con la paleta ajustada (verde = min, rojo = max)
+        // Limpiar la capa temporal
+        resultsLayer.clearLayers();
+        // Volver a dibujar cada resultado con el color correcto
+        for (let r of results) {
+            let intensity = (maxPorcentaje > minPorcentaje) ? (r.porcentaje - minPorcentaje) / (maxPorcentaje - minPorcentaje) : 0;
+            // Hue desde 120 (verde) hasta 0 (rojo)
+            let hue = (1 - intensity) * 120;
+            L.rectangle(r.bounds, {
+                color: `hsl(${hue}, 80%, 50%)`,
+                weight: 1,
+                fillOpacity: 0.6
+            }).addTo(resultsLayer);
+        }
+
+        document.getElementById("info").innerHTML = `Procesados ${results.length} celdas (${failed} fallaron).<br> Zoom: ${ZOOM} | Rangos: R[${ranges.rMin}-${ranges.rMax}] G[${ranges.gMin}-${ranges.gMax}] B[${ranges.bMin}-${ranges.bMax}]<br> Min % = ${minPorcentaje.toFixed(2)}%, Max % = ${maxPorcentaje.toFixed(2)}%`;
+        alert(`Terminado. Min % = ${minPorcentaje.toFixed(2)}%, Max % = ${maxPorcentaje.toFixed(2)}%`);
+    }
+
+    // --------------------------------------------------------------
+    // 6. Prueba de tile con puntos fucsia (sin cambios)
+    // --------------------------------------------------------------
+    async function testSampleTile() {
+        if (!userRect) {
+            alert("Dibuje un rectángulo primero");
+            return;
+        }
+        if (testOverlay) {
+            map.removeLayer(testOverlay);
+            testOverlay = null;
+        }
+
+        let ZOOM = parseInt(document.getElementById("zoomLevel").value);
+        let tiles = getTilesInBounds(userRect.getBounds(), ZOOM);
+        if (!tiles.length) {
+            alert("No hay tiles en esa área con el zoom actual");
+            return;
+        }
+
+        let ranges = {
+            rMin: parseInt(document.getElementById("rMin").value),
+            rMax: parseInt(document.getElementById("rMax").value),
+            gMin: parseInt(document.getElementById("gMin").value),
+            gMax: parseInt(document.getElementById("gMax").value),
+            bMin: parseInt(document.getElementById("bMin").value),
+            bMax: parseInt(document.getElementById("bMax").value)
+        };
+        for (let k in ranges) if (isNaN(ranges[k])) ranges[k] = 0;
+        if (ranges.rMin > ranges.rMax) { let t = ranges.rMin; ranges.rMin = ranges.rMax; ranges.rMax = t; }
+        if (ranges.gMin > ranges.gMax) { let t = ranges.gMin; ranges.gMin = ranges.gMax; ranges.gMax = t; }
+        if (ranges.bMin > ranges.bMax) { let t = ranges.bMin; ranges.bMin = ranges.bMax; ranges.bMax = t; }
+
+        let firstTile = tiles[0];
+        try {
+            testOverlay = await createTestOverlay(firstTile, ranges);
+            testOverlay.addTo(map);
+            map.fitBounds(firstTile.bounds);
+            document.getElementById("info").innerHTML = `Tile de prueba con rangos: R[${ranges.rMin}-${ranges.rMax}] G[${ranges.gMin}-${ranges.gMax}] B[${ranges.bMin}-${ranges.bMax}]. Puntos fucsia 2x2 = píxeles que cumplen los rangos.`;
+        } catch (error) {
+            console.error(error);
+            alert("Error al cargar tile de prueba: " + error.message);
+        }
+    }
+
+    // --------------------------------------------------------------
+    // 7. Descarga de resultados XYZ (Z = porcentaje)
+    // --------------------------------------------------------------
+    document.getElementById("download").onclick = function() {
+        if (!results.length) {
+            alert("Primero procese");
+            return;
+        }
+        let txt = "X Y Z\n";
+        for (let r of results) txt += `${r.lng} ${r.lat} ${r.porcentaje}\n`;
+        let blob = new Blob([txt], {type:"text/plain"});
+        let a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "porcentaje_plantas.xyz";
+        a.click();
+    };
+
+    document.getElementById("run").onclick = processTiles;
+    document.getElementById("testTile").onclick = testSampleTile;
+
+    // --------------------------------------------------------------
+    // 8. Actualizar información del promedio de rango
+    // --------------------------------------------------------------
+    function updateAverageInfo() {
+        let rMin = parseInt(document.getElementById("rMin").value) || 0;
+        let rMax = parseInt(document.getElementById("rMax").value) || 0;
+        let gMin = parseInt(document.getElementById("gMin").value) || 0;
+        let gMax = parseInt(document.getElementById("gMax").value) || 0;
+        let bMin = parseInt(document.getElementById("bMin").value) || 0;
+        let bMax = parseInt(document.getElementById("bMax").value) || 0;
+        if (rMin > rMax) { let t = rMin; rMin = rMax; rMax = t; }
+        if (gMin > gMax) { let t = gMin; gMin = gMax; gMax = t; }
+        if (bMin > bMax) { let t = bMin; bMin = bMax; bMax = t; }
+        let avgR = (rMin + rMax) / 2;
+        let avgG = (gMin + gMax) / 2;
+        let avgB = (bMin + bMax) / 2;
+        let avgTotal = (avgR + avgG + avgB) / 3;
+        document.getElementById("avgInfo").innerHTML = `Promedio rango: R=${avgR.toFixed(1)} G=${avgG.toFixed(1)} B=${avgB.toFixed(1)} → Promedio total: ${avgTotal.toFixed(1)}`;
+    }
+    document.getElementById("rMin").addEventListener("input", updateAverageInfo);
+    document.getElementById("rMax").addEventListener("input", updateAverageInfo);
+    document.getElementById("gMin").addEventListener("input", updateAverageInfo);
+    document.getElementById("gMax").addEventListener("input", updateAverageInfo);
+    document.getElementById("bMin").addEventListener("input", updateAverageInfo);
+    document.getElementById("bMax").addEventListener("input", updateAverageInfo);
+    updateAverageInfo();
+
+    // --------------------------------------------------------------
+    // 9. Lectura RGB bajo el mouse (sin cambios)
+    // --------------------------------------------------------------
+    let pixelCanvas = document.createElement("canvas");
+    pixelCanvas.width = 256;
+    pixelCanvas.height = 256;
+    let pixelCtx = pixelCanvas.getContext("2d");
+
+    async function getPixelAtLatLng(latlng, zoom) {
+        let point = map.project(latlng, zoom);
+        let tileX = Math.floor(point.x / 256);
+        let tileY = Math.floor(point.y / 256);
+        let px = Math.floor(point.x % 256);
+        let py = Math.floor(point.y % 256);
+        let url = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/" + zoom + "/" + tileY + "/" + tileX;
+        let img = new Image();
+        img.crossOrigin = "Anonymous";
+        return new Promise(resolve => {
+            img.onload = () => {
+                pixelCtx.clearRect(0, 0, 256, 256);
+                pixelCtx.drawImage(img, 0, 0);
+                let data = pixelCtx.getImageData(px, py, 1, 1).data;
+                resolve({ r: data[0], g: data[1], b: data[2] });
+            };
+            img.onerror = () => resolve(null);
+            img.src = url;
+        });
+    }
+
+    map.on("mousemove", async function(e) {
+        let zoom = map.getZoom();
+        let pixel = await getPixelAtLatLng(e.latlng, zoom);
+        if (!pixel) return;
+        let prom = Math.round((pixel.r + pixel.g + pixel.b) / 3);
+        document.getElementById("pixelInfo").innerHTML = `R: ${pixel.r} &nbsp; G: ${pixel.g} &nbsp; B: ${pixel.b} &nbsp; Prom: ${prom}`;
+    });
+</script>
+</body>
+</html>

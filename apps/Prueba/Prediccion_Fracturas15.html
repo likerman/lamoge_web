@@ -1,0 +1,1091 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<h1>Predicción de fracturamiento Aguaragüe - Ernesto Cristallini - © 2025</h1>
+
+<style>
+  :root{ --right-width:420px; }
+  body { font-family: Arial, sans-serif; margin:10px; background:#f5f7fb; }
+  header { font-size:18px; font-weight:bold; margin-bottom:8px; }
+  #app { display:flex; gap:12px; align-items:flex-start; }
+  #left { flex:0 0 420px; border:1px solid #333; position:relative; background:#fff; padding:8px; }
+  #mapCanvas {
+    width: 100%;
+    aspect-ratio: 1 / 2;
+    display:block;
+    background:#fafafa;
+    border:1px solid #ccc;
+    image-rendering: auto;
+  }
+  #coords { position:absolute; right:6px; bottom:6px; background:rgba(255,255,255,0.95); padding:6px; font-size:13px; border:1px solid #ccc; }
+  #fractureCount { position:absolute; left:6px; bottom:6px; background:rgba(255,255,255,0.95); padding:6px; font-size:13px; border:1px solid #ccc; }
+  #right { flex:1; max-width:calc(100% - 440px); }
+  .section { background:#fff; border:1px solid #ddd; padding:8px; margin-bottom:8px; border-radius:6px; }
+  label { display:block; margin:6px 0 3px; }
+  input[type="number"] { width:90px; }
+  #stereo, #roseta { width:300px; height:300px; border:1px solid #ccc; display:inline-block; margin-right:8px; background:#fff; border-radius:6px; }
+  .controls-row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+  button { padding:6px 10px; border-radius:6px; }
+  #loading { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); color:white; display:flex; justify-content:center; align-items:center; z-index:1000; }
+  .manual-input { display:flex; gap:8px; align-items:center; margin-top:8px; }
+  .manual-input input { width:80px; }
+  .manual-input button { padding:4px 8px; }
+  .point-marker { position:absolute; width:8px; height:8px; background:red; border-radius:50%; transform:translate(-50%,-50%); z-index:10; }
+</style>
+</head>
+
+<body>
+
+
+<div id="loading" style="display:none;">
+  <div style="text-align:center;">
+    <p>Generando imágenes de mapa... Esto puede tomar unos segundos</p>
+    <p>Esta operación solo se realiza una vez</p>
+  </div>
+</div>
+
+<div id="app">
+  <div id="left">
+    <canvas id="mapCanvas"></canvas>
+    <div id="coords">X: - Y: - Z: - Km: - Kg: -</div>
+    <div id="fractureCount">Fracturas: 0</div>
+  </div>
+
+  <div id="right">
+    <div class="section">
+      <strong>Visualización</strong>
+      <div class="controls-row">
+        <label><input type="checkbox" id="showZ" checked> mostrar Z (paleta)</label>
+        <label><input type="checkbox" id="showKm" unchecked> mostrar Km</label>
+        <label><input type="checkbox" id="showKg" unchecked> mostrar Kg</label>
+        <label><input type="checkbox" id="showPozos" checked> mostrar pozos</label>
+        <label><input type="checkbox" id="showNombres" checked> mostrar nombres de pozos</label>
+        <label><input type="checkbox" id="showFalla" checked> mostrar falla</label>
+      </div>
+    </div>
+
+    <div class="section">
+      <strong>Pesos (inicial = 1)</strong>
+      <label>Peso background: <input id="wBackground" type="number" value="0.1" step="0.1"></label>
+      <label>Peso Km: <input id="wKm" type="number" value="5" step="1"></label>
+      <label>Peso Kg: <input id="wKg" type="number" value="0.6" step="0.1"></label>
+      <label>Peso influencia: <input id="wInfl" type="number" value="20" step="1"></label>
+      <label>Valore de aleatoreidad: <input id="aleat" type="number" value="5" step="1"></label>
+    </div>
+
+    <div class="section">
+      <strong>Posición manual</strong>
+      <div class="manual-input">
+        <label>X: <input type="number" id="manualX" step="0.01"></label>
+        <label>Y: <input type="number" id="manualY" step="0.01"></label>
+        <button id="setManualPoint">Marcar punto</button>
+        <button id="downloadData">Descargar datos</button>
+        <button id="clearCache">Borrar cache</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <strong>Gráficos</strong><br/>
+      <canvas id="stereo" width="300" height="300"></canvas>
+      <canvas id="roseta" width="300" height="300"></canvas>
+    </div>
+
+    <div class="section controls-row">
+      <button id="reloadBtn">Recargar datos</button>
+      <button id="regenerateBtn">Regenerar imágenes</button>
+      <div style="font-size:12px; color:#666;">(Servir la carpeta con un servidor local para que <code>fetch</code> funcione)</div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------------------
+   UTILIDADES
+   --------------------- */
+function parseDatText(txt) {
+  const lines = txt.split(/\r?\n/).map(s=>s.trim()).filter(s=>s && !s.startsWith('#'));
+  return lines.map(l => l.split(/\s+/).map(Number));
+}
+function minMax(arr){ let min=Infinity,max=-Infinity; arr.forEach(v=>{ if(v<min) min=v; if(v>max) max=v; }); if(min===Infinity) {min=0; max=0;} return {min,max}; }
+function normalizeTo100(value, min, max){ if(max<=min) return 0; return 100 * (value - min)/(max - min); }
+
+/* Rodrigues rotation helpers */
+function dot(a,b){return a[0]*b[0]+a[1]*b[1]+a[2]*b[2];}
+function cross(a,b){ return [ a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0] ]; }
+function norm(a){ return Math.sqrt(dot(a,a)); }
+function rotateVectorRodrigues(v,k,theta){
+  const cos=Math.cos(theta), sin=Math.sin(theta);
+  const v_cos=[v[0]*cos, v[1]*cos, v[2]*cos];
+  const kxv=[ k[1]*v[2]-k[2]*v[1], k[2]*v[0]-k[0]*v[2], k[0]*v[1]-k[1]*v[0] ];
+  const k_dot_v = dot(k,v);
+  return [
+    v_cos[0] + kxv[0]*sin + k[0]*k_dot_v*(1-cos),
+    v_cos[1] + kxv[1]*sin + k[1]*k_dot_v*(1-cos),
+    v_cos[2] + kxv[2]*sin + k[2]*k_dot_v*(1-cos)
+  ];
+}
+
+/* ======================
+   DATOS y rangos
+   ====================== */
+let DATA = { Km: [], Kg: [], influencia: [], background: [], pozos: [], falla: [] };
+let ranges = {};
+
+/* ======================
+   Canvas y vista
+   ====================== */
+const canvas = document.getElementById('mapCanvas');
+const ctx = canvas.getContext('2d');
+let devicePixelRatio_ = window.devicePixelRatio || 1;
+
+let view = { tx: 0, ty: 0, scale: 1 };
+let baseTransform = { scaleX: 1, scaleY: 1, offsetX: 0, offsetY: 0 };
+
+// Variables para el punto manual
+let manualPoint = null;
+let isMouseOverMap = false;
+
+// Variable para contar fracturas
+let currentFractureCount = 0;
+
+function resizeCanvas(){
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = Math.round(rect.width * devicePixelRatio_);
+  canvas.height = Math.round(rect.height * devicePixelRatio_);
+  
+  // Calcular transformación base UNA VEZ
+  if (ranges.X && ranges.Y) {
+    const w = canvas.width/devicePixelRatio_, h = canvas.height/devicePixelRatio_;
+    const pad = 20;
+    const spanX = ranges.X.max - ranges.X.min || 1;
+    const spanY = ranges.Y.max - ranges.Y.min || 1;
+    baseTransform.scaleX = (w - pad*2) / spanX;
+    baseTransform.scaleY = (h - pad*2) / spanY;
+    baseTransform.offsetX = pad;
+    baseTransform.offsetY = pad;
+    
+    resetView();
+  }
+  
+  drawMap();
+}
+
+function resetView() {
+  if(!ranges.X) return;
+  view.tx = baseTransform.offsetX;
+  view.ty = baseTransform.offsetY;
+  view.scale = Math.min(baseTransform.scaleX, baseTransform.scaleY);
+}
+
+function worldToScreen(x,y){
+  return { 
+    sx: (x - ranges.X.min) * view.scale + view.tx, 
+    sy: canvas.height/devicePixelRatio_ - ((y - ranges.Y.min) * view.scale + view.ty)
+  };
+}
+
+function screenToWorld(sx, sy){
+  const wy = (canvas.height/devicePixelRatio_ - sy - view.ty)/view.scale + ranges.Y.min;
+  const wx = (sx - view.tx)/view.scale + ranges.X.min;
+  return { X: wx, Y: wy };
+}
+
+/* ======================
+   Generación de imágenes rasterizadas
+   ====================== */
+
+
+
+/* =========================
+   DIBUJADO DEL MAPA
+   ========================= */
+/* =========================
+   DIBUJADO DEL MAPA
+   ========================= */
+function drawMap(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.save();
+  ctx.scale(devicePixelRatio_, devicePixelRatio_);
+  
+  // Fondo blanco
+  ctx.fillStyle='#ffffff';
+  ctx.fillRect(0,0,canvas.width/devicePixelRatio_, canvas.height/devicePixelRatio_);
+
+  if(!DATA.Km || DATA.Km.length===0){ 
+    ctx.restore(); 
+    return; 
+  }
+
+  const showZ = document.getElementById('showZ').checked;
+  const showKm = document.getElementById('showKm').checked;
+  const showKg = document.getElementById('showKg').checked;
+
+  // Dibujar imágenes raster punto por punto (igual que los pozos)
+  if (showZ) {
+    drawRasterPoints('z', 1.0);
+  }
+  
+  if (showKm) {
+    drawRasterPoints('km', 0.7);
+  }
+  
+  if (showKg) {
+    drawRasterPoints('kg', 0.7);
+  }
+
+  // DIBUJAR FALLA SI ESTÁ ACTIVADO EL CHECKBOX
+  if(document.getElementById('showFalla').checked && DATA.falla && DATA.falla.length > 0){
+    drawFalla();
+  }
+
+  // Pozos - CORREGIDO: usar worldToScreen igual que las imágenes
+  if(document.getElementById('showPozos').checked){
+    DATA.pozos.forEach(p=>{
+      const {sx,sy} = worldToScreen(p.X, p.Y);
+      ctx.fillStyle = 'black';
+      ctx.beginPath(); 
+      ctx.arc(sx, sy, 4, 0, Math.PI*2); 
+      ctx.fill();
+      if(document.getElementById('showNombres').checked){
+        ctx.fillStyle='black'; 
+        ctx.font='12px Arial';
+        ctx.fillText(p.nombre, sx+6, sy-6);
+      }
+    });
+  }
+
+  // Dibujar punto manual si existe
+  if (manualPoint) {
+    const {sx, sy} = worldToScreen(manualPoint.X, manualPoint.Y);
+    ctx.fillStyle = 'red';
+    ctx.beginPath();
+    ctx.arc(sx, sy, 6, 0, Math.PI*2);
+    ctx.fill();
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
+/* =========================
+   DIBUJADO DE LA FALLA
+   ========================= */
+function drawFalla() {
+  if (!DATA.falla || DATA.falla.length < 2) return;
+  
+  ctx.save();
+  ctx.strokeStyle = 'purple';
+  ctx.lineWidth = 3;
+  ctx.setLineDash([5, 3]); // Línea punteada
+  ctx.beginPath();
+  
+  // Mover al primer punto
+  const firstPoint = DATA.falla[0];
+  const firstScreen = worldToScreen(firstPoint.X, firstPoint.Y);
+  ctx.moveTo(firstScreen.sx, firstScreen.sy);
+  
+  // Dibujar línea a través de todos los puntos
+  for (let i = 1; i < DATA.falla.length; i++) {
+    const point = DATA.falla[i];
+    const screen = worldToScreen(point.X, point.Y);
+    ctx.lineTo(screen.sx, screen.sy);
+  }
+  
+  ctx.stroke();
+  ctx.restore();
+}
+
+/* =========================
+   DIBUJADO DE PUNTOS RASTER CON ZOOM
+   ========================= */
+/* =========================
+   DIBUJADO DE PUNTOS RASTER CON ZOOM
+   ========================= */
+function drawRasterPoints(dataType, alpha) {
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  
+  if (dataType === 'kg') {
+    // PALETA ARCOÍRIS para Kg - Más variación de colores
+    DATA.Kg.forEach(p => {
+      const screen = worldToScreen(p.X, p.Y);
+      
+      if (screen.sx >= -10 && screen.sx <= canvas.width/devicePixelRatio_ + 10 && 
+          screen.sy >= -10 && screen.sy <= canvas.height/devicePixelRatio_ + 10) {
+        
+if (!isNaN(p.Kg) && isFinite(p.Kg)) {
+  const kgAbs = Math.abs(p.Kg);  // Valor absoluto
+  
+  let r, g, b;
+  
+  if (kgAbs < 1e-9) {
+    // Valores cerca de cero: Blanco puro
+    r = 255;
+    g = 255;
+    b = 255;
+  } else if (p.Kg > 0) {
+    // VALORES POSITIVOS: Escala de rojos
+    const kgm = normalizeTo100(p.Kg, ranges.Kg.min, ranges.Kg.max)/100;
+    
+    if (kgm < 0.33) {
+      // Blanco → Rojo claro
+      const t = kgm / 0.33;
+      r = 255;
+      g = Math.round(255 * (1 - t));
+      b = Math.round(255 * (1 - t));
+    } else if (kgm < 0.66) {
+      // Rojo claro → Rojo medio
+      const t = (kgm - 0.33) / (0.66 - 0.33);
+      r = 255;
+      g = Math.round(128 * (1 - t));
+      b = Math.round(128 * (1 - t));
+    } else {
+      // Rojo medio → Rojo oscuro
+      const t = (kgm - 0.66) / (1.0 - 0.66);
+      r = 255;
+      g = Math.round(64 * (1 - t));
+      b = Math.round(64 * (1 - t));
+    }
+  } else {
+    // VALORES NEGATIVOS: Escala de azules
+    const kgm = normalizeTo100(-p.Kg, ranges.Kg.min, ranges.Kg.max)/100; // Usar valor absoluto normalizado
+    
+    if (kgm < 0.33) {
+      // Blanco → Azul claro
+      const t = kgm / 0.33;
+      r = Math.round(255 * (1 - t));
+      g = Math.round(255 * (1 - t));
+      b = 255;
+    } else if (kgm < 0.66) {
+      // Azul claro → Azul medio
+      const t = (kgm - 0.33) / (0.66 - 0.33);
+      r = Math.round(128 * (1 - t));
+      g = Math.round(128 * (1 - t));
+      b = 255;
+    } else {
+      // Azul medio → Azul oscuro
+      const t = (kgm - 0.66) / (1.0 - 0.66);
+      r = Math.round(64 * (1 - t));
+      g = Math.round(64 * (1 - t));
+      b = 255;
+    }
+  }
+          
+          const color = `rgb(${r},${g},${b})`;
+          
+          ctx.fillStyle = color;
+          ctx.beginPath();
+          const pointSize = Math.max(2, 5 / Math.pow(view.scale, 0.1));
+          ctx.arc(screen.sx, screen.sy, pointSize, 0, Math.PI*2);
+          ctx.fill();
+        }
+      }
+    });
+  } else {
+    DATA.Km.forEach(p => {
+      const screen = worldToScreen(p.X, p.Y);
+      
+      if (screen.sx >= -10 && screen.sx <= canvas.width/devicePixelRatio_ + 10 && 
+          screen.sy >= -10 && screen.sy <= canvas.height/devicePixelRatio_ + 10) {
+        
+        let color = 'rgba(0,0,0,0)';
+        
+        if (dataType === 'z') {
+          if (!isNaN(p.Z) && isFinite(p.Z)) {
+            const zn = normalizeTo100(p.Z, ranges.Z.min, ranges.Z.max)/100;
+            if (zn < 0.5) {
+              const r = Math.round(zn * 2 * 255);
+              const g = Math.round(zn * 2 * 255);
+              const b = Math.round((1 - zn * 2) * 255);
+              color = `rgb(${r},${g},${b})`;
+            } else {
+              const r = Math.round(255);
+              const g = Math.round((1 - (zn - 0.5) * 2) * 255);
+              b = 0;
+              color = `rgb(${r},${g},${b})`;
+            }
+          }
+        } 
+        else if (dataType === 'km') {
+          const kmm = normalizeTo100(p.Km, ranges.Km.min, ranges.Km.max)/100;
+          
+          let r, g, b;
+          
+  if (kmm < 0.05) {
+    // Primer intervalo: 0 → 0.15
+    // Blanco → Cian
+    const t = kmm / 0.05;  // t va de 0 a 1 en este intervalo
+    r = Math.round(255 * (1 - t));
+    g = 255;
+    b = 255;
+  } else if (kmm < 0.10) {
+    // Segundo intervalo: 0.15 → 0.30
+    // Cian → Verde
+    const t = (kmm - 0.05) / (0.10 - 0.05);  // t va de 0 a 1
+    r = 0;
+    g = 255;
+    b = Math.round(255 * (1 - t));
+  } else if (kmm < 0.20) {
+    // Tercer intervalo: 0.30 → 0.50
+    // Verde → Naranja
+    const t = (kmm - 0.10) / (0.20 - 0.10);  // t va de 0 a 1
+    r = Math.round(255 * t);
+    g = 255;
+    b = 0;
+  } else {
+    // Último intervalo: 0.50 → 1.0
+    // Naranja → Magenta
+    const t = (kmm - 0.20) / (1.0 - 0.20);  // t va de 0 a 1
+    r = 255;
+    g = Math.round(255 * (1 - t));
+    b = Math.round(255 * t);
+  }
+  
+  color = `rgb(${r},${g},${b})`;
+}
+        
+        if (color !== 'rgba(0,0,0,0)') {
+          ctx.fillStyle = color;
+          ctx.beginPath();
+          const pointSize = Math.max(2, 5 / Math.pow(view.scale, 0.1));
+          ctx.arc(screen.sx, screen.sy, pointSize, 0, Math.PI*2);
+          ctx.fill();
+        }
+      }
+    });
+  }
+  
+  ctx.restore();
+}
+/* =====================
+   BÚSQUEDAS y utilidades
+   ===================== */
+function findNearest(arr, x, y){
+  if(!arr || arr.length===0) return null;
+  let best=null, bd=Infinity;
+  arr.forEach(r=>{
+    const d = (r.X-x)*(r.X-x) + (r.Y-y)*(r.Y-y);
+    if(d<bd) { bd=d; best=r; }
+  });
+  return best;
+}
+
+/* =========================
+   Actualizar coordenadas y gráficos
+   ========================= */
+const coordsDiv = document.getElementById('coords');
+const fractureCountDiv = document.getElementById('fractureCount');
+
+function updateCoordsAndCharts(wx, wy){
+  const pKm = findNearest(DATA.Km, wx, wy);
+  const pKg = findNearest(DATA.Kg, wx, wy);
+  
+  // Formatear X, Y como enteros
+  const x = Math.round(wx);
+  const y = Math.round(wy);
+  
+  let z = '-', Kmv = '-', Kgv = '-';
+  
+  if (pKm) {
+    // Z como entero
+    z = Math.round(pKm.Z);
+    
+    // Km con 2 decimales y notación científica si es pequeño
+    if (Math.abs(pKm.Km) < 0.01) {
+      Kmv = pKm.Km.toExponential(2);
+    } else {
+      Kmv = pKm.Km.toFixed(2);
+    }
+  } else if (pKg) {
+    // Z como entero
+    z = Math.round(pKg.Z);
+  }
+  
+  if (pKg) {
+    // Kg con 2 decimales y notación científica si es pequeño
+    if (Math.abs(pKg.Kg) < 0.01) {
+      Kgv = pKg.Kg.toExponential(2);
+    } else {
+      Kgv = pKg.Kg.toFixed(2);
+    }
+  }
+  
+  coordsDiv.innerText = `X: ${x}  Y: ${y}  Z: ${z}  Km: ${Kmv}  Kg: ${Kgv}`;
+  
+  // Solo calcular fracturas si el mouse está sobre el mapa
+  if(isMouseOverMap && pKm && pKg){
+    const result = computeFracturesForPoint(pKm, pKg);
+    currentFractureCount = result.poles.length;
+    fractureCountDiv.innerText = `Fracturas: ${currentFractureCount}`;
+    drawRoseta(result.azimuts);
+    drawStereo(result.poles);
+  }
+}
+
+/* ============================================
+   Lógica para generar lista fracturas - RESTAURADA
+   ============================================ */
+function computeFracturesForPoint(pKm, pKg){
+  const wBackground = parseFloat(document.getElementById('wBackground').value) || 0;
+  const wKm = parseFloat(document.getElementById('wKm').value) || 0;
+  const wKg = parseFloat(document.getElementById('wKg').value) || 0;
+  const wInfl = parseFloat(document.getElementById('wInfl').value) || 0;
+  const aleat = parseFloat(document.getElementById('aleat').value) || 0;
+
+  const km_norm = normalizeTo100(pKm.Km, ranges.Km.min, ranges.Km.max);
+  const kg_norm = normalizeTo100(pKg.Kg, ranges.Kg.min, ranges.Kg.max);
+
+  let azimuts = [], poles = [];
+
+  // Fracturas por background
+  DATA.background.forEach(bg=>{
+    if (wBackground <= 0) return;
+    
+    const count = Math.round(bg.peso * wBackground * (1+(kg_norm/100) * wKg) * 10);
+    if (count <= 0) return;
+
+    //const aleat2=Math.random() *aleat;
+    const aleat2=aleat;
+
+    for(let i=0;i<count;i++){
+        // PRIMERO: Rotar SIN aleatoriedad (usar valores originales del background)
+        let planePoleVec = poleFromPlane(bg.Az, bg.dip);
+        let planePoleAzPl = azPlungeFromVector(planePoleVec);
+        
+        // Asegurar hemisferio inferior del polo original
+        if (planePoleAzPl.pl < 0) {
+            planePoleVec = [-planePoleVec[0], -planePoleVec[1], -planePoleVec[2]];
+        }
+        
+        // Asegurar que la normal de la superficie esté en hemisferio inferior
+        let surfaceNormal = vectorFromTrendPlunge(pKg.trend, pKg.plunge);
+        let correctedTrend = pKg.trend;
+        let correctedPlunge = pKg.plunge;
+        
+        if (surfaceNormal[2] > 0) {
+            surfaceNormal = [-surfaceNormal[0], -surfaceNormal[1], -surfaceNormal[2]];
+            correctedTrend = (pKg.trend + 180) % 360;
+            correctedPlunge = -pKg.plunge;
+        }
+        
+        // Calcular parámetros de rotación
+        const superficieAz = (correctedTrend + 90) % 360;
+        const superficieDip = 90 - correctedPlunge;
+        
+        const rotationAxis = vectorFromTrendPlunge(superficieAz, 0);
+        const rotationAngle = superficieDip * Math.PI / 180;
+        
+        // Rotar el polo
+        const rotatedPole = rotateVectorRodrigues(planePoleVec, rotationAxis, rotationAngle);
+        
+        // LUEGO: Aplicar aleatoriedad al polo ya rotado
+        let poleAzPl = azPlungeFromVector(rotatedPole);
+        
+        // Aplicar aleatoriedad al azimut y plunge del polo rotado
+        const azConVariacion = poleAzPl.az + (Math.random() * 2 * aleat2 - aleat2);
+        const plConVariacion = poleAzPl.pl + (Math.random() * 2 * aleat2 - aleat2);
+        
+        poleAzPl.az = (azConVariacion + 360) % 360;
+        poleAzPl.pl = Math.max(0, Math.min(90, plConVariacion));
+        
+        // Forzar hemisferio inferior
+        if (poleAzPl.pl < -1) {
+            poleAzPl.pl = -poleAzPl.pl;
+            poleAzPl.az = (poleAzPl.az + 180) % 360;
+        }
+
+        const planoAz = (poleAzPl.az + 90) % 360;
+        
+        azimuts.push(planoAz);
+        poles.push(poleAzPl);
+    }
+  });
+
+// Para fracturas por curvatura máxima
+const kmCount = Math.round((km_norm/100) * wKm * 20);
+for(let i=0;i<kmCount;i++){
+  // PRIMERO: Calcular el polo base SIN aleatoriedad
+  const planoAzBase = pKm.Az;
+  const fracturaDipBase = 90 - pKg.plunge;
+  const poleAzBase = (planoAzBase + 90) % 360;
+  const polePlungeBase = fracturaDipBase;
+  
+  // LUEGO: Aplicar aleatoriedad directamente al polo
+  const azConVariacion = poleAzBase + (Math.random() * 2 * aleat - aleat);
+  const plConVariacion = polePlungeBase + (Math.random() * 2 * aleat - aleat);
+  
+  const poleAz = (azConVariacion + 360) % 360;
+  const polePlunge = Math.max(0, Math.min(90, plConVariacion));
+  
+  // Calcular el azimut del plano a partir del polo con variación
+  const planoAz = (poleAz + 90) % 360;
+  
+  azimuts.push(planoAz);
+  poles.push({ az: poleAz, pl: polePlunge });
+}
+
+  // Para fracturas por influencia
+// Para fracturas por influencia
+const inf = findNearest(DATA.influencia, pKm.X, pKm.Y);
+if(inf && wInfl > 0){
+  const infl_norm = normalizeTo100(inf.infl, ranges.infl.min, ranges.infl.max);
+  const inflCount = Math.round((infl_norm/100) * wInfl * 10);
+  
+  // DEBUG: Ver cuántas fracturas se generan
+  console.log("Influencia - count:", inflCount, "az base:", inf.Az);
+  
+  for(let i=0;i<inflCount;i++){
+    // El plano tiene azimut inf.Az e inclina 45° al Oeste
+    const planoAzBase = inf.Az;
+    
+    // El polo está a 90° del azimut del plano y tiene plunge 45°
+    let poleAzBase = (planoAzBase + 90) % 360;  // Polo al ESTE
+    if (poleAzBase > 180) poleAzBase += 180;
+
+
+    let polePlungeBase = 45;                     // Plunge 45°
+    
+    // Aplicar aleatoriedad
+    const azConVariacion = poleAzBase + (Math.random() * 2 * aleat - aleat);
+    const inclinacionAleatoria = 45 + (Math.random() * 10 - 5); // 40° a 50°
+    const plConVariacion = inclinacionAleatoria + (Math.random() * 2 * aleat - aleat);
+    
+    let poleAz = (azConVariacion + 360) % 360;
+    let polePlunge = Math.max(0, Math.min(90, plConVariacion));
+    
+    // Forzar hemisferio inferior (plunge positivo)
+    if (polePlunge < 0) {
+        polePlunge = -polePlunge;
+        poleAz = (poleAz + 180) % 360;
+    }
+    
+    // El azimut del plano es perpendicular al polo
+    const planoAz = (poleAz + 90) % 360;
+    
+    azimuts.push(planoAz);
+    poles.push({ az: poleAz, pl: polePlunge });
+    
+    // DEBUG: Ver cada fractura generada
+    console.log("Fractura", i, "- Polo az:", poleAz, "plunge:", polePlunge, "Plano az:", planoAz);
+  }
+}
+
+  return { azimuts, poles };
+}
+
+/* ================================
+   Helpers: plane/vector conversions - RESTAURADAS
+   ================================ */
+function poleFromPlane(az, dip){
+  const plunge = 90 - dip;
+  const trend = (az + 90) % 360;
+  return vectorFromTrendPlunge(trend, plunge);
+}
+
+function vectorFromTrendPlunge(trend, plunge) {
+  const t = (trend) * Math.PI/180;
+  const p = (plunge) * Math.PI/180;
+  const x = Math.cos(p)*Math.sin(t);
+  const y = Math.cos(p)*Math.cos(t);
+  const z = -Math.sin(p);
+  return [x,y,z];
+}
+
+function azPlungeFromVector(v){
+  let pl = Math.asin(Math.max(-1, Math.min(1, -v[2]))) * 180/Math.PI;
+  
+  if (pl < 0) {
+    pl = -pl;
+    v = [-v[0], -v[1], -v[2]];
+  }
+  
+  let tr = Math.atan2(v[0], v[1]) * 180/Math.PI;
+  if(tr<0) tr += 360;
+  return { az: tr, pl: pl };
+}
+
+/* =========================
+   Roseta axial - RESTAURADA
+   ========================= */
+function drawRoseta(azimuts){
+  const c = document.getElementById('roseta'), ctxR = c.getContext('2d');
+  ctxR.clearRect(0,0,c.width,c.height);
+  if(!azimuts || azimuts.length===0) return;
+  
+  const nbins = 18;
+  const bins = new Array(nbins).fill(0);
+  azimuts.forEach(a=>{
+    if(typeof a !== 'number' || isNaN(a)) return;
+    let ang = ((a % 360) + 360) % 360;
+    if(ang >= 180) ang -= 180;
+    const idx = Math.floor((ang/180) * nbins) % nbins;
+    bins[idx]++;
+  });
+  
+  const maxb = Math.max(...bins,1);
+  const cx = c.width/2, cy = c.height/2, R = Math.min(cx,cy)-10;
+  
+  ctxR.strokeStyle='#ddd';
+  for(let r=0;r<=4;r++){ 
+    ctxR.beginPath(); 
+    ctxR.arc(cx,cy, R*(r/4), 0,Math.PI*2); 
+    ctxR.stroke(); 
+  }
+  
+  for(let i=0;i<nbins;i++){
+    const angStart = (i/nbins)*Math.PI;
+    const angEnd = ((i+1)/nbins)*Math.PI;
+    const proportion = bins[i]/maxb;
+    const rOut = 5 + proportion * (R-10);
+    
+    ctxR.beginPath();
+    ctxR.moveTo(cx,cy);
+    ctxR.arc(cx,cy, rOut, angStart - Math.PI/2, angEnd - Math.PI/2);
+    ctxR.closePath();
+    ctxR.fillStyle = 'rgba(40,120,200,0.7)';
+    ctxR.fill();
+    
+    ctxR.beginPath();
+    ctxR.moveTo(cx,cy);
+    ctxR.arc(cx,cy, rOut, angStart - Math.PI/2 + Math.PI, angEnd - Math.PI/2 + Math.PI);
+    ctxR.closePath();
+    ctxR.fill();
+  }
+  
+  ctxR.beginPath();
+  ctxR.arc(cx,cy,R,0,Math.PI*2); 
+  ctxR.strokeStyle='#444'; 
+  ctxR.stroke();
+}
+
+/* =========================
+   Estereográfica - RESTAURADA
+   ========================= */
+function drawStereo(poles){
+  const c = document.getElementById('stereo'), ctxS = c.getContext('2d');
+  ctxS.clearRect(0,0,c.width,c.height);
+  const cx = c.width/2, cy = c.height/2, R = Math.min(cx,cy)-12;
+  ctxS.strokeStyle='#444'; ctxS.beginPath(); ctxS.arc(cx,cy,R,0,Math.PI*2); ctxS.stroke();
+  if(!poles || poles.length===0) return;
+  
+  // Obtener el valor de aleat
+  const aleat = parseFloat(document.getElementById('aleat').value) || 0;
+  
+  // Determinar el tamaño del punto basado en aleat
+  const pointSize = aleat > 0 ? 2 : 3; // Puntos más pequeños si hay aleatoriedad
+  
+  poles.forEach(pt=>{
+    const az = (pt.az || 0) * Math.PI/180;
+    const pl = Math.max(0, Math.min(90, (pt.pl || 0)));
+    
+    // CORRECCIÓN: Invertir la relación plunge-radio
+    const rr = R * (1 - pl/90);  // pl=90 → rr=0 (centro), pl=0 → rr=R (borde)
+    
+    const x = cx + rr * Math.sin(az);
+    const y = cy - rr * Math.cos(az);
+    
+    ctxS.fillStyle='rgba(200,40,40,0.9)'; 
+    ctxS.beginPath(); 
+    ctxS.arc(x, y, pointSize, 0, Math.PI*2); // Usar pointSize variable
+    ctxS.fill();
+  });
+}
+
+/* =========================
+   Resto del código
+   ========================= */
+
+// Imágenes rasterizadas
+
+
+
+
+
+
+// Función para establecer un punto manual
+function setManualPoint(x, y) {
+  manualPoint = { X: x, Y: y };
+  
+  // Actualizar campos de entrada
+  document.getElementById('manualX').value = x.toFixed(2);
+  document.getElementById('manualY').value = y.toFixed(2);
+  
+  // Actualizar coordenadas y gráficos
+  updateCoordsAndCharts(x, y);
+  
+  // Calcular fracturas para este punto
+  const pKm = findNearest(DATA.Km, x, y);
+  const pKg = findNearest(DATA.Kg, x, y);
+  
+  if (pKm && pKg) {
+    const result = computeFracturesForPoint(pKm, pKg);
+    currentFractureCount = result.poles.length;
+    fractureCountDiv.innerText = `Fracturas: ${currentFractureCount}`;
+    drawRoseta(result.azimuts);
+    drawStereo(result.poles);
+  }
+  
+  // Redibujar mapa
+  drawMap();
+}
+
+// Función para descargar datos
+// Función para descargar datos
+function downloadData() {
+  if (!manualPoint) {
+    alert('Primero debe marcar un punto en el mapa');
+    return;
+  }
+  
+  const x = manualPoint.X.toFixed(2);
+  const y = manualPoint.Y.toFixed(2);
+  
+  // Calcular fracturas
+  const pKm = findNearest(DATA.Km, manualPoint.X, manualPoint.Y);
+  const pKg = findNearest(DATA.Kg, manualPoint.X, manualPoint.Y);
+  
+  if (!pKm || !pKg) {
+    alert('No se encontraron datos para este punto');
+    return;
+  }
+  
+  const result = computeFracturesForPoint(pKm, pKg);
+  
+  // Crear CSV con planos de fractura: Azimut (RHR) e Inclinación
+  let csvContent = "Azimut_RHR,Inclinacion\n";
+  for (let i = 0; i < result.poles.length; i++) {
+    const pole = result.poles[i];
+    
+    // Calcular azimut del plano: polo.az + 90
+    let planoAz = (pole.az + 90) % 360;
+    
+    // Calcular inclinación del plano: 90 - pole.pl
+    let planoInclinacion = 90 - pole.pl;
+    
+    // Asegurar que la inclinación esté en el rango 0-90
+    planoInclinacion = Math.max(0, Math.min(90, planoInclinacion));
+    
+    csvContent += `${planoAz.toFixed(2)},${planoInclinacion.toFixed(2)}\n`;
+  }
+  
+  // Descargar CSV
+  const blob = new Blob([csvContent], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${x}_${y}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  
+  // Descargar imágenes
+  setTimeout(() => {
+    // Descargar estereográfica
+    const stereoCanvas = document.getElementById('stereo');
+    const stereoUrl = stereoCanvas.toDataURL('image/jpeg', 0.9);
+    const aStereo = document.createElement('a');
+    aStereo.href = stereoUrl;
+    aStereo.download = `${x}_${y}_estereografica.jpg`;
+    document.body.appendChild(aStereo);
+    aStereo.click();
+    document.body.removeChild(aStereo);
+    
+    // Descargar roseta
+    setTimeout(() => {
+      const rosetaCanvas = document.getElementById('roseta');
+      const rosetaUrl = rosetaCanvas.toDataURL('image/jpeg', 0.9);
+      const aRoseta = document.createElement('a');
+      aRoseta.href = rosetaUrl;
+      aRoseta.download = `${x}_${y}_roseta.jpg`;
+      document.body.appendChild(aRoseta);
+      aRoseta.click();
+      document.body.removeChild(aRoseta);
+    }, 100);
+  }, 100);
+}
+
+// Función para borrar cache
+function clearCache() {
+  if (confirm('¿Está seguro de que desea borrar el cache? Esto regenerará las imágenes.')) {
+    // Como ahora dibujamos directamente, no hay cache que borrar
+    drawMap();
+    alert('Cache borrado');
+  }
+}
+
+// Event listeners
+window.addEventListener('resize', resizeCanvas);
+
+let isPanning=false, lastPan=null;
+canvas.addEventListener('mousedown', (e)=>{ 
+  isPanning=true; 
+  lastPan=[e.clientX,e.clientY]; 
+  
+  // Si no está panning, establecer punto manual
+  if (!isPanning) {
+    const rect = canvas.getBoundingClientRect();
+    const sx = e.clientX - rect.left, sy = e.clientY - rect.top;
+    const w = screenToWorld(sx, sy);
+    setManualPoint(w.X, w.Y);
+  }
+});
+window.addEventListener('mouseup', ()=>{ isPanning=false; lastPan=null; });
+window.addEventListener('mousemove', (e)=>{
+  if(isPanning && lastPan){
+    const dx = e.clientX - lastPan[0], dy = e.clientY - lastPan[1];
+    view.tx += dx; view.ty -= dy;
+    lastPan=[e.clientX,e.clientY];
+    drawMap();
+  } else {
+    const rect = canvas.getBoundingClientRect();
+    const sx = e.clientX - rect.left, sy = e.clientY - rect.top;
+    const w = screenToWorld(sx, sy);
+    updateCoordsAndCharts(w.X, w.Y);
+  }
+});
+
+// Detectar cuando el mouse entra y sale del mapa
+canvas.addEventListener('mouseenter', () => {
+  isMouseOverMap = true;
+});
+
+canvas.addEventListener('mouseleave', () => {
+  isMouseOverMap = false;
+  // Cuando el mouse sale del mapa, resetear el contador de fracturas
+  fractureCountDiv.innerText = `Fracturas: 0`;
+  currentFractureCount = 0;
+});
+
+canvas.addEventListener('wheel', (ev)=>{
+  ev.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  const mx = ev.clientX - rect.left, my = ev.clientY - rect.top;
+  const zoomFactor = Math.exp(-ev.deltaY * 0.0018);
+  const wxBefore = (mx - view.tx)/view.scale;
+  const wyBefore = (canvas.height/devicePixelRatio_ - my - view.ty)/view.scale;
+  view.scale *= zoomFactor;
+  const wxAfter = (mx - view.tx)/view.scale;
+  const wyAfter = (canvas.height/devicePixelRatio_ - my - view.ty)/view.scale;
+  view.tx += (wxAfter - wxBefore)*view.scale;
+  view.ty += (wyAfter - wyBefore)*view.scale;
+  drawMap();
+}, {passive:false});
+
+// Event listener para click en el mapa
+canvas.addEventListener('click', (e) => {
+  if (!isPanning) {
+    const rect = canvas.getBoundingClientRect();
+    const sx = e.clientX - rect.left, sy = e.clientY - rect.top;
+    const w = screenToWorld(sx, sy);
+    setManualPoint(w.X, w.Y);
+  }
+});
+
+async function loadAll(){
+  try{
+    document.getElementById('loading').style.display = 'flex';
+    
+    const base = './';
+    const texts = await Promise.all([
+      fetch(base+'Km_100.dat').then(r=>{ if(!r.ok) throw new Error('Km_100.dat not found'); return r.text(); }),
+      fetch(base+'Kg_100.dat').then(r=>{ if(!r.ok) throw new Error('Kg_100.dat not found'); return r.text(); }),
+      fetch(base+'influencia.dat').then(r=>{ if(!r.ok) throw new Error('influencia.dat not found'); return r.text(); }),
+      fetch(base+'background.dat').then(r=>{ if(!r.ok) throw new Error('background.dat not found'); return r.text(); }),
+      fetch(base+'pozos.dat').then(r=>{ if(!r.ok) throw new Error('pozos.dat not found'); return r.text(); }),
+      // AGREGAR ESTA LÍNEA para cargar la falla
+      fetch(base+'FueraSecuencia.txt').then(r=>{ if(!r.ok) throw new Error('FueraSecuencia.txt not found'); return r.text(); })
+    ]);
+    
+    DATA.Km = parseDatText(texts[0]).map(r=>({ X:r[0], Y:r[1], Z:r[2], Km:r[3], Az:r[4] }));
+    DATA.Kg = parseDatText(texts[1]).map(r=>({ X:r[0], Y:r[1], Z:r[2], Kg:r[3], trend:r[4], plunge:r[5] }));
+    DATA.influencia = parseDatText(texts[2]).map(r=>({ X:r[0], Y:r[1], Z:r[2], infl:r[3], Az:r[4] }));
+    DATA.background = parseDatText(texts[3]).map(r=>({ Az:r[0], dip:r[1], peso:r[2] }));
+    
+    // Pozos
+    const pozosLines = texts[4].split(/\r?\n/).map(s=>s.trim()).filter(s=>s && !s.startsWith('#'));
+    DATA.pozos = pozosLines.map(line => {
+      const parts = line.split(/\s+/);
+      if (parts.length > 3) {
+        const nombre = parts.slice(0, parts.length - 2).join(' ');
+        const X = parseFloat(parts[parts.length - 2]);
+        const Y = parseFloat(parts[parts.length - 1]);
+        return { nombre, X, Y };
+      } else {
+        return { nombre: parts[0], X: parseFloat(parts[1]), Y: parseFloat(parts[2]) };
+      }
+    });
+
+    // CARGAR DATOS DE FALLA
+    const fallaLines = texts[5].split(/\r?\n/).map(s=>s.trim()).filter(s=>s && !s.startsWith('#'));
+    DATA.falla = fallaLines.map(line => {
+      const parts = line.split(/\s+/).map(Number);
+      return { X: parts[0], Y: parts[1] };
+    });
+
+    // Calcular rangos
+    computeRanges();
+    
+    // Solo redimensionar, no generar imágenes raster
+    resizeCanvas();
+    
+    drawMap();
+    document.getElementById('loading').style.display = 'none';
+  } catch(err){
+    console.error('Error cargando datos', err);
+    alert('Error cargando datos. Servir la carpeta y revisar consola.');
+    document.getElementById('loading').style.display = 'none';
+  }
+}
+
+
+function computeRanges(){
+  ranges.Km = minMax(DATA.Km.map(d=>d.Km)); 
+  ranges.Kg = minMax(DATA.Kg.map(d=>d.Kg)); 
+  ranges.infl = minMax(DATA.influencia.map(d=>d.infl));
+  
+  // INCLUIR DATOS DE FALLA EN LOS RANGOS
+  const xs = DATA.Km.map(d=>d.X).concat(DATA.Kg.map(d=>d.X), DATA.influencia.map(d=>d.X), DATA.falla.map(d=>d.X));
+  const ys = DATA.Km.map(d=>d.Y).concat(DATA.Kg.map(d=>d.Y), DATA.influencia.map(d=>d.Y), DATA.falla.map(d=>d.Y));
+  ranges.X = minMax(xs); 
+  ranges.Y = minMax(ys);
+  ranges.Z = minMax(DATA.Km.map(d=>d.Z));
+}
+
+// UI bindings
+['showZ','showKm','showKg','showPozos','showNombres','showFalla','wBackground','wKm','wKg','wInfl','aleat'].forEach(id=>{
+  document.getElementById(id).addEventListener('change', drawMap);
+});
+
+document.getElementById('reloadBtn').addEventListener('click', loadAll);
+document.getElementById('regenerateBtn').addEventListener('click', ()=>{
+  drawMap();
+});
+
+document.getElementById('setManualPoint').addEventListener('click', () => {
+  const x = parseFloat(document.getElementById('manualX').value);
+  const y = parseFloat(document.getElementById('manualY').value);
+  
+  if (isNaN(x) || isNaN(y)) {
+    alert('Por favor ingrese valores válidos para X e Y');
+    return;
+  }
+  
+  setManualPoint(x, y);
+});
+
+document.getElementById('downloadData').addEventListener('click', downloadData);
+document.getElementById('clearCache').addEventListener('click', clearCache);
+
+['showZ','showKm','showKg','showPozos','showNombres','wBackground','wKm','wKg','wInfl','aleat'].forEach(id=>{
+  document.getElementById(id).addEventListener('change', drawMap);
+});
+
+// Inicializar
+loadAll();
+</script>
+</body>
+</html>

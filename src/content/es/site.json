@@ -1,0 +1,148 @@
+{
+  "meta": {
+    "title": "LaMoGe | Laboratorio de Modelado Geológico",
+    "description": "Landing institucional bilingüe del Laboratorio de Modelado Geológico (LaMoGe), IDEAN, UBA-CONICET."
+  },
+  "navigation": {
+    "home": "Inicio",
+    "about": "Quiénes somos",
+    "activities": "Qué hacemos",
+    "research": "Líneas",
+    "team": "Integrantes",
+    "publications": "Publicaciones",
+    "services": "Servicios",
+    "facilities": "Capacidades",
+    "gallery": "Galería",
+    "collaborations": "Colaboraciones",
+    "teaching": "Formación",
+    "faq": "Preguntas",
+    "contact": "Contacto",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
+    "languageLabel": "Idioma"
+  },
+  "hero": {
+    "eyebrow": "IDEAN · UBA-CONICET",
+    "title": "Laboratorio de Modelado Geológico",
+    "subtitle": "Investigación avanzada en tectónica, geodinámica y modelado geológico integrado.",
+    "summary": "LaMoGe articula modelado análogo y numérico, geología estructural, análisis de datos y formación científica para abordar problemas geológicos complejos con proyección académica e institucional.",
+    "primaryCta": "Explorar líneas de investigación",
+    "secondaryCta": "Ver publicaciones",
+    "tertiaryCta": "Contactar al laboratorio",
+    "stats": [
+      "Modelado análogo y numérico",
+      "Investigación, formación y servicios",
+      "Redes científicas nacionales e internacionales"
+    ]
+  },
+  "about": {
+    "eyebrow": "Perfil institucional",
+    "title": "Un laboratorio para investigar, formar y transferir conocimiento geocientífico",
+    "description": "LaMoGe se concibe como una plataforma interdisciplinaria para estudiar procesos geológicos y tectónicos mediante experimentación, simulación y análisis cuantitativo.",
+    "missionTitle": "Misión",
+    "mission": "Desarrollar investigación de frontera en modelado geológico, fortalecer la formación de recursos humanos y aportar herramientas científicas aplicadas a problemas reales.",
+    "visionTitle": "Visión",
+    "vision": "Consolidarse como un nodo regional e internacional de referencia en modelado geológico, geodinámica y experimentación aplicada.",
+    "historyTitle": "Trayectoria",
+    "history": "Este texto es un placeholder profesional. Reemplazar por una síntesis breve sobre el origen del laboratorio, hitos institucionales y evolución de sus capacidades.",
+    "institutionTitle": "Pertenencia",
+    "institution": "Laboratorio perteneciente al Instituto de Estudios Andinos Don Pablo Groeber (IDEAN), con inserción académica en la Universidad de Buenos Aires y CONICET."
+  },
+  "activities": {
+    "eyebrow": "Capacidades científicas",
+    "title": "Qué hacemos",
+    "description": "Investigación experimental y computacional, interpretación geológica, docencia, colaboración institucional y servicios especializados."
+  },
+  "research": {
+    "eyebrow": "Agenda científica",
+    "title": "Líneas de investigación",
+    "description": "Cada línea puede ampliarse fácilmente desde archivos de datos. Los contenidos siguientes son de ejemplo y deben ajustarse con información validada."
+  },
+  "team": {
+    "eyebrow": "Personas",
+    "title": "Integrantes",
+    "description": "La estructura está preparada para distinguir dirección, investigadores, becarios, estudiantes y colaboradores.",
+    "filterLabel": "Filtrar por rol",
+    "allRoles": "Todos"
+  },
+  "publications": {
+    "eyebrow": "Producción científica",
+    "title": "Publicaciones",
+    "description": "Listado escalable con publicaciones destacadas, filtros por año, tema y tipo, y enlaces externos.",
+    "featuredLabel": "Destacada",
+    "filterYear": "Año",
+    "filterTopic": "Tema",
+    "filterType": "Tipo",
+    "allYears": "Todos",
+    "allTopics": "Todos",
+    "allTypes": "Todos",
+    "viewAll": "Ver todas las publicaciones"
+  },
+  "services": {
+    "eyebrow": "Vinculación y transferencia",
+    "title": "Servicios a terceros",
+    "description": "Servicios científicos y técnicos con placeholders claros para ajustar alcance, condiciones y responsables."
+  },
+  "facilities": {
+    "eyebrow": "Infraestructura",
+    "title": "Facilidades, equipamiento y capacidades",
+    "description": "Infraestructura experimental, procesamiento, software y recursos técnicos disponibles para investigación y colaboración."
+  },
+  "gallery": {
+    "eyebrow": "Multimedia",
+    "title": "Galería",
+    "description": "Sección lista para incorporar fotografías, videos, animaciones y material institucional."
+  },
+  "collaborations": {
+    "eyebrow": "Redes",
+    "title": "Colaboraciones y proyectos",
+    "description": "Espacio para mostrar redes nacionales e internacionales, instituciones asociadas y proyectos activos o destacados."
+  },
+  "teaching": {
+    "eyebrow": "Formación",
+    "title": "Docencia y formación",
+    "description": "Participación en enseñanza, dirección de estudiantes, tesis, cursos y entrenamiento técnico."
+  },
+  "faq": {
+    "eyebrow": "Información útil",
+    "title": "Preguntas frecuentes",
+    "description": "Respuestas breves para visitantes, potenciales colaboradores e instituciones interesadas."
+  },
+  "contact": {
+    "eyebrow": "Contacto institucional",
+    "title": "Hablemos",
+    "description": "Sección preparada para contacto institucional, consultas de colaboración y pedidos de información.",
+    "emailLabel": "Email institucional",
+    "addressLabel": "Ubicación",
+    "affiliationLabel": "Afiliación",
+    "formName": "Nombre",
+    "formEmail": "Email",
+    "formOrganization": "Institución u organización",
+    "formMessage": "Mensaje",
+    "formSubmit": "Enviar consulta",
+    "formNote": "Placeholder: conectar este formulario a un backend o servicio de formularios antes de publicar.",
+    "email": "lamoge@idean.uba.ar",
+    "address": "Ciudad Universitaria, Buenos Aires, Argentina",
+    "affiliation": "IDEAN · UBA · CONICET"
+  },
+  "footer": {
+    "tagline": "Laboratorio de investigación avanzada en modelado geológico.",
+    "quickLinks": "Enlaces rápidos",
+    "backToTop": "Volver arriba",
+    "credits": "Diseño y desarrollo base preparado para crecer con contenido editable por Git."
+  },
+  "sectionOrder": [
+    "about",
+    "activities",
+    "research",
+    "team",
+    "publications",
+    "services",
+    "facilities",
+    "gallery",
+    "collaborations",
+    "teaching",
+    "faq",
+    "contact"
+  ]
+}

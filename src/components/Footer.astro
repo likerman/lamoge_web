@@ -1,0 +1,56 @@
+---
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+import type { Locale } from "../lib/i18n";
+
+interface Props {
+  locale: Locale;
+  navigation: Record<string, string>;
+  footer: {
+    tagline: string;
+    quickLinks: string;
+    backToTop: string;
+    credits: string;
+  };
+}
+
+const { locale, navigation, footer } = Astro.props;
+
+const links = [
+  { id: "about", label: navigation.about },
+  { id: "research", label: navigation.research },
+  { id: "publications", label: navigation.publications },
+  { id: "services", label: navigation.services },
+  { id: "contact", label: navigation.contact }
+];
+---
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a href={`/${locale}/`} class="brand footer-brand">
+        <span class="brand-mark">La</span>
+        <span class="brand-copy">
+          <strong>LaMoGe</strong>
+          <small>IDEAN · UBA-CONICET</small>
+        </span>
+      </a>
+      <p>{footer.tagline}</p>
+      <p class="footer-credits">{footer.credits}</p>
+    </div>
+
+    <div>
+      <h3>{footer.quickLinks}</h3>
+      <nav class="footer-links">
+        {links.map((link) => (
+          <a href={`#${link.id}`}>{link.label}</a>
+        ))}
+      </nav>
+    </div>
+
+    <div>
+      <h3>{navigation.languageLabel}</h3>
+      <LanguageSwitcher locale={locale} />
+      <a class="back-to-top" href="#top">{footer.backToTop}</a>
+    </div>
+  </div>
+</footer>

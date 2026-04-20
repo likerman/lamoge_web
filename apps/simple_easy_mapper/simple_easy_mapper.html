@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polilíneas en mapa</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.6.2/proj4.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
+    <style>
+        #container {
+            display: flex;
+            width: 100%;
+        }
+        #map {
+            height: 600px;
+            width: 60%;
+            cursor: crosshair;
+        }
+        #info {
+            padding-left: 20px;
+            max-width: 40%;
+        }
+        .color-palette {
+            display: flex;
+            gap: 5px;
+            margin: 10px 0;
+        }
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+        .thickness-palette {
+            display: flex;
+            gap: 5px;
+            margin: 10px 0;
+        }
+        .thickness-option {
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            background: #f0f0f0;
+        }
+        .thickness-option.selected, .color-option.selected {
+            border: 2px solid #000;
+        }
+        .delete-mode {
+            background-color: #ff9999 !important;
+        }
+    </style>
+</head>
+<body>
+    <h2>Simple Easy Mapper</h2>
+    <h4>Ernesto Cristallini - © 2025</h4>
+    <div id="container">
+        <div id="map"></div>
+        <div id="info">
+            <h3>Coordinates:</h3>
+            <p>Latitude: <span id="coordLat">0</span></p>
+            <p>Longitude: <span id="coordLng">0</span></p>
+            <p>UTM X: <span id="utmX">0</span></p>
+            <p>UTM Y: <span id="utmY">0</span></p>
+            <p>UTM zone: <span id="utmZone">0</span></p>
+            <label>
+                <input type="checkbox" id="useFixedZone"> Set zone and hemisphere from current position
+            </label>
+        </div>
+    </div>
+    <div id="below-map">
+        <h3>Color select:</h3>
+        <div class="color-palette">
+            <div class="color-option selected" style="background-color: #f9eded;" data-color="#f9eded "></div>
+            <div class="color-option" style="background-color: #00FF00;" data-color="#00FF00"></div>
+            <div class="color-option" style="background-color: #0000FF;" data-color="#0000FF"></div>
+            <div class="color-option" style="background-color: #FFFF00;" data-color="#FFFF00"></div>
+            <div class="color-option" style="background-color: #FF00FF;" data-color="#FF00FF"></div>
+            <div class="color-option" style="background-color: #00FFFF;" data-color="#00FFFF"></div>
+            <div class="color-option" style="background-color: #FFA500;" data-color="#FFA500"></div>
+            <div class="color-option" style="background-color: #800080;" data-color="#800080"></div>
+            <div class="color-option" style="background-color: #008000;" data-color="#008000"></div>
+            <div class="color-option" style="background-color: #fd0e0e;" data-color="#fd0e0e"></div>
+            <div class="color-option" style="background-color: #000000;" data-color="#000000"></div>
+            <div class="color-option" style="background-color: #0b7b70f8;" data-color="#0b7b70f8"></div>
+            <div class="color-option" style="background-color: #140d49;" data-color="#140d49"></div>
+            <div class="color-option" style="background-color: #5fc1c8;" data-color="#5fc1c8"></div>
+            <div class="color-option" style="background-color: #da97cc;" data-color="#da97cc"></div>
+        </div>
+        
+        <h3>Select width:</h3>
+        <div class="thickness-palette">
+            <div class="thickness-option" data-thickness="1">1px</div>
+            <div class="thickness-option selected" data-thickness="2">2px</div>
+            <div class="thickness-option" data-thickness="4">4px</div>
+            <div class="thickness-option" data-thickness="6">6px</div>
+            <div class="thickness-option" data-thickness="8">8px</div>
+        </div>
+        
+        <button id="undoButton">Undo</button>
+        <button id="deleteLineamentButton" style="margin-right: 20px;">Delete last polyline</button>
+        <button id="toggleDrawingMode">Enable Continuous Drawing</button>
+        <button id="deleteModeButton">Delete Line Mode</button>
+        
+        <p></p>
+        <button id="exportKLM_Button">Save KML</button>
+        <button id="saveSVG">Export SVG (UTM)</button><br><br>
+        <label>Open KML file</label>
+        <input type="file" id="kmlFileInput" accept=".kml" onchange="loadKML()" />
+        <p></p>
+        <hr>
+        <a href="mailto:ecristallini@gmail.com?subject=Polilíneas app%20del%20Correo&body=Este%20es%20el%20contenido%20del%20correo">
+            If you want to make suggestions to the author, contact him at ecristallini@gmail.com
+        </a>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+[
+  {
+    "name": "IDEAN",
+    "kind": {
+      "es": "Institución sede",
+      "en": "Host institution"
+    },
+    "scope": {
+      "es": "Argentina",
+      "en": "Argentina"
+    },
+    "summary": {
+      "es": "Nodo institucional principal para investigación andina, geología y colaboración interdisciplinaria.",
+      "en": "Main institutional node for Andean research, geology and interdisciplinary collaboration."
+    },
+    "url": "https://idean.conicet.gov.ar/",
+    "logo": "/images/placeholders/logo-1.svg"
+  },
+  {
+    "name": "Universidad de Buenos Aires",
+    "kind": {
+      "es": "Afiliación académica",
+      "en": "Academic affiliation"
+    },
+    "scope": {
+      "es": "Argentina",
+      "en": "Argentina"
+    },
+    "summary": {
+      "es": "Espacio para destacar vínculos con docencia, investigación y formación de estudiantes.",
+      "en": "Space to highlight links to teaching, research and student training."
+    },
+    "url": "https://www.uba.ar/",
+    "logo": "/images/placeholders/logo-2.svg"
+  },
+  {
+    "name": "Partner Institution Placeholder",
+    "kind": {
+      "es": "Colaboración internacional",
+      "en": "International collaboration"
+    },
+    "scope": {
+      "es": "Internacional",
+      "en": "International"
+    },
+    "summary": {
+      "es": "Reemplazar por proyecto o institución asociada con colaboración activa.",
+      "en": "Replace with an active partner project or institution."
+    },
+    "url": "https://example.org/",
+    "logo": "/images/placeholders/logo-3.svg"
+  }
+]

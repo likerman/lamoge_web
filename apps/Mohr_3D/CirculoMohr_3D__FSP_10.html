@@ -1,0 +1,896 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Mohr 3D + Círculos de Mohr — combinado</title>
+  <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; margin: 14px; background: #f7f9fc; color:#111; }
+    h1 { font-size:18px; margin: 0 0 12px 0; }
+    .layout { display:flex; gap:12px; flex-wrap:wrap; }
+    .left { flex: 1 1 720px; min-width:640px; }
+    .right { width:360px; }
+    .panel { background:#fff; padding:10px; border-radius:8px; box-shadow:0 1px 6px rgba(0,0,0,0.08); margin-bottom:10px; }
+    label { font-size:13px; display:block; margin-bottom:6px; }
+    .row { display:flex; gap:8px; align-items:center; }
+    input[type=range] { width:100%; }
+    .controls-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    button { padding:8px 10px; border-radius:6px; border:1px solid #2b7cff; background:#2b7cff; color:white; cursor:pointer; }
+    button.secondary { background:#fff; color:#2b7cff; }
+    .small { font-size:12px; color:#444; }
+    #plot3d { width:100%; height:640px; }
+    #plot2d { width:100%; height:360px; }
+    code { background:#eef; padding:2px 4px; border-radius:4px; font-size:12px; }
+    .radio-group { display:flex; gap:12px; margin-bottom:8px; }
+    .radio-group label { display:flex; align-items:center; gap:4px; }
+    .orientation-info { background:#f0f8ff; padding:8px; border-radius:6px; margin-top:8px; font-size:11px; }
+    .orientation-info div { margin:2px 0; }
+  </style>
+</head>
+<body>
+  <h1>Reactivación de fracturas de cizalla (Círculos de Mohr 3D círculos) - Ernesto Cristallini - © 2025</h1>
+
+  <div class="layout">
+    <div class="left">
+      <div id="plot3d" class="panel"></div>
+      <div id="plot2d" class="panel"></div>
+    </div>
+
+    <div class="right">
+      <div class="panel">
+        <label class="small">Esfuerzos principales (MPa)</label>
+        <div class="row" style="gap:10px">
+          <div style="flex:1"><label class="small">σ₁: <span id="lbl_s1">100</span></label><input id="s1" type="range" min="1" max="300" step="1" value="100"></div>
+          <div style="flex:1"><label class="small">σ₂: <span id="lbl_s2">60</span></label><input id="s2" type="range" min="0" max="299" step="1" value="60"></div>
+        </div>
+        <div style="margin-top:8px"><label class="small">σ₃: <span id="lbl_s3">20</span></label><input id="s3" type="range" min="0" max="298" step="1" value="20"></div>
+      </div>
+
+      <div class="panel">
+        <label class="small">Rotación del tensor de esfuerzos</label>
+        
+        <div style="margin-bottom:8px">
+          <label class="small">Rotación según eje vertical (°): <span id="lbl_rot_v">0</span></label>
+          <input id="rot_v" type="range" min="0" max="360" step="1" value="0">
+        </div>
+        
+        <div style="margin-bottom:8px">
+          <label class="small">Rotación según eje E-O (°): <span id="lbl_rot_ns">0</span></label>
+          <input id="rot_ns" type="range" min="0" max="360" step="1" value="0">
+        </div>
+        
+        <div style="margin-bottom:8px">
+          <label class="small">Rotación según eje N-S (°): <span id="lbl_rot_ew">0</span></label>
+          <input id="rot_ew" type="range" min="0" max="360" step="1" value="0">
+        </div>
+
+        <div class="orientation-info">
+          <div><strong>Orientación actual:</strong></div>
+          <div>σ₁: Trend <span id="info_t1">0</span>°, Plunge <span id="info_p1">0</span>°</div>
+          <div>σ₂: Trend <span id="info_t2">90</span>°, Plunge <span id="info_p2">0</span>°</div>
+          <div>σ₃: Trend <span id="info_t3">0</span>°, Plunge <span id="info_p3">90</span>°</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <label class="small">Planos aleatorios / CSV</label>
+        <div style="margin-bottom:8px"><label class="small">Cantidad de planos aleatorios: <span id="lbl_n">500</span></label><input id="npoints" type="range" min="1" max="10000" step="1" value="500"></div>
+        <div style="display:flex;gap:8px"><button id="btn_update">Actualizar</button><button id="btn_rand" class="secondary">Generar aleatorios</button></div>
+        <div style="margin-top:10px"><label class="small">Cargar CSV (nx,ny,nz o strike,dip)</label><input id="file_input" type="file" accept=".csv"></div>
+      </div>
+
+      <div class="panel">
+        <label class="small">Envolvente Coulomb</label>
+        <div style="display:flex;gap:8px">
+          <div style="flex:1"><label class="small">φ (°): <span id="lbl_phi">30</span></label><input id="phi" type="range" min="0" max="60" step="0.1" value="30"></div>
+          <div style="width:120px"><label class="small">c (MPa): <span id="lbl_c">10.0</span></label><input id="c" type="range" min="0" max="50" step="0.1" value="10"></div>
+        </div>
+        <div style="margin-top:8px"><label class="small">Pp (MPa): <span id="lbl_pp">10</span></label><input id="pp" type="range" min="0" max="100" step="0.1" value="10"></div>
+      </div>
+
+      <div class="panel">
+        <label class="small">Modo de visualización</label>
+        <div class="radio-group">
+          <label><input type="radio" name="color_mode" value="fault_type" checked> Tipo de falla</label>
+          <label><input type="radio" name="color_mode" value="fsp"> FSP</label>
+        </div>
+        <div id="fsp_info" class="small" style="margin-top:8px; display:none;">
+          FSP = τ / (μ·(σₙ - Pₚ))<br>
+          μ = tan(φ)
+        </div>
+      </div>
+
+      <div class="panel">
+        <label class="small">Leyenda (colores)</label>
+        <div id="legend_fault_type">
+          <!-- INTERCAMBIO: rojo = inversas, azul = normales -->
+          <div class="small">🔴 normales &nbsp; 🔵 inversas &nbsp; 🟢 strike-slip &nbsp; ⚫ reactivadas</div>
+        </div>
+        <div id="legend_fsp" style="display:none;">
+          <div class="small">🔴 FSP alto &nbsp; 🟡 FSP medio &nbsp; 🔵 FSP bajo &nbsp; ⚫ reactivadas</div>
+        </div>
+        <div style="margin-top:8px"><button id="btn_export_png">Exportar Mohr 2D PNG</button> <button id="btn_export_csv" class="secondary">Exportar puntos CSV</button></div>
+        <div id="summary" class="small" style="margin-top:8px">Resumen: —</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+// ------------------ utilities ------------------
+function seededRandom(seed){ let s = seed % 2147483647; if (s<=0) s += 2147483646; return function(){ s = s*16807 % 2147483647; return (s-1)/2147483646; }; }
+function genUniformNormals(n, seed){ const rnd = seededRandom(seed||Math.floor(Math.random()*1e9)); const n1=new Float64Array(n), n2=new Float64Array(n), n3=new Float64Array(n); for(let i=0;i<n;i++){ const u=rnd(), v=rnd(); const theta = Math.acos(2*u-1), phi = 2*Math.PI*v; n1[i] = Math.sin(theta)*Math.cos(phi); n2[i] = Math.sin(theta)*Math.sin(phi); n3[i] = Math.cos(theta); } return {n1,n2,n3}; }
+function parseCSV(text){ const rows = text.trim().split(/\r?\n/).map(r=>r.trim()).filter(r=>r.length>0); if(rows.length<1) return null; const headers = rows[0].split(/,|;|\s+/).map(h=>h.trim().toLowerCase()); const data=[]; for(let i=1;i<rows.length;i++){ const vals = rows[i].split(/,|;|\s+/).map(x=>x.trim()); if(vals.length !== headers.length) continue; const obj={}; for(let j=0;j<headers.length;j++) obj[headers[j]] = parseFloat(vals[j]); data.push(obj);} return {headers,data}; }
+function normalsFromStrikeDip(strikesDeg,dipsDeg){ const n=strikesDeg.length; const n1=new Float64Array(n), n2=new Float64Array(n), n3=new Float64Array(n); for(let i=0;i<n;i++){ const strike=strikesDeg[i]*Math.PI/180, dip=dipsDeg[i]*Math.PI/180; n1[i]=Math.sin(dip)*Math.sin(strike); n2[i]=Math.sin(dip)*Math.cos(strike); n3[i]=Math.cos(dip); const norm=Math.hypot(n1[i],n2[i],n3[i])||1; n1[i]/=norm; n2[i]/=norm; n3[i]/=norm;} return {n1,n2,n3}; }
+
+// Funciones para rotación 3D usando ángulos de Euler
+function rotationMatrixX(angle) {
+  const c = Math.cos(angle);
+  const s = Math.sin(angle);
+  return [
+    [1, 0, 0],
+    [0, c, -s],
+    [0, s, c]
+  ];
+}
+
+function rotationMatrixY(angle) {
+  const c = Math.cos(angle);
+  const s = Math.sin(angle);
+  return [
+    [c, 0, s],
+    [0, 1, 0],
+    [-s, 0, c]
+  ];
+}
+
+function rotationMatrixZ(angle) {
+  const c = Math.cos(angle);
+  const s = Math.sin(angle);
+  return [
+    [c, -s, 0],
+    [s, c, 0],
+    [0, 0, 1]
+  ];
+}
+
+function multiplyMatrices(a, b) {
+  const result = [[0,0,0],[0,0,0],[0,0,0]];
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      for (let k = 0; k < 3; k++) {
+        result[i][j] += a[i][k] * b[k][j];
+      }
+    }
+  }
+  return result;
+}
+
+function multiplyMatrixVector(matrix, vector) {
+  return [
+    matrix[0][0]*vector[0] + matrix[0][1]*vector[1] + matrix[0][2]*vector[2],
+    matrix[1][0]*vector[0] + matrix[1][1]*vector[1] + matrix[1][2]*vector[2],
+    matrix[2][0]*vector[0] + matrix[2][1]*vector[1] + matrix[2][2]*vector[2]
+  ];
+}
+
+// Nueva función para crear tensor de esfuerzos con rotaciones
+function stressTensorFromPrincipalWithRotation(s1, s2, s3, rot_v, rot_ns, rot_ew) {
+  // Convertir ángulos a radianes
+  const rotV = rot_v * Math.PI / 180;
+  const rotNS = rot_ns * Math.PI / 180;
+  const rotEW = rot_ew * Math.PI / 180;
+  
+  // Matriz de rotación combinada (Z-Y-X)
+  const Rz = rotationMatrixZ(rotV);    // Rotación vertical
+  const Ry = rotationMatrixY(rotNS);   // Rotación Norte-Sur  
+  const Rx = rotationMatrixX(rotEW);   // Rotación Este-Oeste
+  
+  // Combinar rotaciones: R = Rz * Ry * Rx
+  const R_temp = multiplyMatrices(Rz, Ry);
+  const R = multiplyMatrices(R_temp, Rx);
+  
+  // Tensor de esfuerzos en sistema de coordenadas principal inicial
+  // σ₁ en X, σ₂ en Y, σ₃ en Z
+  const S_principal = [
+    [s1, 0, 0],
+    [0, s2, 0],
+    [0, 0, s3]
+  ];
+  
+  // Rotar el tensor: S_global = R * S_principal * R^T
+  const R_transpose = [
+    [R[0][0], R[1][0], R[2][0]],
+    [R[0][1], R[1][1], R[2][1]],
+    [R[0][2], R[1][2], R[2][2]]
+  ];
+  
+  const S_temp = multiplyMatrices(R, S_principal);
+  const S = multiplyMatrices(S_temp, R_transpose);
+  
+  // Los ejes principales rotados son las columnas de R
+  const basis = {
+    e1: [R[0][0], R[1][0], R[2][0]],  // σ₁
+    e2: [R[0][1], R[1][1], R[2][1]],  // σ₂  
+    e3: [R[0][2], R[1][2], R[2][2]]   // σ₃
+  };
+  
+  return { S, basis };
+}
+
+// Función para calcular trend y plunge de un vector
+function vectorToTrendPlunge(vector) {
+  const [x, y, z] = vector;
+  
+  // Calcular trend (azimut)
+  let trend = Math.atan2(x, y) * 180 / Math.PI;
+  if (trend < 0) trend += 360;
+  
+  // Calcular plunge (desde vertical)
+  const plunge = Math.acos(Math.min(1, Math.max(-1, Math.abs(z)))) * 180 / Math.PI;
+  
+  return { trend: Math.round(trend), plunge: Math.round(plunge) };
+}
+
+function computeSnTauFromTensor(n1,n2,n3,S){ const N=n1.length; const sigma_n=new Float64Array(N), tauVecX=new Float64Array(N), tauVecY=new Float64Array(N), tauVecZ=new Float64Array(N), tauMag=new Float64Array(N); for(let i=0;i<N;i++){ const nx=n1[i], ny=n2[i], nz=n3[i]; const sn = nx*(S[0][0]*nx + S[0][1]*ny + S[0][2]*nz) + ny*(S[1][0]*nx + S[1][1]*ny + S[1][2]*nz) + nz*(S[2][0]*nx + S[2][1]*ny + S[2][2]*nz); sigma_n[i]=sn; const tx=S[0][0]*nx + S[0][1]*ny + S[0][2]*nz; const ty=S[1][0]*nx + S[1][1]*ny + S[1][2]*nz; const tz=S[2][0]*nx + S[2][1]*ny + S[2][2]*nz; const sx=tx - sn*nx, sy=ty - sn*ny, sz=tz - sn*nz; tauVecX[i]=sx; tauVecY[i]=sy; tauVecZ[i]=sz; tauMag[i]=Math.hypot(sx,sy,sz); } return {sigma_n,tauVecX,tauVecY,tauVecZ,tauMag}; }
+function signedTauFromTauVec(tauVecZ,tauMag){ const N=tauMag.length; const tau=new Float64Array(N); for(let i=0;i<N;i++) tau[i]=tauMag[i]*Math.sign(tauVecZ[i]||1); return tau; }
+
+// Función para calcular FSP (Fault Slip Potential)
+function computeFSP(sigma_n, tauMag, phi, pp) {
+  const N = sigma_n.length;
+  const fsp = new Float64Array(N);
+  const mu = Math.tan(phi * Math.PI / 180); // Coeficiente de fricción interna
+  
+  for(let i = 0; i < N; i++) {
+    const denominator = mu * (sigma_n[i] - pp);
+    // Evitar división por cero y valores negativos en el denominador
+    if (denominator > 0) {
+      fsp[i] = tauMag[i] / denominator;
+    } else {
+      fsp[i] = 0; // O asignar un valor especial para estos casos
+    }
+  }
+  
+  return fsp;
+}
+
+function classifyPlanesByBasis(n1,n2,n3,basis){ const N=n1.length; const kinds=new Array(N); const e1=basis.e1,e2=basis.e2,e3=basis.e3; for(let i=0;i<N;i++){ const d1=Math.abs(n1[i]*e1[0]+n2[i]*e1[1]+n3[i]*e1[2]); const d2=Math.abs(n1[i]*e2[0]+n2[i]*e2[1]+n3[i]*e2[2]); const d3=Math.abs(n1[i]*e3[0]+n2[i]*e3[1]+n3[i]*e3[2]); const m=Math.max(d1,d2,d3); if(m===d1) kinds[i]='normal'; else if(m===d3) kinds[i]='inverse'; else kinds[i]='strike-slip'; } return kinds; }
+
+// ------------------ plotting functions ------------------
+
+function drawMohrCircles(params){
+  const {n1:n1_in,n2:n2_in,n3:n3_in,s1,s2,s3,rot_v,rot_ns,rot_ew,phi,c,pp,opts} = params;
+
+  // Copias locales de normales (no modificar originales)
+  const N = n1_in.length;
+  const n1 = new Float64Array(N), n2 = new Float64Array(N), n3 = new Float64Array(N);
+  for(let i=0;i<N;i++){ n1[i]=n1_in[i]; n2[i]=n2_in[i]; n3[i]=n3_in[i]; }
+
+  // Forzar normales hacia abajo (hemiesfera inferior)
+  for(let i=0;i<N;i++){
+    if(n3[i] > 0){
+      n1[i] = -n1[i];
+      n2[i] = -n2[i];
+      n3[i] = -n3[i];
+    }
+  }
+
+  // Tensor de esfuerzos con rotación
+  const st = stressTensorFromPrincipalWithRotation(s1,s2,s3,rot_v,rot_ns,rot_ew);
+  const comp = computeSnTauFromTensor(n1,n2,n3,st.S);
+  const sigma_n = Array.from(comp.sigma_n);
+  const tauMag = comp.tauMag;
+  const tauSigned = signedTauFromTauVec(comp.tauVecZ,tauMag);
+  
+  // Calcular FSP
+  const fsp = computeFSP(comp.sigma_n, comp.tauMag, phi, pp);
+
+  // Mohr circles
+  const mohr = (a,b)=>({center:0.5*(a+b), radius:0.5*(a-b)});
+  const c12 = mohr(s1,s2), c23 = mohr(s2,s3), c13 = mohr(s1,s3);
+  // Líneas muy largas
+  const sigma_min = Math.min(s3, 0) - 50; // Extiende 50 MPa hacia la izquierda del mínimo
+  const sigma_max = Math.max(s1, 0) + 50; // Extiende 50 MPa hacia la derecha del máximo
+
+  const steps = 400; const sx = [];
+  for(let i=0;i<steps;i++) sx.push(sigma_min + (sigma_max-sigma_min)*i/(steps-1));
+  const phiRad = phi*Math.PI/180;
+  const tau_env_pos = sx.map(s => c + (s-pp)*Math.tan(phiRad));
+
+  // Falla vs no falla
+  const failMask = new Array(N); let nFailed=0;
+  for(let i=0;i<N;i++){
+    const env = c + (sigma_n[i]-pp)*Math.tan(phiRad);
+    const isFail = Math.abs(tauMag[i]) >= env - 1e-12;
+    failMask[i] = isFail;
+    if(isFail) nFailed++;
+  }
+
+  // Clasificación por rake y dip (según tu criterio) - USANDO NORMALES ORIGINALES
+  // INTERCAMBIO DE COLORES: normal -> azul, inverse -> rojo
+  const colorMap = { normal:'blue', inverse:'red', 'strike-slip':'green' };
+  const groups = { normal:{x:[],y:[]}, inverse:{x:[],y:[]}, 'strike-slip':{x:[],y:[]} };
+  const groupsFail = { normal:{x:[],y:[]}, inverse:{x:[],y:[]}, 'strike-slip':{x:[],y:[]} };
+  
+  // Grupos para FSP
+  const fspGroups = { low:{x:[],y:[], color:'blue'}, medium:{x:[],y:[], color:'yellow'}, high:{x:[],y:[], color:'red'} };
+  const fspGroupsFail = { low:{x:[],y:[]}, medium:{x:[],y:[]}, high:{x:[],y:[]} };
+
+  const rakeCut = 45; // grados
+  const dipMin = 10, dipMax = 80;
+
+  // Primero clasificar usando las normales originales (sin forzar hacia abajo)
+  const tiposOriginales = new Array(N);
+  for(let i=0;i<N;i++){
+    const nx = n1_in[i], ny = n2_in[i], nz = n3_in[i];
+
+    // strike direction = cross(up, n) = (-ny, nx, 0)
+    let sx_v = -ny, sy_v = nx, sz_v = 0;
+    let sNorm = Math.hypot(sx_v, sy_v, sz_v);
+    if(sNorm < 1e-8){
+      const projX = nx, projY = ny;
+      let altx = -projY, alty = projX;
+      const an = Math.hypot(altx, alty) || 1;
+      sx_v = altx / an; sy_v = alty / an; sz_v = 0;
+    } else {
+      sx_v /= sNorm; sy_v /= sNorm; sz_v /= sNorm;
+    }
+
+    // downdip = cross(normal, strike)
+    let dx = ny * sz_v - nz * sy_v;
+    let dy = nz * sx_v - nx * sz_v;
+    let dz = nx * sy_v - ny * sx_v;
+    const dnorm = Math.hypot(dx,dy,dz) || 1;
+    dx /= dnorm; dy /= dnorm; dz /= dnorm;
+
+    // shear vector (ya es vector de cortante en componentes)
+    const shearX = comp.tauVecX[i];
+    const shearY = comp.tauVecY[i];
+    const shearZ = comp.tauVecZ[i];
+
+    // proyecciones sobre strike y downdip
+    const s_strike = shearX * sx_v + shearY * sy_v + shearZ * sz_v;
+    const s_dip   = shearX * dx   + shearY * dy   + shearZ * dz;
+
+    // rake y dip
+    const rakeDeg = Math.atan2(s_dip, s_strike) * 180/Math.PI;
+    const absRake = Math.abs(rakeDeg);
+    const dipDeg = Math.acos(Math.min(1, Math.max(-1, Math.abs(nz)))) * 180/Math.PI;
+
+    // decidir tipo
+    let tipo;
+    if (absRake < rakeCut) {
+      tipo = 'strike-slip';
+    } else {
+      if (dipDeg < dipMin || dipDeg > dipMax) {
+        tipo = 'strike-slip';
+      } else {
+        // dip-slip: s_dip < 0 -> normal (hanging wall baja), s_dip > 0 -> inverse
+        tipo = (s_dip < 0) ? 'normal' : 'inverse';
+      }
+    }
+    tiposOriginales[i] = tipo;
+  }
+
+  // Determinar modo de visualización
+  const colorMode = document.querySelector('input[name="color_mode"]:checked').value;
+  
+  // Ahora asignar puntos al diagrama de Mohr usando la clasificación original
+  // pero duplicando simétricamente
+  for(let i=0;i<N;i++){
+    const x = sigma_n[i], y = tauSigned[i];
+    const tipo = tiposOriginales[i];
+    
+    if (colorMode === 'fault_type') {
+      // Modo original: colorear por tipo de falla
+      if (failMask[i]) {
+        groupsFail[tipo].x.push(x), groupsFail[tipo].y.push(y);
+        // Punto simétrico (mismo tipo de falla)
+        groupsFail[tipo].x.push(x), groupsFail[tipo].y.push(-y);
+      } else {
+        groups[tipo].x.push(x), groups[tipo].y.push(y);
+        // Punto simétrico (mismo tipo de falla)  
+        groups[tipo].x.push(x), groups[tipo].y.push(-y);
+      }
+    } else {
+      // Modo FSP: colorear por valor de FSP
+      let fspGroup;
+      if (fsp[i] < 0.5) fspGroup = 'low';
+      else if (fsp[i] < 1.0) fspGroup = 'medium';
+      else fspGroup = 'high';
+      
+      if (failMask[i]) {
+        fspGroupsFail[fspGroup].x.push(x), fspGroupsFail[fspGroup].y.push(y);
+        // Punto simétrico
+        fspGroupsFail[fspGroup].x.push(x), fspGroupsFail[fspGroup].y.push(-y);
+      } else {
+        fspGroups[fspGroup].x.push(x), fspGroups[fspGroup].y.push(y);
+        // Punto simétrico
+        fspGroups[fspGroup].x.push(x), fspGroups[fspGroup].y.push(-y);
+      }
+    }
+  }
+
+  // trazas
+  const traces = [];
+  [[c12,'σ1–σ2'],[c23,'σ2–σ3'],[c13,'σ1–σ3']].forEach(cc=>{
+    const center = cc[0].center, radius = cc[0].radius;
+    const sline = [], tline = [];
+    for(let i=0;i<300;i++){
+      const s = center - radius + 2*radius*i/299;
+      sline.push(s);
+      tline.push(Math.sqrt(Math.max(0, radius*radius - (s-center)*(s-center))));
+    }
+    traces.push({ x:sline, y:tline, mode:'lines', line:{width:1,color:'#444'}, name:cc[1]+' (sup)'} );
+    traces.push({ x:sline, y:tline.map(v=>-v), mode:'lines', line:{width:1,color:'#444'}, showlegend:false } );
+  });
+
+  if (colorMode === 'fault_type') {
+    // Trazas para modo tipo de falla (nombres mostrados: normal e inversa según color)
+    for (const k of ['normal','inverse','strike-slip']){
+      let displayName = k;
+      if (k === 'normal') displayName = 'normal';
+      else if (k === 'inverse') displayName = 'inversa';
+      else displayName = 'strike-slip';
+      traces.push({ x: groups[k].x, y: groups[k].y, mode:'markers', marker:{size:5, color: colorMap[k]}, name: displayName });
+    }
+    for (const k of ['normal','inverse','strike-slip']){
+      if (groupsFail[k].x.length > 0){
+        let displayName = k;
+        if (k === 'normal') displayName = 'normal';
+        else if (k === 'inverse') displayName = 'inversa';
+        else displayName = 'strike-slip';
+        traces.push({ x: groupsFail[k].x, y: groupsFail[k].y, mode:'markers', marker:{size:6, color:'black'}, name: displayName + ' (reactivada)' });
+      }
+    }
+  } else {
+    // Trazas para modo FSP
+    for (const k of ['low','medium','high']){
+      if (fspGroups[k].x.length > 0) {
+        traces.push({ 
+          x: fspGroups[k].x, 
+          y: fspGroups[k].y, 
+          mode:'markers', 
+          marker:{size:5, color: fspGroups[k].color}, 
+          name: 'FSP ' + k 
+        });
+      }
+    }
+    for (const k of ['low','medium','high']){
+      if (fspGroupsFail[k].x.length > 0){
+        traces.push({ 
+          x: fspGroupsFail[k].x, 
+          y: fspGroupsFail[k].y, 
+          mode:'markers', 
+          marker:{size:6, color:'black'}, 
+          name: 'FSP ' + k + ' (reactivada)' 
+        });
+      }
+    }
+  }
+
+  traces.push({ x: sx, y: tau_env_pos, mode:'lines', line:{color:'#7a3f98', width:2}, name:'Envolvente (+)' });
+  traces.push({ x: sx, y: tau_env_pos.map(t=>-t), mode:'lines', line:{color:'#7a3f98', width:2}, showlegend:false });
+
+  const layout = {
+    title: 'Diagrama de Mohr (σ_n vs τ)' + (colorMode === 'fsp' ? ' - Coloreado por FSP' : ''),
+    xaxis: { title:'σ_n (MPa)' },
+    yaxis: { title:'τ (MPa)', scaleanchor:'x', scaleratio:1 },
+    width: 900,
+    height: 900,
+    legend: { orientation:'h' }
+  };
+
+  Plotly.newPlot('plot2d', traces, layout, {responsive:true});
+
+  return { total: N, nFailed, basis: st.basis, fsp };
+}
+
+function drawSphere3D(params){
+  // Dibuja la esfera y usa las mismas normales forzadas hacia abajo
+  const {n1:n1_in,n2:n2_in,n3:n3_in,s1,s2,s3,rot_v,rot_ns,rot_ew,phi,c,pp,opts} = params;
+  const N = n1_in.length;
+  const n1 = new Float64Array(N), n2 = new Float64Array(N), n3 = new Float64Array(N);
+  for(let i=0;i<N;i++){ n1[i]=n1_in[i]; n2[i]=n2_in[i]; n3[i]=n3_in[i]; }
+  for(let i=0;i<N;i++){ if(n3[i] > 0){ n1[i] = -n1[i]; n2[i] = -n2[i]; n3[i] = -n3[i]; } }
+
+  const st = stressTensorFromPrincipalWithRotation(s1,s2,s3,rot_v,rot_ns,rot_ew);
+  const comp = computeSnTauFromTensor(n1,n2,n3,st.S);
+  const sigma_n = comp.sigma_n; const tauMag = comp.tauMag;
+  const phiRad = phi*Math.PI/180;
+  const failed = new Array(N);
+  for (let i=0;i<N;i++){
+    const env = c + (sigma_n[i]-pp)*Math.tan(phiRad);
+    failed[i] = Math.abs(tauMag[i]) >= env - 1e-12;
+  }
+  
+  // Calcular FSP
+  const fsp = computeFSP(comp.sigma_n, comp.tauMag, phi, pp);
+
+  // sphere mesh
+  const xs=[], ys=[], zs=[];
+  const res = 36;
+  for (let i=0;i<=res;i++){
+    const th = Math.PI*i/res;
+    for (let j=0;j<=res;j++){
+      const ph = 2*Math.PI*j/res;
+      xs.push(Math.sin(th)*Math.cos(ph)); ys.push(Math.sin(th)*Math.sin(ph)); zs.push(Math.cos(th));
+    }
+  }
+  const traceSphere = { x:xs, y:ys, z:zs, opacity:0.06, type:'mesh3d', name:'Esfera', showscale:false };
+
+  // Determinar modo de visualización
+  const colorMode = document.querySelector('input[name="color_mode"]:checked').value;
+  
+  // INTERCAMBIO DE COLORES: normal -> azul, inverse -> rojo
+  const colorMap = { normal:'blue', inverse:'red', 'strike-slip':'green' };
+  const traceNormalsGroups = { normal:{x:[],y:[],z:[]}, inverse:{x:[],y:[],z:[]}, 'strike-slip':{x:[],y:[],z:[]}, fail:{x:[],y:[],z:[]} };
+  const traceFSPGroups = { low:{x:[],y:[],z:[], color:'blue'}, medium:{x:[],y:[],z:[], color:'yellow'}, high:{x:[],y:[],z:[], color:'red'}, fail:{x:[],y:[],z:[]} };
+  
+  const rakeCut = 45, dipMin=10, dipMax=80;
+
+  for (let i=0;i<N;i++){
+    const nx = n1[i], ny = n2[i], nz = n3[i];
+
+    if (colorMode === 'fault_type') {
+      // strike/downdip construction (same as above)
+      let sx_v = -ny, sy_v = nx, sz_v = 0;
+      let sNorm = Math.hypot(sx_v, sy_v, sz_v);
+      if(sNorm < 1e-8){
+        const projX = nx, projY = ny;
+        let altx = -projY, alty = projX;
+        const an = Math.hypot(altx, alty) || 1;
+        sx_v = altx / an; sy_v = alty / an; sz_v = 0;
+      } else { sx_v /= sNorm; sy_v /= sNorm; sz_v /= sNorm; }
+
+      let dx = ny * sz_v - nz * sy_v;
+      let dy = nz * sx_v - nx * sz_v;
+      let dz = nx * sy_v - ny * sx_v;
+      const dnorm = Math.hypot(dx,dy,dz) || 1;
+      dx /= dnorm; dy /= dnorm; dz /= dnorm;
+
+      const shearX = comp.tauVecX[i], shearY = comp.tauVecY[i], shearZ = comp.tauVecZ[i];
+      const s_strike = shearX * sx_v + shearY * sy_v + shearZ * sz_v;
+      const s_dip   = shearX * dx   + shearY * dy   + shearZ * dz;
+      const rakeDeg = Math.atan2(s_dip, s_strike) * 180/Math.PI;
+      const absRake = Math.abs(rakeDeg);
+      const dipDeg = Math.acos(Math.min(1, Math.max(-1, Math.abs(nz)))) * 180/Math.PI;
+
+      let tipo;
+      if (absRake < rakeCut) tipo = 'strike-slip';
+      else {
+        if (dipDeg < dipMin || dipDeg > dipMax) tipo = 'strike-slip';
+        else tipo = (s_dip < 0) ? 'normal' : 'inverse';
+      }
+
+      if (failed[i]) {
+        traceNormalsGroups.fail.x.push(nx); traceNormalsGroups.fail.y.push(ny); traceNormalsGroups.fail.z.push(nz);
+      } else {
+        traceNormalsGroups[tipo].x.push(nx); traceNormalsGroups[tipo].y.push(ny); traceNormalsGroups[tipo].z.push(nz);
+      }
+    } else {
+      // Modo FSP
+      let fspGroup;
+      if (fsp[i] < 0.5) fspGroup = 'low';
+      else if (fsp[i] < 1.0) fspGroup = 'medium';
+      else fspGroup = 'high';
+      
+      if (failed[i]) {
+        traceFSPGroups.fail.x.push(nx); traceFSPGroups.fail.y.push(ny); traceFSPGroups.fail.z.push(nz);
+      } else {
+        traceFSPGroups[fspGroup].x.push(nx); traceFSPGroups[fspGroup].y.push(ny); traceFSPGroups[fspGroup].z.push(nz);
+      }
+    }
+  }
+
+  const data = [traceSphere];
+  
+  if (colorMode === 'fault_type') {
+    // Datos para modo tipo de falla (nombres mostrados: normal e inversa)
+    for(const k of ['normal','inverse','strike-slip']){
+      const arr = traceNormalsGroups[k];
+      if(arr.x.length>0){
+        let displayName = k;
+        if (k === 'normal') displayName = 'normal';
+        else if (k === 'inverse') displayName = 'inversa';
+        else displayName = 'strike-slip';
+        data.push({ x:arr.x, y:arr.y, z:arr.z, type:'scatter3d', mode:'markers', marker:{size:4, color: colorMap[k]}, name: displayName });
+      }
+    }
+    if(traceNormalsGroups.fail.x.length>0) data.push({ x:traceNormalsGroups.fail.x, y:traceNormalsGroups.fail.y, z:traceNormalsGroups.fail.z, type:'scatter3d', mode:'markers', marker:{size:6, color:'black'}, name:'reactivadas' });
+  } else {
+    // Datos para modo FSP
+    for(const k of ['low','medium','high']){
+      const arr = traceFSPGroups[k];
+      if(arr.x.length>0) data.push({ x:arr.x, y:arr.y, z:arr.z, type:'scatter3d', mode:'markers', marker:{size:4, color: traceFSPGroups[k].color}, name:'FSP ' + k });
+    }
+    if(traceFSPGroups.fail.x.length>0) data.push({ x:traceFSPGroups.fail.x, y:traceFSPGroups.fail.y, z:traceFSPGroups.fail.z, type:'scatter3d', mode:'markers', marker:{size:6, color:'black'}, name:'reactivadas' });
+  }
+
+  // principal axes
+  const eframe = st.basis;
+  const e1 = eframe.e1, e2 = eframe.e2, e3 = eframe.e3;
+  const scale = 1.2;
+  data.push({ x:[-e1[0]*scale, e1[0]*scale], y:[-e1[1]*scale, e1[1]*scale], z:[-e1[2]*scale, e1[2]*scale], mode:'lines', type:'scatter3d', line:{width:8,color:'red'}, name:'σ1' });
+  data.push({ x:[-e2[0]*scale, e2[0]*scale], y:[-e2[1]*scale, e2[1]*scale], z:[-e2[2]*scale, e2[2]*scale], mode:'lines', type:'scatter3d', line:{width:8,color:'green'}, name:'σ2' });
+  data.push({ x:[-e3[0]*scale, e3[0]*scale], y:[-e3[1]*scale, e3[1]*scale], z:[-e3[2]*scale, e3[2]*scale], mode:'lines', type:'scatter3d', line:{width:8,color:'blue'}, name:'σ3' });
+
+  // Agregar ejes de coordenadas con todas las direcciones cardinales
+  const axisScale = 1.5;
+  
+  // Eje X (Este-Oeste) - línea
+  data.push({ 
+    x:[-axisScale, axisScale], y:[0, 0], z:[0, 0], 
+    mode:'lines', type:'scatter3d', 
+    line:{width:3, color:'#666'}, 
+    name:'Eje E-W', 
+    showlegend:false 
+  });
+  
+  // Eje Y (Norte-Sur) - línea  
+  data.push({ 
+    x:[0, 0], y:[-axisScale, axisScale], z:[0, 0], 
+    mode:'lines', type:'scatter3d', 
+    line:{width:3, color:'#666'}, 
+    name:'Eje N-S', 
+    showlegend:false 
+  });
+  
+  // Eje Z (Arriba-Abajo) - línea
+  data.push({ 
+    x:[0, 0], y:[0, 0], z:[-axisScale, axisScale], 
+    mode:'lines', type:'scatter3d', 
+    line:{width:3, color:'#666'}, 
+    name:'Eje Z', 
+    showlegend:false 
+  });
+
+  // Agregar etiquetas para todas las direcciones cardinales
+  const labelScale = axisScale * 1.15;
+  
+  // Etiquetas para el eje X (Este-Oeste)
+  data.push({ 
+    x:[labelScale], y:[0], z:[0], 
+    mode:'text', type:'scatter3d', 
+    text:['E'], 
+    textposition:'middle center', 
+    textfont:{size:16, color:'#333'}, 
+    showlegend:false 
+  });
+  data.push({ 
+    x:[-labelScale], y:[0], z:[0], 
+    mode:'text', type:'scatter3d', 
+    text:['W'], 
+    textposition:'middle center', 
+    textfont:{size:16, color:'#333'}, 
+    showlegend:false 
+  });
+  
+  // Etiquetas para el eje Y (Norte-Sur)
+  data.push({ 
+    x:[0], y:[labelScale], z:[0], 
+    mode:'text', type:'scatter3d', 
+    text:['N'], 
+    textposition:'middle center', 
+    textfont:{size:16, color:'#333'}, 
+    showlegend:false 
+  });
+  data.push({ 
+    x:[0], y:[-labelScale], z:[0], 
+    mode:'text', type:'scatter3d', 
+    text:['S'], 
+    textposition:'middle center', 
+    textfont:{size:16, color:'#333'}, 
+    showlegend:false 
+  });
+  
+  // Etiquetas para el eje Z (Arriba-Abajo)
+  data.push({ 
+    x:[0], y:[0], z:[labelScale], 
+    mode:'text', type:'scatter3d', 
+    text:['Z'], 
+    textposition:'middle center', 
+    textfont:{size:16, color:'#333'}, 
+    showlegend:false 
+  });
+  data.push({ 
+    x:[0], y:[0], z:[-labelScale], 
+    mode:'text', type:'scatter3d', 
+    text:['-Z'], 
+    textposition:'middle center', 
+    textfont:{size:16, color:'#333'}, 
+    showlegend:false 
+  });
+
+  const layout = { 
+    title:'Esfera de normales y ejes principales' + (colorMode === 'fsp' ? ' - Coloreado por FSP' : ''), 
+    width:900, 
+    height:900, 
+    scene:{ 
+      xaxis:{
+        title:'E',
+        range:[-1.7, 1.7],
+        showgrid: true,
+        zeroline: true,
+        showline: true
+      },
+      yaxis:{
+        title:'N', 
+        range:[-1.7, 1.7],
+        showgrid: true,
+        zeroline: true,
+        showline: true
+      }, 
+      zaxis:{
+        title:'Z (up)', 
+        range:[-1.7, 1.7],
+        showgrid: true,
+        zeroline: true,
+        showline: true
+      }, 
+      aspectmode:'cube',
+      camera: {
+        eye: {x: 1.5, y: 1.5, z: 1.5}
+      }
+    }, 
+    legend:{orientation:'h'} 
+  };
+  
+  Plotly.newPlot('plot3d', data, layout, {responsive:true});
+  return { total:N, nFailed: failed.filter(Boolean).length, basis: eframe };
+}
+
+// ------------------ UI and state ------------------
+const s1El = document.getElementById('s1'), s2El = document.getElementById('s2'), s3El = document.getElementById('s3');
+const lbl_s1 = document.getElementById('lbl_s1'), lbl_s2 = document.getElementById('lbl_s2'), lbl_s3 = document.getElementById('lbl_s3');
+const rot_vEl = document.getElementById('rot_v'), rot_nsEl = document.getElementById('rot_ns'), rot_ewEl = document.getElementById('rot_ew');
+const lbl_rot_v = document.getElementById('lbl_rot_v'), lbl_rot_ns = document.getElementById('lbl_rot_ns'), lbl_rot_ew = document.getElementById('lbl_rot_ew');
+const npointsEl = document.getElementById('npoints'), lbl_n = document.getElementById('lbl_n');
+const phiEl = document.getElementById('phi'), lbl_phi = document.getElementById('lbl_phi');
+const cEl = document.getElementById('c'), lbl_c = document.getElementById('lbl_c');
+const ppEl = document.getElementById('pp'), lbl_pp = document.getElementById('lbl_pp');
+const summaryEl = document.getElementById('summary');
+const fileInput = document.getElementById('file_input');
+const legendFaultType = document.getElementById('legend_fault_type');
+const legendFSP = document.getElementById('legend_fsp');
+const fspInfo = document.getElementById('fsp_info');
+
+// Elementos para mostrar orientación
+const info_t1 = document.getElementById('info_t1'), info_p1 = document.getElementById('info_p1');
+const info_t2 = document.getElementById('info_t2'), info_p2 = document.getElementById('info_p2');
+const info_t3 = document.getElementById('info_t3'), info_p3 = document.getElementById('info_p3');
+
+let state = { n1:null, n2:null, n3:null, usingCSV:false, csvData:null, seed:42, fsp:null };
+
+function updateLabels(){
+  lbl_s1.textContent = s1El.value; lbl_s2.textContent = s2El.value; lbl_s3.textContent = s3El.value;
+  lbl_rot_v.textContent = rot_vEl.value;
+  lbl_rot_ns.textContent = rot_nsEl.value;
+  lbl_rot_ew.textContent = rot_ewEl.value;
+  lbl_n.textContent = npointsEl.value;
+  lbl_phi.textContent = phiEl.value; lbl_c.textContent = parseFloat(cEl.value).toFixed(1); lbl_pp.textContent = ppEl.value;
+}
+
+// Actualizar información de orientación
+function updateOrientationInfo(basis) {
+  const tp1 = vectorToTrendPlunge(basis.e1);
+  const tp2 = vectorToTrendPlunge(basis.e2);
+  const tp3 = vectorToTrendPlunge(basis.e3);
+  
+  info_t1.textContent = tp1.trend;
+  info_p1.textContent = tp1.plunge;
+  info_t2.textContent = tp2.trend;
+  info_p2.textContent = tp2.plunge;
+  info_t3.textContent = tp3.trend;
+  info_p3.textContent = tp3.plunge;
+}
+
+[s1El,s2El,s3El,rot_vEl,rot_nsEl,rot_ewEl,npointsEl,phiEl,cEl,ppEl].forEach(el=>el.addEventListener('input', updateLabels));
+updateLabels();
+
+// Manejar cambio de modo de visualización
+document.querySelectorAll('input[name="color_mode"]').forEach(radio => {
+  radio.addEventListener('change', function() {
+    if (this.value === 'fsp') {
+      legendFaultType.style.display = 'none';
+      legendFSP.style.display = 'block';
+      fspInfo.style.display = 'block';
+    } else {
+      legendFaultType.style.display = 'block';
+      legendFSP.style.display = 'none';
+      fspInfo.style.display = 'none';
+    }
+    doUpdate();
+  });
+});
+
+function generateDataFromCSV(parsed){
+  const headers = parsed.headers.map(h=>h.toLowerCase());
+  const data = parsed.data;
+  if(headers.includes('nx') && headers.includes('ny') && headers.includes('nz')){
+    const n = data.length; const n1=new Float64Array(n), n2=new Float64Array(n), n3=new Float64Array(n);
+    for(let i=0;i<n;i++){ n1[i]=data[i].nx; n2[i]=data[i].ny; n3[i]=data[i].nz; const norm=Math.hypot(n1[i],n2[i],n3[i])||1; n1[i]/=norm; n2[i]/=norm; n3[i]/=norm; }
+    return {n1,n2,n3};
+  } else if(headers.includes('strike') && headers.includes('dip')){
+    const strikes = data.map(d=>d.strike), dips = data.map(d=>d.dip);
+    return normalsFromStrikeDip(strikes,dips);
+  } else return null;
+}
+
+fileInput.addEventListener('change', (ev)=>{
+  const f = ev.target.files[0]; if(!f) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const txt = e.target.result;
+    const parsed = parseCSV(txt);
+    if(!parsed || parsed.data.length===0){ alert('CSV vacío o formato incorrecto'); return; }
+    const generated = generateDataFromCSV(parsed);
+    if(!generated){ alert('CSV debe contener nx,ny,nz o strike,dip'); return; }
+    state.usingCSV = true; state.csvData = generated; state.n1 = generated.n1; state.n2 = generated.n2; state.n3 = generated.n3;
+    doUpdate();
+  };
+  reader.readAsText(f);
+});
+
+function doUpdate(){
+  generateAndRender(true);
+}
+
+function generateAndRender(useCSV){
+  // principal stresses and orientation
+  const s1 = +s1El.value, s2 = +s2El.value, s3 = +s3El.value;
+  const rot_v = +rot_vEl.value, rot_ns = +rot_nsEl.value, rot_ew = +rot_ewEl.value;
+  const phi = +phiEl.value, c = +cEl.value, pp = +ppEl.value;
+  
+  let n1,n2,n3;
+  if(state.usingCSV && !useCSV && state.csvData){ // use CSV immediately when loaded, unless user forced random
+    n1 = state.csvData.n1; n2 = state.csvData.n2; n3 = state.csvData.n3;
+  } else if(state.usingCSV && state.csvData && useCSV){
+    // use CSV if requested (same)
+    n1 = state.csvData.n1; n2 = state.csvData.n2; n3 = state.csvData.n3;
+  } else {
+    const n = Math.max(1, parseInt(npointsEl.value,10) || 500);
+    const rnd = genUniformNormals(n, state.seed);
+    n1 = rnd.n1; n2 = rnd.n2; n3 = rnd.n3;
+    state.usingCSV = false; state.csvData = null;
+  }
+  state.n1 = n1; state.n2 = n2; state.n3 = n3;
+
+  const params = { n1,n2,n3, s1,s2,s3, rot_v, rot_ns, rot_ew, phi, c, pp, opts:{} };
+  const mohrRes = drawMohrCircles(params);
+  const sphRes = drawSphere3D(params);
+  
+  // Guardar FSP en el estado
+  state.fsp = mohrRes.fsp;
+  
+  // Actualizar información de orientación
+  updateOrientationInfo(sphRes.basis);
+  
+  summaryEl.textContent = `Planos: ${mohrRes.total}. Fallan/Próx: ${mohrRes.nFailed} (${(100*mohrRes.nFailed/mohrRes.total).toFixed(2)}%).`;
+}
+
+// button events
+document.getElementById('btn_update').addEventListener('click', ()=> generateAndRender(true));
+document.getElementById('btn_rand').addEventListener('click', ()=> { state.usingCSV=false; generateAndRender(false); });
+document.getElementById('btn_export_png').addEventListener('click', ()=> { Plotly.toImage(document.getElementById('plot2d'), {format:'png', width:1200, height:1200}).then(url=>{ const a=document.createElement('a'); a.href=url; a.download='mohr2d.png'; a.click(); }); });
+document.getElementById('btn_export_csv').addEventListener('click', ()=>{
+  if(!state.n1){ alert('No hay datos generados'); return; }
+  const n = state.n1.length; const s1 = +s1El.value, s2 = +s2El.value, s3 = +s3El.value, pp = +ppEl.value;
+  const rot_v = +rot_vEl.value, rot_ns = +rot_nsEl.value, rot_ew = +rot_ewEl.value;
+  const tensor = stressTensorFromPrincipalWithRotation(s1,s2,s3,rot_v,rot_ns,rot_ew);
+  const comp = computeSnTauFromTensor(state.n1,state.n2,state.n3,tensor.S);
+  const tauSigned = signedTauFromTauVec(comp.tauVecZ, comp.tauMag);
+  
+  // Incluir FSP en el CSV
+  let csv = 'nx,ny,nz,sigma_n,tau,fsp\n';
+  for(let i=0;i<n;i++) csv += `${state.n1[i]},${state.n2[i]},${state.n3[i]},${comp.sigma_n[i]},${tauSigned[i]},${state.fsp ? state.fsp[i] : 'N/A'}\n`;
+  
+  const blob = new Blob([csv], {type:'text/csv'}); const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download = 'mohr_points_export.csv'; a.click(); URL.revokeObjectURL(url);
+});
+
+// initial draw
+generateAndRender(false);
+
+</script>
+</body>
+</html>

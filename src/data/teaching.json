@@ -1,0 +1,56 @@
+[
+  {
+    "title": {
+      "es": "Formación de grado y posgrado",
+      "en": "Undergraduate and graduate training"
+    },
+    "format": {
+      "es": "Docencia",
+      "en": "Teaching"
+    },
+    "audience": {
+      "es": "Estudiantes de geología, ciencias afines y posgrado.",
+      "en": "Students in geology, related disciplines and graduate programmes."
+    },
+    "description": {
+      "es": "Participación en cursos y espacios de formación vinculados a tectónica, modelado y análisis geológico.",
+      "en": "Participation in courses and training spaces related to tectonics, modelling and geological analysis."
+    }
+  },
+  {
+    "title": {
+      "es": "Dirección de tesis y estudiantes",
+      "en": "Supervision of theses and students"
+    },
+    "format": {
+      "es": "Mentoría",
+      "en": "Mentoring"
+    },
+    "audience": {
+      "es": "Tesistas, becarios y estudiantes en formación.",
+      "en": "Thesis students, fellows and trainees."
+    },
+    "description": {
+      "es": "Acompañamiento en proyectos de investigación, trabajos finales y desarrollo metodológico.",
+      "en": "Support for research projects, final dissertations and methodological development."
+    }
+  },
+  {
+    "title": {
+      "es": "Talleres técnicos especializados",
+      "en": "Specialised technical workshops"
+    },
+    "format": {
+      "es": "Capacitación",
+      "en": "Training"
+    },
+    "audience": {
+      "es": "Equipos académicos y técnicos.",
+      "en": "Academic and technical teams."
+    },
+    "description": {
+      "es": "Instancias prácticas sobre herramientas de modelado, visualización y análisis de datos.",
+      "en": "Practical sessions on modelling tools, visualisation and data analysis."
+    }
+  }
+]

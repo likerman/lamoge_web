@@ -1,0 +1,68 @@
+[
+  {
+    "icon": "A",
+    "title": {
+      "es": "Modelado análogo",
+      "en": "Analogue modelling"
+    },
+    "description": {
+      "es": "Diseño y ejecución de experimentos físicos para estudiar procesos tectónicos y evolución estructural.",
+      "en": "Design and execution of physical experiments to study tectonic processes and structural evolution."
+    }
+  },
+  {
+    "icon": "N",
+    "title": {
+      "es": "Modelado numérico",
+      "en": "Numerical modelling"
+    },
+    "description": {
+      "es": "Implementación y análisis de modelos computacionales para explorar escenarios geodinámicos complejos.",
+      "en": "Implementation and analysis of computational models to explore complex geodynamic scenarios."
+    }
+  },
+  {
+    "icon": "T",
+    "title": {
+      "es": "Geología estructural y tectónica",
+      "en": "Structural geology and tectonics"
+    },
+    "description": {
+      "es": "Interpretación integrada de deformación, arquitectura estructural y evolución tectónica.",
+      "en": "Integrated interpretation of deformation, structural architecture and tectonic evolution."
+    }
+  },
+  {
+    "icon": "G",
+    "title": {
+      "es": "Geodinámica y procesos",
+      "en": "Geodynamics and processes"
+    },
+    "description": {
+      "es": "Análisis de la dinámica litosférica y de procesos geológicos a múltiples escalas.",
+      "en": "Analysis of lithospheric dynamics and geological processes across multiple scales."
+    }
+  },
+  {
+    "icon": "D",
+    "title": {
+      "es": "Análisis de datos geológicos",
+      "en": "Geological data analysis"
+    },
+    "description": {
+      "es": "Procesamiento, integración y visualización de datos estructurales, geofísicos y experimentales.",
+      "en": "Processing, integration and visualisation of structural, geophysical and experimental data."
+    }
+  },
+  {
+    "icon": "F",
+    "title": {
+      "es": "Docencia y formación",
+      "en": "Teaching and training"
+    },
+    "description": {
+      "es": "Participación en cursos, talleres, dirección de estudiantes y formación técnica especializada.",
+      "en": "Participation in courses, workshops, student supervision and specialised technical training."
+    }
+  }
+]

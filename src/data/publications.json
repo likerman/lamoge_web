@@ -1,0 +1,46 @@
+[
+  {
+    "featured": true,
+    "year": 2025,
+    "type": "article",
+    "topic": "tectonics",
+    "title": "Placeholder article on structural inheritance and analogue modelling",
+    "authors": "Apellido, N.; Investigador, N.; Colaborador, N.",
+    "journal": "Journal of Geological Modelling",
+    "doi": "10.0000/placeholder.2025.001",
+    "url": "https://doi.org/10.0000/placeholder.2025.001"
+  },
+  {
+    "featured": false,
+    "year": 2024,
+    "type": "conference",
+    "topic": "geodynamics",
+    "title": "Conference contribution on lithospheric forcing and tectonic response",
+    "authors": "Apellido, N.; Apellido, N.",
+    "journal": "International Conference on Geodynamics",
+    "doi": "",
+    "url": "https://example.org/publication-2"
+  },
+  {
+    "featured": true,
+    "year": 2023,
+    "type": "article",
+    "topic": "analogue-modelling",
+    "title": "Placeholder paper on sandbox experiments and fault propagation",
+    "authors": "Apellido, N.; Becaria, N.; Investigador, N.",
+    "journal": "Tectonophysics",
+    "doi": "10.0000/placeholder.2023.010",
+    "url": "https://doi.org/10.0000/placeholder.2023.010"
+  },
+  {
+    "featured": false,
+    "year": 2022,
+    "type": "thesis",
+    "topic": "data-analysis",
+    "title": "Master thesis on quantitative analysis of structural datasets",
+    "authors": "Nombre Estudiante",
+    "journal": "Universidad de Buenos Aires",
+    "doi": "",
+    "url": "https://example.org/publication-4"
+  }
+]

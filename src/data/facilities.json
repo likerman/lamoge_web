@@ -1,0 +1,59 @@
+[
+  {
+    "name": {
+      "es": "Plataforma experimental de modelado análogo",
+      "en": "Analogue modelling experimental platform"
+    },
+    "category": {
+      "es": "Infraestructura experimental",
+      "en": "Experimental infrastructure"
+    },
+    "use": {
+      "es": "Simulación física de procesos de deformación y evolución tectónica.",
+      "en": "Physical simulation of deformation processes and tectonic evolution."
+    },
+    "description": {
+      "es": "Placeholder: completar dimensiones, materiales y capacidades instrumentales de la plataforma.",
+      "en": "Placeholder: complete dimensions, materials and instrumental capabilities of the platform."
+    },
+    "image": "/images/placeholders/facility-1.svg"
+  },
+  {
+    "name": {
+      "es": "Entorno de procesamiento y visualización",
+      "en": "Processing and visualisation environment"
+    },
+    "category": {
+      "es": "Datos y software",
+      "en": "Data and software"
+    },
+    "use": {
+      "es": "Integración de datos, análisis cuantitativo y producción de figuras y animaciones.",
+      "en": "Data integration, quantitative analysis and production of figures and animations."
+    },
+    "description": {
+      "es": "Conjunto de herramientas para análisis geoespacial, modelado, scripting y visualización científica.",
+      "en": "Set of tools for geospatial analysis, modelling, scripting and scientific visualisation."
+    },
+    "image": "/images/placeholders/facility-2.svg"
+  },
+  {
+    "name": {
+      "es": "Capacidades de cómputo",
+      "en": "Computing capabilities"
+    },
+    "category": {
+      "es": "Recursos computacionales",
+      "en": "Computational resources"
+    },
+    "use": {
+      "es": "Ejecución de simulaciones, procesamiento de datos y automatización de flujos de trabajo.",
+      "en": "Running simulations, processing datasets and automating workflows."
+    },
+    "description": {
+      "es": "Placeholder: detallar hardware disponible, acceso remoto y limitaciones operativas.",
+      "en": "Placeholder: detail available hardware, remote access and operational constraints."
+    },
+    "image": "/images/placeholders/facility-3.svg"
+  }
+]

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9N7H3YFTFF"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-9N7H3YFTFF');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strike and dip from map</title>
+    <!-- Leaflet (reemplaza Bing Maps) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.6.2/proj4.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
+    <style>
+        #container {
+            display: flex;
+            width: 100%;
+        }
+
+        #map {
+            height: 600px;
+            width: 60%;
+            cursor: crosshair;
+        }
+
+        #info {
+            padding-left: 20px;
+            max-width: 40%;
+        }
+
+        #below-map {
+            margin-top: 20px;
+        }
+
+        #result {
+            display: inline;
+            background-color: #f0f8ff;
+            border: 2px solid #1e90ff;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #000;
+        }
+        
+        /* Estilos para símbolos geológicos */
+        .strike-line {
+            stroke: blue;
+            stroke-width: 2;
+        }
+        
+        .dip-line {
+            stroke: blue;
+            stroke-width: 2;
+        }
+        
+        .temp-strike-line {
+            stroke: yellow;
+            stroke-width: 2;
+        }
+        
+        .temp-dip-line {
+            stroke: yellow;
+            stroke-width: 2;
+        }
+        
+        /* Estilo para el checkbox */
+        .checkbox-container {
+            display: inline-block;
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Strike and dip from map</h2>
+    <h4>Ernesto Cristallini - © 2024 </h4>
+    
+    <div id="container">
+        <div id="map"></div>
+        <div id="info">
+            <h3>Coordinates:</h3>
+            <p>Latitude: <span id="coordLat">0</span></p>
+            <p>Longitude: <span id="coordLng">0</span></p>
+            <p>UTM X: <span id="utmX">0</span></p>
+            <p>UTM Y: <span id="utmY">0</span</p>
+            <p>UTM zone: <span id="utmZone">0</span</p>
+            <p>Height: <span id="heightValue">0</span> m</p>
+        </div>
+    </div>
+
+    <div id="below-map">
+        <button id="clearButton">Clear temporary points</button>
+        <button id="calculateButton" style="margin-right: 20px;">Calculate strike and dip</button>
+        <div class="checkbox-container">
+            <input type="checkbox" id="randomErrorCheckbox">
+            <label for="randomErrorCheckbox">Random error</label>
+        </div>
+        <a id="helpLink" href="https://youtu.be/sk_G6pIfbTk" target="_blank">need help</a>
+        <p></p>
+
+        <div id="result-container" style="display: none; style="display: inline-flex; align-items: center; background-color: #f9f9f9; border: 1px solid #ccc; padding: 10px; border-radius: 5px;">
+            <p id="result" style="display: none; style="margin: 0;">Resultado</p>
+            <button id="addButton" style="display: none; style="margin-left: 20px;">Add</button>
+        </div>
+
+        <h3 id="addedPointsHeader" style="display: none;">Added points:</h3>
+        <ul id="pointList"></ul>
+
+        <button id="copyStrikeDipButton" style="display: none;">Copy Strike/Dip to clipboard</button>
+        <button id="copyDipDirectionDipButton" style="display: none;">Copy Dip-direction/Dip to clipboard</button>
+
+        <p></p>
+
+        <button id="downloadButton" style="display: none; margin-right: 20px;">Download file in "Estereografica Web" format</button>
+        <a id="estereoLink" href="http://estereo.reyuntec.ar/" target="_blank" style="display: none;">Use this file in: "Estereografica Web"</a>
+
+        <hr>
+        <a href="mailto:ecristallini@gmail.com?subject=Strike and dip app%20del%20Correo&body=Este%20es%20el%20contenido%20del%20correo">If you want to make suggestions to the author, contact him at ecristallini@gmail.com</a>
+
+        <p></p>
+
+        <a id="otherApplicationsLink" href="http://estereo.reyuntec.ar/applications_menu.html" target="_blank" onclick="openWithFallback(event)">Related applications</a>
+
+    </div>
+
+    <script>
+        let map;
+        let markerArray = [];
+        let pointArray = [];
+        let lastPointArray = [];
+        let lastAzimuth=0;
+        let lastDip=0;
+        let resultsArray = [];
+        let temporaryGeologicalSymbols = [];
+        let geologicalSymbols = [];
+        
+        // Función para obtener la elevación usando Open-Elevation API
+        async function getAltitude(latitude, longitude) {
+            try {
+                const response = await fetch(`https://api.open-elevation.com/api/v1/lookup?locations=${latitude},${longitude}`);
+                const data = await response.json();
+                if (data.results && data.results.length > 0) {
+                    return data.results[0].elevation;
+                }
+                throw new Error('No se encontraron datos de elevación');
+            } catch (error) {
+                console.error('Error al obtener elevación:', error);
+                return 0; // Valor por defecto si falla
+            }
+        }
+
+        function initMap() {
+            // Inicializar mapa con ESRI World Imagery
+            map = L.map('map').setView([-23.2771, -65.1615], 8);
+            
+            // Capa de satélite ESRI
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+            }).addTo(map);
+            
+            // Mostrar coordenadas al mover el mouse
+            map.on('mousemove', function(e) {
+                const lat = e.latlng.lat;
+                const lng = e.latlng.lng;
+                document.getElementById("coordLat").textContent = lat.toFixed(6);
+                document.getElementById("coordLng").textContent = lng.toFixed(6);
+                
+                const utmCoords = convertToUTM(lat, lng);
+                document.getElementById("utmX").textContent = utmCoords.x.toFixed(2);
+                document.getElementById("utmY").textContent = utmCoords.y.toFixed(2);
+                document.getElementById("utmZone").textContent = utmCoords.zone;
+            });
+            
+            // Manejar clics en el mapa
+            map.on('click', async function(e) {
+                const lat = e.latlng.lat;
+                const lng = e.latlng.lng;
+                
+                const altitude = await getAltitude(lat, lng);
+                
+                if (Math.abs(altitude) < 0.1) {
+                    alert("¡Atención! La altitud obtenida es cero. Esto puede ser un error.\n\nEl punto no será agregado. Por favor, intente en una ubicación cercana.");
+                    return;
+                }
+                
+                document.getElementById("heightValue").textContent = altitude.toFixed(2);
+                const utmCoords = convertToUTM(lat, lng);
+                addPointToList(utmCoords, altitude, lat, lng);
+                drawMarker([lat, lng]);
+            });
+
+            document.getElementById("clearButton").addEventListener("click", clearPoints);
+            document.getElementById("calculateButton").addEventListener("click", calculatePlaneFit);
+            document.getElementById("addButton").addEventListener("click", addPlaneFit);
+            document.getElementById("copyStrikeDipButton").addEventListener("click", copyStrikeDipToClipboard);
+            document.getElementById("copyDipDirectionDipButton").addEventListener("click", copyDipDirectionDipToClipboard);
+            document.getElementById("downloadButton").addEventListener("click", downloadFile);
+        }
+
+        function convertToUTM(lat, lng) {
+            const zoneNumber = Math.floor((lng + 180) / 6) + 1;
+            const hemisphere = lat >= 0 ? 'north' : 'south';
+            const utmProj = `+proj=utm +zone=${zoneNumber} +${hemisphere === 'north' ? 'north' : 'south'} +datum=WGS84`;
+
+            const [x, y] = proj4('EPSG:4326', utmProj, [lng, lat]);
+            return { x, y, zone: `${zoneNumber}${hemisphere === 'north' ? 'N' : 'S'}` };
+        }
+
+        function addPointToList(utmCoords, altitude, lat, lon) {
+            pointArray.push({ x: utmCoords.x, y: utmCoords.y, z: altitude, lat: lat, lon: lon });
+        }
+
+        function drawMarker(latlng) {
+            const marker = L.circleMarker(latlng, {
+                color: 'yellow',
+                fillColor: '#ff0',
+                fillOpacity: 1,
+                radius: 5
+            }).addTo(map);
+            
+            markerArray.push(marker);
+        }
+
+        function clearPoints() {
+            document.getElementById('result-container').style.display = 'none';
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('addButton').style.display = 'none';
+            pointArray = [];
+            
+            // Eliminar marcadores
+            markerArray.forEach(marker => map.removeLayer(marker));
+            markerArray = [];
+            
+            clearGeologicalSymbols();
+        }
+        
+        function addPlaneFit() {
+            document.getElementById('addedPointsHeader').style.display = 'inline-block';
+            document.getElementById('copyStrikeDipButton').style.display = 'inline-block';
+            document.getElementById('copyDipDirectionDipButton').style.display = 'inline-block';
+            document.getElementById('downloadButton').style.display = 'inline-block';
+            document.getElementById('estereoLink').style.display = 'inline-block';
+    
+            const pointList = document.getElementById("pointList");
+            const randomErrorEnabled = document.getElementById("randomErrorCheckbox").checked;
+              
+            clearGeologicalSymbols();
+            
+            lastPointArray.forEach(({ x, y, z, lat, lon }) => {
+                let finalAzimuth = lastAzimuth;
+                let finalDip = lastDip;
+                
+                if (randomErrorEnabled) {
+                    // Agregar error aleatorio al rumbo (0-3 grados)
+                    const azimuthError = Math.floor(Math.random() * 7) - 3; // Entre -3 y +3
+                    finalAzimuth += azimuthError;
+                    if (finalAzimuth > 360) finalAzimuth -= 360;
+                    if (finalAzimuth < 0) finalAzimuth += 360;
+                    
+                    // Agregar error aleatorio a la inclinación (0-2 grados)
+                    const dipError = Math.floor(Math.random() * 5) - 2; // Entre -2 y +2
+                    finalDip += dipError;
+                    if (finalDip > 90) finalDip = 90;
+                    if (finalDip < 0) finalDip = 0;
+                }
+                
+                const listItem = document.createElement("li");
+                listItem.textContent = `UTM: (${x.toFixed(2)}, ${y.toFixed(2)}, ${z.toFixed(2)}), Strike/Dip: (${finalAzimuth.toFixed(2)}, ${finalDip.toFixed(2)})`;
+                pointList.appendChild(listItem);
+                
+                resultsArray.push({ x: x, y: y, z: z, lat: lat, lon: lon, az: finalAzimuth, dp: finalDip});
+                
+                let dipdirection = finalAzimuth + 90;
+                if (dipdirection > 360) {
+                    dipdirection -= 360;
+                }
+                
+                addGeologicalSymbolWithFixedLength(lat, lon, finalAzimuth);
+            });
+        }
+        
+        function copyStrikeDipToClipboard() {
+            let textToCopy = "X\tY\tZ\tLat\tLon\tAzimuth\tDip\n";
+            
+            for (let item of resultsArray) {
+                textToCopy += item.x.toFixed(2) + "\t" + item.y.toFixed(2) + "\t" + item.z.toFixed(2) + "\t" + item.lat.toFixed(2) + "\t" + item.lon.toFixed(2) + "\t" + item.az.toFixed(2) + "\t" + item.dp.toFixed(2) + "\n";
+            }
+            
+            copyText(textToCopy);
+        }
+        
+        function copyDipDirectionDipToClipboard() {
+            let textToCopy = "X\tY\tZ\tLat\tLon\tDipDirection\tDip\n";
+
+            for (let item of resultsArray) {
+                let dipDirection = item.az + 90;
+                if (dipDirection > 360) {
+                    dipDirection -= 360;
+                }
+                textToCopy += item.x.toFixed(2) + "\t" + item.y.toFixed(2) + "\t" + item.z.toFixed(2) + "\t" + item.lat.toFixed(2) + "\t" + item.lon.toFixed(2) + "\t" + dipDirection.toFixed(2) + "\t" + item.dp.toFixed(2) + "\n";
+            }
+            
+            copyText(textToCopy);
+        }
+        
+        function copyText(textToCopy) {
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = textToCopy;
+            tempTextArea.style.position = 'fixed';
+            tempTextArea.style.left = '-9999px';
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                const msg = successful ? 'Copied to clipboard' : 'Error copying';
+                alert(msg);
+            } catch (err) {
+                console.error('Error al copiar el texto:', err);
+            }
+            
+            document.body.removeChild(tempTextArea);
+        }
+            
+        function addGeologicalSymbolWithFixedLength(latitude, longitude, azimuth) {
+            const origin = L.latLng(latitude, longitude);
+            const strikeEnd = destinationPoint(origin, azimuth, 0.002); // ~200m
+            const strikeMid = destinationPoint(origin, azimuth, 0.001); // ~100m
+            const dipAzimuth = (azimuth + 90) % 360;
+            const dipEnd = destinationPoint(strikeMid, dipAzimuth, 0.0005); // ~50m
+
+            const strikeLine = L.polyline([origin, strikeEnd], {
+                color: 'blue',
+                weight: 2,
+                className: 'strike-line'
+            }).addTo(map);
+
+            const dipLine = L.polyline([strikeMid, dipEnd], {
+                color: 'blue',
+                weight: 2,
+                className: 'dip-line'
+            }).addTo(map);
+
+            geologicalSymbols.push(strikeLine);
+            geologicalSymbols.push(dipLine);
+        }
+        
+        function addTemporaryGeologicalSymbolWithFixedLength(latitude, longitude, azimuth) {
+            const origin = L.latLng(latitude, longitude);
+            const strikeEnd = destinationPoint(origin, azimuth, 0.002);
+            const strikeMid = destinationPoint(origin, azimuth, 0.001);
+            const dipAzimuth = (azimuth + 90) % 360;
+            const dipEnd = destinationPoint(strikeMid, dipAzimuth, 0.0005);
+
+            const strikeLine = L.polyline([origin, strikeEnd], {
+                color: 'yellow',
+                weight: 2,
+                className: 'temp-strike-line'
+            }).addTo(map);
+
+            const dipLine = L.polyline([strikeMid, dipEnd], {
+                color: 'yellow',
+                weight: 2,
+                className: 'temp-dip-line'
+            }).addTo(map);
+
+            temporaryGeologicalSymbols.push(strikeLine);
+            temporaryGeologicalSymbols.push(dipLine);
+        }
+        
+        function clearGeologicalSymbols() {
+            temporaryGeologicalSymbols.forEach(symbol => map.removeLayer(symbol));
+            temporaryGeologicalSymbols = [];
+        }
+        
+        // Función auxiliar para calcular punto destino (similar a SpatialMath de Bing)
+        function destinationPoint(origin, bearing, distanceDegrees) {
+            const rad = Math.PI / 180;
+            const lat1 = origin.lat * rad;
+            const lon1 = origin.lng * rad;
+            const brng = bearing * rad;
+            const d = distanceDegrees * rad;
+            
+            const lat2 = Math.asin(Math.sin(lat1)*Math.cos(d) + Math.cos(lat1)*Math.sin(d)*Math.cos(brng));
+            const lon2 = lon1 + Math.atan2(Math.sin(brng)*Math.sin(d)*Math.cos(lat1), Math.cos(d)-Math.sin(lat1)*Math.sin(lat2));
+            
+            return L.latLng(lat2 / rad, lon2 / rad);
+        }
+
+        function calculatePlaneFit() {
+            document.getElementById('result-container').style.display = 'block';
+            document.getElementById('result').style.display = 'inline-block';
+            document.getElementById('addButton').style.display = 'inline-block';
+            document.getElementById('addButton').style.marginLeft = "20px";
+            
+            const n = pointArray.length;
+            if (n < 3) {
+                document.getElementById("result").textContent = "Se necesitan al menos tres puntos para ajustar un plano.";
+                return;
+            }
+
+            let sumX = 0, sumY = 0, sumZ = 0;
+            let sumX2 = 0, sumY2 = 0, sumXY = 0, sumXZ = 0, sumYZ = 0;
+
+            pointArray.forEach(({ x, y, z, lat, lon }) => {
+                sumX += x; sumY += y; sumZ += z;
+                sumX2 += x * x; sumY2 += y * y; sumXY += x * y;
+                sumXZ += x * z; sumYZ += y * z;
+            });
+
+            const A = [[sumX2, sumXY, sumX], [sumXY, sumY2, sumY], [sumX, sumY, n]];
+            const B = [sumXZ, sumYZ, sumZ];
+            const [a, b, d] = numeric.solve(A, B);
+
+            const normal = { x: a, y: b, z: -1 };
+            const normMagnitude = Math.sqrt(a * a + b * b + 1);
+            const normalized = { x: a / normMagnitude, y: b / normMagnitude, z: -1 / normMagnitude };
+
+            let dip;
+            if (Math.abs(normalized.z) < 1e-6) {
+                dip = 90;
+            } else {
+                dip = (Math.atan2(((normalized.x**2)+(normalized.y**2))**(0.5),Math.abs(normalized.z)))*180/Math.PI;
+            }
+            
+            let azimuth;
+
+            if (normalized.x >= 0 && normalized.y < 0) {
+                azimuth = 90 + (Math.atan2(Math.abs(normalized.y), Math.abs(normalized.x)) * 180 / Math.PI);
+            } else if (normalized.x < 0 && normalized.y < 0) {
+                azimuth = 270 - (Math.atan2(Math.abs(normalized.y), Math.abs(normalized.x)) * 180 / Math.PI);
+            } else if (normalized.x < 0 && normalized.y >= 0) {
+                azimuth = 270 + (Math.atan2(Math.abs(normalized.y), Math.abs(normalized.x)) * 180 / Math.PI);
+            } else {
+                azimuth = 90 - (Math.atan2(Math.abs(normalized.y), Math.abs(normalized.x)) * 180 / Math.PI);
+            }
+
+            azimuth=azimuth+90;
+            
+            if (azimuth > 360) {
+                azimuth-=360;
+            }
+            if (azimuth < 0) {
+                azimuth+=360;
+            }        
+
+            document.getElementById("result").textContent = `Strike: ${azimuth.toFixed(2)}°, Dip: ${dip.toFixed(2)}°`;
+            lastAzimuth=azimuth;
+            lastDip=dip;
+            
+            lastPointArray=pointArray;
+
+            pointArray = [];
+            markerArray.forEach(marker => map.removeLayer(marker));
+            markerArray = [];
+            addTemporaryPlaneFit();
+        }
+
+        function addTemporaryPlaneFit() {
+            lastPointArray.forEach(({ x, y, z, lat, lon }) => {
+                addTemporaryGeologicalSymbolWithFixedLength(lat, lon, lastAzimuth);
+            });
+        }
+        
+        function downloadFile() {
+            let content = "Nombre;Azimut;Inclinacion;TipoDato;TipoAzimut;R;G;B;Grosor;EstriaAzi;EstriaIncli;EstriaMov;EstriaRke;Peso\n";
+
+            for (let item of resultsArray) {
+                let dipDirection = item.az + 90;
+                if (dipDirection > 360) {
+                    dipDirection -= 360;
+                }
+                
+                content += `${item.x.toFixed(2)}/${item.y.toFixed(2)};${dipDirection.toFixed(2)};${item.dp.toFixed(2)};P;1;0;128;0;2;0;0;;0;1\n`;
+            }
+
+            let blob = new Blob([content], { type: 'text/plain' });
+            let link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'myFile_strike_and_dip.csv';
+            document.body.appendChild(link);
+            link.click();
+            
+            setTimeout(() => {
+                URL.revokeObjectURL(link.href);
+                document.body.removeChild(link);
+            }, 100);
+        }
+
+        function openWithFallback(event) {
+            event.preventDefault();
+            const newWindow = window.open('http://157.92.29.231/aplicaciones.html', '_blank');
+
+            if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+                window.open('http://slamoge.gl.fcen.uba.ar/applications_menu.html', '_blank');
+            }
+        }
+        
+        // Inicializar el mapa al cargar la página
+        window.onload = initMap;
+    </script>
+</body>
+</html>

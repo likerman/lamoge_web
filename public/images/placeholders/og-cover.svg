@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#08131d"/>
+  <rect x="72" y="72" width="1056" height="486" rx="36" fill="#0f2232"/>
+  <text x="120" y="234" fill="#66c8c2" font-size="34" font-family="IBM Plex Sans, sans-serif">IDEAN · UBA-CONICET</text>
+  <text x="120" y="330" fill="#f2f7fa" font-size="78" font-family="IBM Plex Serif, serif">LaMoGe</text>
+  <text x="120" y="402" fill="#b7c9d7" font-size="34" font-family="IBM Plex Sans, sans-serif">Geological Modelling Laboratory</text>
+</svg>
