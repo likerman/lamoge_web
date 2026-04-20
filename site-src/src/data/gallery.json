@@ -1,0 +1,39 @@
+[
+  {
+    "type": "image",
+    "title": {
+      "es": "Vista general del laboratorio",
+      "en": "Laboratory overview"
+    },
+    "caption": {
+      "es": "Placeholder para fotografía institucional del espacio de trabajo.",
+      "en": "Placeholder for an institutional photograph of the workspace."
+    },
+    "asset": "/images/placeholders/gallery-1.svg"
+  },
+  {
+    "type": "image",
+    "title": {
+      "es": "Experimento de modelado",
+      "en": "Modelling experiment"
+    },
+    "caption": {
+      "es": "Placeholder para imagen de experimentación o montaje instrumental.",
+      "en": "Placeholder for an experimental setup or instrumentation image."
+    },
+    "asset": "/images/placeholders/gallery-2.svg"
+  },
+  {
+    "type": "video",
+    "title": {
+      "es": "Animación o video institucional",
+      "en": "Animation or institutional video"
+    },
+    "caption": {
+      "es": "Preparado para reemplazar por un video corto o render de resultados.",
+      "en": "Ready to be replaced by a short video or results render."
+    },
+    "asset": "/images/placeholders/gallery-3.svg",
+    "embedUrl": ""
+  }
+]

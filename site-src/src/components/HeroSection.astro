@@ -1,0 +1,44 @@
+---
+interface Props {
+  hero: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    summary: string;
+    primaryCta: string;
+    secondaryCta: string;
+    tertiaryCta: string;
+    stats: string[];
+  };
+}
+
+const { hero } = Astro.props;
+---
+
+<section class="relative isolate min-h-[92vh] overflow-hidden bg-ink-950 text-white">
+  <div class="absolute inset-0">
+    <img src="/images/placeholders/hero-geology.svg" alt="" loading="eager" class="h-full w-full object-cover" />
+  </div>
+  <div class="absolute inset-0 bg-[linear-gradient(115deg,rgba(8,19,29,0.92)_12%,rgba(8,19,29,0.64)_56%,rgba(8,19,29,0.88)_100%),linear-gradient(180deg,rgba(8,19,29,0.25),rgba(8,19,29,0.82))]"></div>
+
+  <div class="shell relative z-10 grid min-h-[92vh] items-end gap-8 py-28 md:grid-cols-[minmax(0,1.35fr)_minmax(280px,0.8fr)] md:py-32">
+    <div data-reveal>
+      <p class="eyebrow text-teal-400">{hero.eyebrow}</p>
+      <h1 class="max-w-[11ch] font-serif text-5xl leading-[0.94] md:text-7xl">{hero.title}</h1>
+      <p class="mt-4 max-w-[24ch] text-xl text-mist-200 md:text-2xl">{hero.subtitle}</p>
+      <p class="mt-5 max-w-3xl text-base leading-8 text-mist-300">{hero.summary}</p>
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a class="button-primary" href="#research">{hero.primaryCta}</a>
+        <a class="button-secondary" href="#publications">{hero.secondaryCta}</a>
+        <a class="inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold text-mist-200 transition-transform hover:-translate-y-0.5" href="#contact">{hero.tertiaryCta}</a>
+      </div>
+    </div>
+
+    <ul class="grid gap-4" data-reveal>
+      {hero.stats.map((item) => (
+        <li class="card-muted">{item}</li>
+      ))}
+    </ul>
+  </div>
+</section>

@@ -1,0 +1,56 @@
+---
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+import type { Locale } from "../lib/i18n";
+
+interface Props {
+  locale: Locale;
+  navigation: Record<string, string>;
+  footer: {
+    tagline: string;
+    quickLinks: string;
+    backToTop: string;
+    credits: string;
+  };
+}
+
+const { locale, navigation, footer } = Astro.props;
+
+const links = [
+  { id: "about", label: navigation.about },
+  { id: "research", label: navigation.research },
+  { id: "publications", label: navigation.publications },
+  { id: "services", label: navigation.services },
+  { id: "contact", label: navigation.contact }
+];
+---
+
+<footer class="mt-12 bg-ink-950 py-12 text-white">
+  <div class="shell grid gap-8 md:grid-cols-[1.2fr_0.8fr_0.6fr]">
+    <div>
+      <a href={`/${locale}/`} class="mb-4 inline-flex items-center gap-3">
+        <span class="grid h-11 w-11 place-items-center rounded-2xl bg-[linear-gradient(135deg,#66c8c2,#83d7d2)] font-bold text-ink-950">La</span>
+        <span class="grid">
+          <strong class="text-base leading-tight">LaMoGe</strong>
+          <small class="text-[0.78rem] text-mist-300">IDEAN · UBA-CONICET</small>
+        </span>
+      </a>
+      <p class="max-w-md text-sm leading-7 text-mist-200">{footer.tagline}</p>
+      <p class="mt-3 text-sm text-mist-300">{footer.credits}</p>
+    </div>
+
+    <div>
+      <h3 class="text-sm font-semibold uppercase tracking-[0.16em] text-teal-400">{footer.quickLinks}</h3>
+      <nav class="mt-4 grid gap-3 text-sm text-mist-300">
+        {links.map((link) => (
+          <a href={`#${link.id}`} class="hover:text-white">{link.label}</a>
+        ))}
+      </nav>
+    </div>
+
+    <div>
+      <h3 class="text-sm font-semibold uppercase tracking-[0.16em] text-teal-400">{navigation.languageLabel}</h3>
+      <LanguageSwitcher locale={locale} />
+      <a class="mt-4 inline-flex text-sm text-teal-400 hover:text-white" href="#top">{footer.backToTop}</a>
+    </div>
+  </div>
+</footer>

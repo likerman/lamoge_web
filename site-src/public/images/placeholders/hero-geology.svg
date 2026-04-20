@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 960">
+  <defs>
+    <linearGradient id="bg" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#08131d" />
+      <stop offset="50%" stop-color="#123047" />
+      <stop offset="100%" stop-color="#1e506d" />
+    </linearGradient>
+    <linearGradient id="ridge" x1="0%" x2="100%" y1="0%" y2="0%">
+      <stop offset="0%" stop-color="#66c8c2" stop-opacity=".4" />
+      <stop offset="100%" stop-color="#d7b46a" stop-opacity=".28" />
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="960" fill="url(#bg)" />
+  <g opacity=".55">
+    <path d="M0 640C140 560 220 520 360 540c120 18 164 82 286 72 152-12 180-116 332-124 154-8 188 92 348 112 110 14 170-20 274-76V960H0V640Z" fill="#0d2331" />
+    <path d="M0 714c128-48 222-74 348-42 118 30 148 110 286 108 158-4 202-102 358-114 132-10 212 48 324 60 88 10 162-8 284-62V960H0V714Z" fill="#16384d" />
+  </g>
+  <g stroke="url(#ridge)" stroke-width="4" fill="none" opacity=".75">
+    <path d="M80 608c112-94 216-130 326-108 138 28 178 136 318 130 148-6 208-122 356-134 124-10 228 54 356 74 54 8 102 8 160-6" />
+    <path d="M124 708c98-54 184-70 284-48 132 30 202 126 326 122 142-4 210-120 366-144 114-18 214 24 328 42 58 10 106 10 172-2" />
+  </g>
+  <text x="96" y="136" fill="#d7e7f1" font-size="40" font-family="IBM Plex Sans, sans-serif" opacity=".7">Placeholder visual for geological modelling imagery</text>
+</svg>

@@ -1,0 +1,52 @@
+---
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+import type { Locale } from "../lib/i18n";
+
+interface Props {
+  locale: Locale;
+  navigation: Record<string, string>;
+}
+
+const { locale, navigation } = Astro.props;
+
+const items = [
+  { id: "about", label: navigation.about },
+  { id: "research", label: navigation.research },
+  { id: "team", label: navigation.team },
+  { id: "publications", label: navigation.publications },
+  { id: "services", label: navigation.services },
+  { id: "contact", label: navigation.contact }
+];
+---
+
+<header class="site-header sticky top-0 z-30 border-b border-transparent bg-ink-950/72 backdrop-blur-xl transition-colors duration-200" id="top">
+  <div class="shell flex min-h-[4.85rem] items-center justify-between gap-4">
+    <a href={`/${locale}/`} class="inline-flex items-center gap-3 text-white">
+      <span class="grid h-11 w-11 place-items-center rounded-2xl bg-[linear-gradient(135deg,#66c8c2,#83d7d2)] font-bold text-ink-950">La</span>
+      <span class="grid">
+        <strong class="text-base leading-tight">LaMoGe</strong>
+        <small class="text-[0.78rem] text-mist-300">IDEAN · UBA-CONICET</small>
+      </span>
+    </a>
+
+    <button
+      class="menu-toggle inline-flex rounded-full border border-white/15 px-4 py-2 text-sm text-white md:hidden"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-nav"
+    >
+      <span>{navigation.openMenu}</span>
+    </button>
+
+    <nav
+      id="site-nav"
+      class="site-nav hidden absolute inset-x-4 top-[calc(100%+0.75rem)] rounded-3xl border border-white/10 bg-ink-950/95 p-5 md:static md:flex md:items-center md:gap-5 md:border-0 md:bg-transparent md:p-0"
+      aria-label={locale === "es" ? "Navegación principal" : "Main navigation"}
+    >
+      {items.map((item) => (
+        <a href={`#${item.id}`} class="py-2 text-sm text-mist-300 hover:text-white">{item.label}</a>
+      ))}
+      <LanguageSwitcher locale={locale} />
+    </nav>
+  </div>
+</header>

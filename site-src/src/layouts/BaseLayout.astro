@@ -1,0 +1,123 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+  locale: "es" | "en";
+}
+
+const { title, description, locale } = Astro.props;
+const canonical = `${Astro.site}${locale}/`;
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={`${Astro.site}images/placeholders/og-cover.svg`} />
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hrefLang="es" href={`${Astro.site}es/`} />
+    <link rel="alternate" hrefLang="en" href={`${Astro.site}en/`} />
+    <link rel="alternate" hrefLang="x-default" href={`${Astro.site}es/`} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@500;600&display=swap" rel="stylesheet" />
+  </head>
+  <body class="min-h-screen">
+    <slot />
+    <button
+      class="scroll-top fixed right-4 bottom-4 z-40 grid h-12 w-12 translate-y-3 place-items-center rounded-full bg-ink-900 text-white opacity-0 shadow-[0_24px_70px_rgba(9,22,31,0.18)] transition-all duration-200 pointer-events-none"
+      type="button"
+      aria-label={locale === "es" ? "Volver arriba" : "Back to top"}
+    >
+      ↑
+    </button>
+
+    <script>
+      const menuToggle = document.querySelector(".menu-toggle");
+      const nav = document.querySelector(".site-nav");
+      const scrollTopButton = document.querySelector(".scroll-top");
+      const siteHeader = document.querySelector(".site-header");
+
+      if (menuToggle && nav) {
+        menuToggle.addEventListener("click", () => {
+          const expanded = menuToggle.getAttribute("aria-expanded") === "true";
+          menuToggle.setAttribute("aria-expanded", String(!expanded));
+          nav.classList.toggle("hidden");
+        });
+      }
+
+      if (scrollTopButton) {
+        scrollTopButton.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+        window.addEventListener("scroll", () => {
+          const visible = window.scrollY > 600;
+          scrollTopButton.classList.toggle("opacity-0", !visible);
+          scrollTopButton.classList.toggle("translate-y-3", !visible);
+          scrollTopButton.classList.toggle("pointer-events-none", !visible);
+          scrollTopButton.classList.toggle("opacity-100", visible);
+          scrollTopButton.classList.toggle("translate-y-0", visible);
+          if (siteHeader) {
+            siteHeader.classList.toggle("border-white/10", window.scrollY > 20);
+            siteHeader.classList.toggle("bg-ink-950/92", window.scrollY > 20);
+          }
+        });
+      }
+
+      const revealElements = document.querySelectorAll("[data-reveal]");
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15 }
+      );
+
+      revealElements.forEach((element) => observer.observe(element));
+
+      const publicationFilters = document.querySelectorAll("[data-filter-target]");
+      publicationFilters.forEach((filterBlock) => {
+        const container = document.querySelector(filterBlock.dataset.filterTarget);
+        if (!container) return;
+
+        const selects = filterBlock.querySelectorAll("select");
+        const cards = container.querySelectorAll("[data-publication]");
+
+        const runFilter = () => {
+          const [yearSelect, topicSelect, typeSelect] = selects;
+          cards.forEach((card) => {
+            const yearMatch = !yearSelect?.value || card.dataset.year === yearSelect.value;
+            const topicMatch = !topicSelect?.value || card.dataset.topic === topicSelect.value;
+            const typeMatch = !typeSelect?.value || card.dataset.type === typeSelect.value;
+            card.classList.toggle("hidden", !(yearMatch && topicMatch && typeMatch));
+          });
+        };
+
+        selects.forEach((select) => select.addEventListener("change", runFilter));
+      });
+
+      const teamFilter = document.querySelector("[data-team-filter]");
+      if (teamFilter) {
+        const cards = document.querySelectorAll("[data-team-member]");
+        teamFilter.addEventListener("change", () => {
+          cards.forEach((card) => {
+            const show = !teamFilter.value || card.dataset.category === teamFilter.value;
+            card.classList.toggle("hidden", !show);
+          });
+        });
+      }
+    </script>
+  </body>
+</html>
