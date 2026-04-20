@@ -98,6 +98,10 @@
   .input-base {
     @apply w-full rounded-2xl border border-white/12 bg-white/6 px-4 py-3 text-white placeholder:text-mist-300/70;
   }
+
+  .research-details summary::-webkit-details-marker {
+    display: none;
+  }
 }
 
 @layer utilities {
@@ -110,6 +114,10 @@
   [data-reveal].is-visible {
     opacity: 1;
     transform: translateY(0);
+  }
+
+  .research-details[open] summary span:last-child {
+    transform: rotate(45deg);
   }
 
   .hidden {

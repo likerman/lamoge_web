@@ -1,0 +1,48 @@
+[
+  {
+    "date": "2026-03-12",
+    "category": {
+      "es": "Proyecto",
+      "en": "Project"
+    },
+    "title": {
+      "es": "Nueva campaña de integración entre modelado análogo y análisis estructural",
+      "en": "New integration campaign between analogue modelling and structural analysis"
+    },
+    "summary": {
+      "es": "Placeholder editorial para anunciar campañas, resultados preliminares, lanzamientos de datasets o hitos institucionales del laboratorio.",
+      "en": "Editorial placeholder to announce campaigns, preliminary results, dataset releases or institutional milestones from the laboratory."
+    },
+    "url": "https://example.org/news-1"
+  },
+  {
+    "date": "2026-02-04",
+    "category": {
+      "es": "Publicación",
+      "en": "Publication"
+    },
+    "title": {
+      "es": "Sección preparada para destacar artículos recientes y contribuciones relevantes",
+      "en": "Section ready to highlight recent articles and relevant contributions"
+    },
+    "summary": {
+      "es": "Usar este bloque para visibilizar papers destacados, presentaciones en congresos, workshops o colaboraciones activas.",
+      "en": "Use this block to surface featured papers, conference presentations, workshops or active collaborations."
+    }
+  },
+  {
+    "date": "2025-11-18",
+    "category": {
+      "es": "Formación",
+      "en": "Training"
+    },
+    "title": {
+      "es": "Espacio para anunciar cursos, tesis, convocatorias y nuevas incorporaciones",
+      "en": "Space to announce courses, theses, calls and new team members"
+    },
+    "summary": {
+      "es": "El contenido queda desacoplado para que agregar una novedad sea tan simple como sumar un objeto JSON.",
+      "en": "The content is decoupled so adding a news item is as simple as appending one JSON object."
+    }
+  }
+]

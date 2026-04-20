@@ -28,8 +28,6 @@ const canonical = `${Astro.site}${locale}/`;
     <link rel="alternate" hrefLang="es" href={`${Astro.site}es/`} />
     <link rel="alternate" hrefLang="en" href={`${Astro.site}en/`} />
     <link rel="alternate" hrefLang="x-default" href={`${Astro.site}es/`} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@500;600&display=swap" rel="stylesheet" />
   </head>
   <body class="min-h-screen">
@@ -45,14 +43,43 @@ const canonical = `${Astro.site}${locale}/`;
     <script>
       const menuToggle = document.querySelector(".menu-toggle");
       const nav = document.querySelector(".site-nav");
+      const menuToggleLabel = menuToggle?.querySelector(".menu-toggle-label");
       const scrollTopButton = document.querySelector(".scroll-top");
       const siteHeader = document.querySelector(".site-header");
+      const localeLinks = document.querySelectorAll("[data-locale-link]");
+
+      const setMenuState = (expanded) => {
+        if (!menuToggle || !nav) return;
+
+        const openLabel = menuToggle.dataset.openLabel ?? "";
+        const closeLabel = menuToggle.dataset.closeLabel ?? openLabel;
+        const nextLabel = expanded ? closeLabel : openLabel;
+
+        menuToggle.setAttribute("aria-expanded", String(expanded));
+        menuToggle.setAttribute("aria-label", nextLabel);
+        menuToggleLabel && (menuToggleLabel.textContent = nextLabel);
+        nav.classList.toggle("hidden", !expanded);
+      };
 
       if (menuToggle && nav) {
+        setMenuState(false);
         menuToggle.addEventListener("click", () => {
           const expanded = menuToggle.getAttribute("aria-expanded") === "true";
-          menuToggle.setAttribute("aria-expanded", String(!expanded));
-          nav.classList.toggle("hidden");
+          setMenuState(!expanded);
+        });
+
+        nav.querySelectorAll("a").forEach((link) => {
+          link.addEventListener("click", () => {
+            if (window.matchMedia("(max-width: 767px)").matches) {
+              setMenuState(false);
+            }
+          });
+        });
+
+        window.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            setMenuState(false);
+          }
         });
       }
 
@@ -94,6 +121,37 @@ const canonical = `${Astro.site}${locale}/`;
 
         const selects = filterBlock.querySelectorAll("select");
         const cards = container.querySelectorAll("[data-publication]");
+        const emptyState = document.querySelector("[data-publication-empty]");
+        const showMoreButton = document.querySelector("[data-show-more-publications]");
+        const maxVisible = Number(showMoreButton?.dataset.initialCount ?? "4");
+        let expanded = false;
+
+        const syncArchive = () => {
+          const visibleCards = Array.from(cards).filter((card) => !card.classList.contains("hidden-by-filter"));
+          let visibleIndex = 0;
+          cards.forEach((card) => {
+            const matchesFilter = !card.classList.contains("hidden-by-filter");
+            const shouldHideByCount = matchesFilter && !expanded && visibleIndex >= maxVisible;
+            if (matchesFilter) {
+              visibleIndex += 1;
+            }
+            card.classList.toggle("hidden-by-count", shouldHideByCount);
+            card.classList.toggle("hidden", card.classList.contains("hidden-by-filter") || shouldHideByCount);
+          });
+
+          if (emptyState) {
+            emptyState.classList.toggle("hidden", visibleCards.length > 0);
+          }
+
+          if (showMoreButton) {
+            const hasMore = visibleCards.length > maxVisible;
+            showMoreButton.classList.toggle("hidden", !hasMore);
+            showMoreButton.setAttribute("aria-expanded", String(expanded));
+            showMoreButton.textContent = expanded
+              ? showMoreButton.dataset.lessLabel ?? showMoreButton.textContent
+              : showMoreButton.dataset.moreLabel ?? showMoreButton.textContent;
+          }
+        };
 
         const runFilter = () => {
           const [yearSelect, topicSelect, typeSelect] = selects;
@@ -101,11 +159,18 @@ const canonical = `${Astro.site}${locale}/`;
             const yearMatch = !yearSelect?.value || card.dataset.year === yearSelect.value;
             const topicMatch = !topicSelect?.value || card.dataset.topic === topicSelect.value;
             const typeMatch = !typeSelect?.value || card.dataset.type === typeSelect.value;
-            card.classList.toggle("hidden", !(yearMatch && topicMatch && typeMatch));
+            card.classList.toggle("hidden-by-filter", !(yearMatch && topicMatch && typeMatch));
           });
+          expanded = false;
+          syncArchive();
         };
 
         selects.forEach((select) => select.addEventListener("change", runFilter));
+        showMoreButton?.addEventListener("click", () => {
+          expanded = !expanded;
+          syncArchive();
+        });
+        syncArchive();
       });
 
       const teamFilter = document.querySelector("[data-team-filter]");
@@ -118,6 +183,28 @@ const canonical = `${Astro.site}${locale}/`;
           });
         });
       }
+
+      localeLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          const href = link.getAttribute("href");
+          if (!href) return;
+          link.setAttribute("href", `${href}${window.location.hash || ""}`);
+        });
+      });
+
+      document.querySelectorAll(".research-details").forEach((detail) => {
+        const label = detail.querySelector("summary [data-open-label]");
+        if (!label) return;
+
+        const syncLabel = () => {
+          label.textContent = detail.hasAttribute("open")
+            ? label.dataset.closeLabel ?? label.dataset.openLabel ?? ""
+            : label.dataset.openLabel ?? "";
+        };
+
+        detail.addEventListener("toggle", syncLabel);
+        syncLabel();
+      });
     </script>
   </body>
 </html>

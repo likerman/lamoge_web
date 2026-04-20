@@ -14,6 +14,7 @@
     "facilities": "Capacidades",
     "gallery": "Galería",
     "collaborations": "Colaboraciones",
+    "news": "Novedades",
     "teaching": "Formación",
     "faq": "Preguntas",
     "contact": "Contacto",
@@ -56,7 +57,9 @@
   "research": {
     "eyebrow": "Agenda científica",
     "title": "Líneas de investigación",
-    "description": "Cada línea puede ampliarse fácilmente desde archivos de datos. Los contenidos siguientes son de ejemplo y deben ajustarse con información validada."
+    "description": "Cada línea puede ampliarse fácilmente desde archivos de datos. Los contenidos siguientes son de ejemplo y deben ajustarse con información validada.",
+    "expandLabel": "Ver detalle",
+    "collapseLabel": "Ocultar detalle"
   },
   "team": {
     "eyebrow": "Personas",
@@ -70,13 +73,18 @@
     "title": "Publicaciones",
     "description": "Listado escalable con publicaciones destacadas, filtros por año, tema y tipo, y enlaces externos.",
     "featuredLabel": "Destacada",
+    "featuredTitle": "Publicaciones destacadas",
+    "archiveTitle": "Archivo filtrable",
     "filterYear": "Año",
     "filterTopic": "Tema",
     "filterType": "Tipo",
     "allYears": "Todos",
     "allTopics": "Todos",
     "allTypes": "Todos",
-    "viewAll": "Ver todas las publicaciones"
+    "viewAll": "Ver todas las publicaciones",
+    "showMore": "Ver más publicaciones",
+    "showLess": "Mostrar menos",
+    "emptyArchive": "No hay publicaciones que coincidan con los filtros actuales."
   },
   "services": {
     "eyebrow": "Vinculación y transferencia",
@@ -97,6 +105,12 @@
     "eyebrow": "Redes",
     "title": "Colaboraciones y proyectos",
     "description": "Espacio para mostrar redes nacionales e internacionales, instituciones asociadas y proyectos activos o destacados."
+  },
+  "news": {
+    "eyebrow": "Actualidad",
+    "title": "Noticias y novedades",
+    "description": "Bloque editorial para comunicar hitos, campañas, publicaciones, eventos y anuncios del laboratorio.",
+    "readMore": "Ver novedad"
   },
   "teaching": {
     "eyebrow": "Formación",
@@ -141,6 +155,7 @@
     "facilities",
     "gallery",
     "collaborations",
+    "news",
     "teaching",
     "faq",
     "contact"

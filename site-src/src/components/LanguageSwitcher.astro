@@ -11,6 +11,7 @@ const { locale } = Astro.props;
 <div class="language-switcher inline-flex rounded-full border border-white/8 bg-white/6 p-1" aria-label={locale === "es" ? "Selector de idioma" : "Language switcher"}>
   <a
     href="/es/"
+    data-locale-link
     class:list={[
       "rounded-full px-3 py-1.5 text-xs font-bold tracking-[0.16em] transition-colors",
       locale === "es" ? "bg-teal-400 text-ink-950" : "text-mist-300 hover:text-white"
@@ -21,6 +22,7 @@ const { locale } = Astro.props;
   </a>
   <a
     href="/en/"
+    data-locale-link
     class:list={[
       "rounded-full px-3 py-1.5 text-xs font-bold tracking-[0.16em] transition-colors",
       locale === "en" ? "bg-teal-400 text-ink-950" : "text-mist-300 hover:text-white"

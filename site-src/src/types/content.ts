@@ -12,6 +12,7 @@ export interface ActivityItem {
 export interface ResearchLine {
   title: LocalizedText;
   summary: LocalizedText;
+  detail: LocalizedText;
   keywords: LocalizedList;
   image?: string;
 }
@@ -87,4 +88,12 @@ export interface TeachingItem {
 export interface FaqItem {
   question: LocalizedText;
   answer: LocalizedText;
+}
+
+export interface NewsItem {
+  date: string;
+  category: LocalizedText;
+  title: LocalizedText;
+  summary: LocalizedText;
+  url?: string;
 }

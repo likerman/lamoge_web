@@ -45,6 +45,18 @@ No es necesario para publicar en el servidor web normal.
 - contenido desacoplado en `site-src/src/content/` y `site-src/src/data/`
 - despliegue simple en Vercel, Netlify o servidor institucional mediante build estático
 
+## Branding y tipografía
+
+- El logo real del laboratorio se detectó en `images/logo/lamoge_logo.pdf`.
+- Para uso web se exportaron dos SVG en `site-src/public/brand/`:
+  - `lamoge-mark.svg`: marca/isotipo
+  - `lamoge-logo.svg`: wordmark horizontal
+- Las fuentes del logo disponibles en `images/fonts/` no se cargan como webfonts globales del sitio.
+- Decisión actual:
+  - las tipografías originales quedan preservadas dentro del asset exportado del logo
+  - la interfaz usa `IBM Plex Sans` y `IBM Plex Serif` como pareja web equivalente, más estable y legible para uso institucional continuo
+- Si más adelante se quiere usar las fuentes originales en producción, conviene antes subsetearlas y autohospedarlas.
+
 ## Cómo editar textos
 
 - Textos institucionales:
@@ -87,18 +99,35 @@ Editar `site-src/src/data/team.json` y sumar un objeto con esta estructura:
 
 Editar `site-src/src/data/publications.json`.
 
+- `featured: true` hace que aparezca en el bloque destacado.
+- `featured: false` la envía al archivo filtrable con botón de “ver más”.
+- `year`, `topic` y `type` alimentan automáticamente los filtros.
+
 ### Agregar una línea de investigación
 
 Editar `site-src/src/data/research-lines.json`.
+
+- `summary` aparece en la tarjeta.
+- `detail` aparece en el bloque ampliable “Ver detalle”.
+- `keywords` alimenta los chips de cada línea.
 
 ### Agregar un servicio
 
 Editar `site-src/src/data/services.json`.
 
+### Agregar una novedad
+
+Editar `site-src/src/data/news.json`.
+
+- `date` debe ir en formato `YYYY-MM-DD`.
+- `category` se muestra como etiqueta.
+- `url` es opcional; si existe, aparece un enlace de lectura.
+
 ### Agregar una imagen o video
 
 1. Guardar el archivo en `site-src/public/images/` o una subcarpeta propia.
 2. Referenciar la ruta pública desde el JSON correspondiente.
+3. Para branding institucional, usar `site-src/public/brand/`.
 
 ## Qué archivo edita cada sección
 
@@ -110,6 +139,7 @@ Editar `site-src/src/data/services.json`.
 - Facilidades: `site-src/src/data/facilities.json`
 - Galería: `site-src/src/data/gallery.json`
 - Colaboraciones: `site-src/src/data/collaborations.json`
+- Novedades: `site-src/src/data/news.json`
 - Docencia y formación: `site-src/src/data/teaching.json`
 - Preguntas frecuentes: `site-src/src/data/faq.json`
 

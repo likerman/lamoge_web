@@ -14,6 +14,7 @@
     "facilities": "Facilities",
     "gallery": "Gallery",
     "collaborations": "Collaborations",
+    "news": "News",
     "teaching": "Teaching",
     "faq": "FAQ",
     "contact": "Contact",
@@ -56,7 +57,9 @@
   "research": {
     "eyebrow": "Scientific agenda",
     "title": "Research lines",
-    "description": "Each research line can be extended easily from data files. The following entries are illustrative and should be updated with validated information."
+    "description": "Each research line can be extended easily from data files. The following entries are illustrative and should be updated with validated information.",
+    "expandLabel": "View details",
+    "collapseLabel": "Hide details"
   },
   "team": {
     "eyebrow": "People",
@@ -70,13 +73,18 @@
     "title": "Publications",
     "description": "Scalable listing with featured publications, filters by year, topic and type, and external links.",
     "featuredLabel": "Featured",
+    "featuredTitle": "Featured publications",
+    "archiveTitle": "Filterable archive",
     "filterYear": "Year",
     "filterTopic": "Topic",
     "filterType": "Type",
     "allYears": "All",
     "allTopics": "All",
     "allTypes": "All",
-    "viewAll": "View all publications"
+    "viewAll": "View all publications",
+    "showMore": "Show more publications",
+    "showLess": "Show fewer",
+    "emptyArchive": "No publications match the current filters."
   },
   "services": {
     "eyebrow": "Outreach and transfer",
@@ -97,6 +105,12 @@
     "eyebrow": "Networks",
     "title": "Collaborations and projects",
     "description": "Space to showcase national and international networks, partner institutions and active or highlighted projects."
+  },
+  "news": {
+    "eyebrow": "Updates",
+    "title": "News and updates",
+    "description": "Editorial block for milestones, campaigns, publications, events and laboratory announcements.",
+    "readMore": "View update"
   },
   "teaching": {
     "eyebrow": "Training",
@@ -141,6 +155,7 @@
     "facilities",
     "gallery",
     "collaborations",
+    "news",
     "teaching",
     "faq",
     "contact"

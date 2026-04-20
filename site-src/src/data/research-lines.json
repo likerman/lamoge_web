@@ -8,6 +8,10 @@
       "es": "Estudio integrado de estructuras, cinemática y control mecánico de la deformación en sistemas orogénicos.",
       "en": "Integrated study of structures, kinematics and mechanical controls on deformation in orogenic systems."
     },
+    "detail": {
+      "es": "Placeholder ampliable: incorporar objetivos específicos, escalas analizadas, metodologías combinadas y vínculos con casos andinos concretos. La estructura queda lista para crecer sin tocar el componente.",
+      "en": "Expandable placeholder: add specific objectives, analysed scales, combined methodologies and links to concrete Andean case studies. The structure is ready to grow without touching the component."
+    },
     "keywords": {
       "es": ["tectónica andina", "deformación", "orógenos"],
       "en": ["Andean tectonics", "deformation", "orogens"]
@@ -23,6 +27,10 @@
       "es": "Experimentos físicos para explorar interacción entre tectónica, sedimentación y evolución del relieve.",
       "en": "Physical experiments to explore the interaction between tectonics, sedimentation and landscape evolution."
     },
+    "detail": {
+      "es": "Placeholder ampliable: describir materiales, escalas, variables de control y ejemplos de experimentos representativos para campañas docentes, proyectos y colaboración externa.",
+      "en": "Expandable placeholder: describe materials, scales, control variables and representative experiments for teaching campaigns, projects and external collaboration."
+    },
     "keywords": {
       "es": ["modelado análogo", "geomorfología", "sedimentación"],
       "en": ["analogue modelling", "geomorphology", "sedimentation"]
@@ -37,6 +45,10 @@
     "summary": {
       "es": "Simulaciones y análisis de sensibilidad para evaluar hipótesis geodinámicas y escenarios tectónicos.",
       "en": "Simulations and sensitivity analyses to evaluate geodynamic hypotheses and tectonic scenarios."
+    },
+    "detail": {
+      "es": "Placeholder ampliable: sumar modelos, flujos computacionales, software, capacidades de procesamiento y tipos de datos integrados para contrastar hipótesis y resultados experimentales.",
+      "en": "Expandable placeholder: add models, computational workflows, software, processing capabilities and integrated data types used to contrast hypotheses and experimental results."
     },
     "keywords": {
       "es": ["simulación", "geodinámica", "análisis cuantitativo"],

@@ -23,6 +23,9 @@ const { hero } = Astro.props;
 
   <div class="shell relative z-10 grid min-h-[92vh] items-end gap-8 py-28 md:grid-cols-[minmax(0,1.35fr)_minmax(280px,0.8fr)] md:py-32">
     <div data-reveal>
+      <div class="mb-6 inline-flex rounded-[1.6rem] bg-white/94 px-4 py-3 shadow-[0_24px_60px_rgba(4,10,16,0.22)]">
+        <img src="/brand/lamoge-logo.svg" alt="LaMoGe" class="h-10 w-auto" />
+      </div>
       <p class="eyebrow text-teal-400">{hero.eyebrow}</p>
       <h1 class="max-w-[11ch] font-serif text-5xl leading-[0.94] md:text-7xl">{hero.title}</h1>
       <p class="mt-4 max-w-[24ch] text-xl text-mist-200 md:text-2xl">{hero.subtitle}</p>

@@ -14,6 +14,7 @@ const items = [
   { id: "research", label: navigation.research },
   { id: "team", label: navigation.team },
   { id: "publications", label: navigation.publications },
+  { id: "news", label: navigation.news },
   { id: "services", label: navigation.services },
   { id: "contact", label: navigation.contact }
 ];
@@ -22,7 +23,9 @@ const items = [
 <header class="site-header sticky top-0 z-30 border-b border-transparent bg-ink-950/72 backdrop-blur-xl transition-colors duration-200" id="top">
   <div class="shell flex min-h-[4.85rem] items-center justify-between gap-4">
     <a href={`/${locale}/`} class="inline-flex items-center gap-3 text-white">
-      <span class="grid h-11 w-11 place-items-center rounded-2xl bg-[linear-gradient(135deg,#66c8c2,#83d7d2)] font-bold text-ink-950">La</span>
+      <span class="grid h-11 w-11 place-items-center rounded-2xl bg-white/96 p-1.5 shadow-[0_12px_30px_rgba(8,19,29,0.25)]">
+        <img src="/brand/lamoge-mark.svg" alt="" class="h-full w-full object-contain" />
+      </span>
       <span class="grid">
         <strong class="text-base leading-tight">LaMoGe</strong>
         <small class="text-[0.78rem] text-mist-300">IDEAN · UBA-CONICET</small>
@@ -34,8 +37,11 @@ const items = [
       type="button"
       aria-expanded="false"
       aria-controls="site-nav"
+      aria-label={navigation.openMenu}
+      data-open-label={navigation.openMenu}
+      data-close-label={navigation.closeMenu}
     >
-      <span>{navigation.openMenu}</span>
+      <span class="menu-toggle-label">{navigation.openMenu}</span>
     </button>
 
     <nav
