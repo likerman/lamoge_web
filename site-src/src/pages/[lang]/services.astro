@@ -1,0 +1,111 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import PageHero from "../../components/PageHero.astro";
+import Footer from "../../components/Footer.astro";
+import servicesData from "../../data/services.json";
+import faqData from "../../data/faq.json";
+import { locales, localizeArray, localizeText, siteContent, type Locale } from "../../lib/i18n";
+import type { FaqItem, ServiceItem } from "../../types/content";
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const locale = Astro.params.lang as Locale;
+
+const content = siteContent[locale];
+const services = servicesData as ServiceItem[];
+const faq = faqData as FaqItem[];
+
+const copy = {
+  es: {
+    title: "Servicios | LaMoGe",
+    description: "Servicios, soporte metodológico y articulación externa del laboratorio.",
+    eyebrow: "Servicios",
+    pageTitle: "Servicios científicos y articulación metodológica para equipos externos.",
+    pageDescription:
+      "La oferta institucional está organizada para canalizar consultas, colaboraciones y transferencias vinculadas al modelado geológico, el análisis estructural y la formación especializada.",
+    processTitle: "Cómo trabajamos",
+    processSteps: [
+      "Definición del problema geológico o estructural",
+      "Diseño metodológico con observaciones, modelado y análisis",
+      "Síntesis técnica y resultados para discusión institucional"
+    ],
+    faqTitle: "Preguntas frecuentes"
+  },
+  en: {
+    title: "Services | LaMoGe",
+    description: "Services, methodological support and external collaboration of the laboratory.",
+    eyebrow: "Services",
+    pageTitle: "Scientific services and methodological collaboration for external teams.",
+    pageDescription:
+      "The institutional offering is organised to channel enquiries, collaborations and transfer processes related to geological modelling, structural analysis and specialised training.",
+    processTitle: "How we work",
+    processSteps: [
+      "Definition of the geological or structural problem",
+      "Methodological design combining observations, modelling and analysis",
+      "Technical synthesis and results for institutional discussion"
+    ],
+    faqTitle: "Frequently asked questions"
+  }
+}[locale];
+---
+
+<BaseLayout title={copy.title} description={copy.description} locale={locale} image="/images/gallery/DSC_0450.JPG">
+  <Header locale={locale} navigation={content.navigation} />
+  <main id="main-content" class="pb-14">
+    <PageHero eyebrow={copy.eyebrow} title={copy.pageTitle} description={copy.pageDescription} image="/images/gallery/DSC_0450.JPG" />
+
+    <section class="section shell">
+      <div class="surface-panel">
+        <div class="grid gap-5 lg:grid-cols-3">
+          {services.map((item) => (
+            <article class="card" data-reveal>
+              <span class="pill">{localizeText(item.status, locale)}</span>
+              <h2 class="mt-4 text-xl font-semibold text-[color:var(--ink-950)]">{localizeText(item.title, locale)}</h2>
+              <p class="mt-3 text-sm leading-7 text-[color:var(--ink-700)]">{localizeText(item.summary, locale)}</p>
+              <p class="mt-4 text-sm text-[color:var(--ink-500)]">{localizeText(item.audience, locale)}</p>
+              <div class="mt-4 flex flex-wrap gap-2">
+                {localizeArray(item.applications, locale).map((entry) => (
+                  <span class="pill">{entry}</span>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="surface-panel surface-panel-dark">
+        <p class="eyebrow">{copy.processTitle}</p>
+        <div class="grid gap-4 md:grid-cols-3">
+          {copy.processSteps.map((step, index) => (
+            <article class="card-dark" data-reveal>
+              <span class="pill !bg-white/6 !border-white/8 !text-white/80">0{index + 1}</span>
+              <p class="mt-4 text-base leading-8 text-white">{step}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="surface-panel">
+        <p class="eyebrow">{copy.faqTitle}</p>
+        <div class="grid gap-4">
+          {faq.map((item) => (
+            <details class="card" data-reveal>
+              <summary class="cursor-pointer list-none text-lg font-semibold text-[color:var(--ink-950)]">
+                {localizeText(item.question, locale)}
+              </summary>
+              <p class="mt-4 text-sm leading-7 text-[color:var(--ink-700)]">{localizeText(item.answer, locale)}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer locale={locale} navigation={content.navigation} footer={content.footer} />
+</BaseLayout>

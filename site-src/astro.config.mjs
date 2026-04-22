@@ -5,6 +5,7 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()]
   },
-  site: "https://lamoge.example.org",
+  site: "https://slamoge.gl.fcen.uba.ar/",
+  output: "static",
   trailingSlash: "always"
 });

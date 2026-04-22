@@ -3,13 +3,21 @@ interface Props {
   eyebrow: string;
   title: string;
   description: string;
+  image?: string;
 }
 
-const { eyebrow, title, description } = Astro.props;
+const { eyebrow, title, description, image } = Astro.props;
 ---
 
-<div class="mb-8 max-w-4xl" data-reveal>
-  <p class="eyebrow">{eyebrow}</p>
-  <h2 class="section-title">{title}</h2>
-  <p class="section-copy">{description}</p>
+<div class="mb-4 max-w-5xl" data-reveal>
+  {image && (
+    <div class="mb-6 overflow-hidden rounded-[2.2rem] border border-ink-800/8 shadow-2xl shadow-ink-950/10 transition-transform hover:scale-[1.01]">
+      <img src={image} alt="" class="aspect-[21/9] w-full object-cover" />
+    </div>
+  )}
+  <div class="flex flex-col gap-1">
+    <p class="eyebrow">{eyebrow}</p>
+    <h1 class="section-title !mt-0 !mb-2">{title}</h1>
+    <p class="section-copy max-w-3xl leading-relaxed">{description}</p>
+  </div>
 </div>

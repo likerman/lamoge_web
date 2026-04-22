@@ -1,0 +1,78 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import PageHero from "../../components/PageHero.astro";
+import Footer from "../../components/Footer.astro";
+import teamData from "../../data/team.json";
+import teachingData from "../../data/teaching.json";
+import { locales, localizeText, siteContent, type Locale } from "../../lib/i18n";
+import type { TeamMember, TeachingItem } from "../../types/content";
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const locale = Astro.params.lang as Locale;
+const content = siteContent[locale];
+const fellows = (teamData as TeamMember[]).filter((member) => member.category === "fellows" || member.category === "students");
+const teaching = teachingData as TeachingItem[];
+
+const copy = {
+  es: {
+    title: "Doctorandos | LaMoGe",
+    description: "Formación doctoral, acompañamiento de tesis y entorno académico del laboratorio.",
+    eyebrow: "Formación",
+    pageTitle: "Doctorandos",
+    pageDescription:
+      "El laboratorio sostiene formación doctoral y posdoctoral dentro de líneas activas de investigación, con acompañamiento metodológico, inserción institucional y trabajo en equipo.",
+    supportTitle: "Entorno académico"
+  },
+  en: {
+    title: "Doctoral fellows | LaMoGe",
+    description: "Doctoral training, thesis supervision and academic environment in the laboratory.",
+    eyebrow: "Training",
+    pageTitle: "Doctoral fellows",
+    pageDescription:
+      "The laboratory supports doctoral and postdoctoral training within active research lines, with methodological supervision, institutional embedding and collaborative work.",
+    supportTitle: "Academic environment"
+  }
+}[locale];
+---
+
+<BaseLayout title={copy.title} description={copy.description} locale={locale} image="/images/gallery/IMG_8323.jpg">
+  <Header locale={locale} navigation={content.navigation} />
+  <main id="main-content" class="pb-14">
+    <PageHero eyebrow={copy.eyebrow} title={copy.pageTitle} description={copy.pageDescription} image="/images/gallery/IMG_8323.jpg" />
+
+    <section class="section shell">
+      <div class="surface-panel">
+        <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {fellows.map((member) => (
+            <article class="card" data-reveal>
+              {member.photo && <img src={member.photo} alt={member.name} class="aspect-square w-full rounded-[1.2rem] object-cover bg-[color:var(--mist-100)]" />}
+              <h2 class="mt-5 text-xl font-semibold text-[color:var(--ink-950)]">{member.name}</h2>
+              <p class="mt-1 text-sm font-semibold text-[color:var(--accent-strong)]">{localizeText(member.role, locale)}</p>
+              <p class="mt-3 text-sm leading-7 text-[color:var(--ink-700)]">{localizeText(member.bio ?? member.area, locale)}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="surface-panel surface-panel-dark">
+        <p class="eyebrow">{copy.supportTitle}</p>
+        <div class="grid gap-4 lg:grid-cols-3">
+          {teaching.map((item) => (
+            <article class="card-dark" data-reveal>
+              <span class="pill !bg-white/6 !border-white/8 !text-white/80">{localizeText(item.format, locale)}</span>
+              <h3 class="mt-4 text-lg font-semibold text-white">{localizeText(item.title, locale)}</h3>
+              <p class="mt-3 text-sm leading-7 text-white/74">{localizeText(item.description, locale)}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer locale={locale} navigation={content.navigation} footer={content.footer} />
+</BaseLayout>

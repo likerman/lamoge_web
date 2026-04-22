@@ -1,68 +1,68 @@
 [
   {
-    "icon": "A",
-    "title": {
-      "es": "Modelado análogo",
-      "en": "Analogue modelling"
-    },
-    "description": {
-      "es": "Diseño y ejecución de experimentos físicos para estudiar procesos tectónicos y evolución estructural.",
-      "en": "Design and execution of physical experiments to study tectonic processes and structural evolution."
-    }
-  },
-  {
-    "icon": "N",
-    "title": {
-      "es": "Modelado numérico",
-      "en": "Numerical modelling"
-    },
-    "description": {
-      "es": "Implementación y análisis de modelos computacionales para explorar escenarios geodinámicos complejos.",
-      "en": "Implementation and analysis of computational models to explore complex geodynamic scenarios."
-    }
-  },
-  {
-    "icon": "T",
-    "title": {
-      "es": "Geología estructural y tectónica",
-      "en": "Structural geology and tectonics"
-    },
-    "description": {
-      "es": "Interpretación integrada de deformación, arquitectura estructural y evolución tectónica.",
-      "en": "Integrated interpretation of deformation, structural architecture and tectonic evolution."
-    }
-  },
-  {
     "icon": "G",
     "title": {
-      "es": "Geodinámica y procesos",
-      "en": "Geodynamics and processes"
+      "es": "Predicción de geometrías estructurales",
+      "en": "Structural geometry prediction"
     },
     "description": {
-      "es": "Análisis de la dinámica litosférica y de procesos geológicos a múltiples escalas.",
-      "en": "Analysis of lithospheric dynamics and geological processes across multiple scales."
-    }
-  },
-  {
-    "icon": "D",
-    "title": {
-      "es": "Análisis de datos geológicos",
-      "en": "Geological data analysis"
-    },
-    "description": {
-      "es": "Procesamiento, integración y visualización de datos estructurales, geofísicos y experimentales.",
-      "en": "Processing, integration and visualisation of structural, geophysical and experimental data."
+      "es": "Reconstrucción de la evolución espacial, temporal y térmica de estructuras complejas no resueltas completamente por la exploración geofísica.",
+      "en": "Reconstruction of the spatial, temporal and thermal evolution of complex structures not fully resolved by geophysical exploration."
     }
   },
   {
     "icon": "F",
     "title": {
-      "es": "Docencia y formación",
-      "en": "Teaching and training"
+      "es": "Predicción de fracturamiento",
+      "en": "Fracture prediction"
     },
     "description": {
-      "es": "Participación en cursos, talleres, dirección de estudiantes y formación técnica especializada.",
-      "en": "Participation in courses, workshops, student supervision and specialised technical training."
+      "es": "Desarrollo de métodos para reconocer zonas con mayor probabilidad de fracturación natural y estimar su intensidad en reservorios convencionales y no convencionales.",
+      "en": "Development of methods to identify areas with higher probability of natural fracturing and estimate fracture intensity in conventional and unconventional reservoirs."
+    }
+  },
+  {
+    "icon": "S",
+    "title": {
+      "es": "Sweet-spots estructurales y campos de esfuerzos",
+      "en": "Structural sweet spots and stress fields"
+    },
+    "description": {
+      "es": "Integración de breakout de pozos, distribución de esfuerzos y zonas de tensión para comprender reservorios shale y optimizar escenarios de desarrollo.",
+      "en": "Integration of well breakouts, stress distribution and tension zones to understand shale reservoirs and optimise development scenarios."
+    }
+  },
+  {
+    "icon": "M",
+    "title": {
+      "es": "Interacción entre estructura y magmatismo",
+      "en": "Structure-magmatism interaction"
+    },
+    "description": {
+      "es": "Estudio experimental y conceptual de diques, intrusiones, movilidad magmática y su vínculo con la arquitectura estructural de la corteza.",
+      "en": "Experimental and conceptual study of dykes, intrusions, magma mobility and their relation to crustal structural architecture."
+    }
+  },
+  {
+    "icon": "T",
+    "title": {
+      "es": "Modelado termo-mecánico y geodinámico",
+      "en": "Thermo-mechanical and geodynamic modelling"
+    },
+    "description": {
+      "es": "Simulaciones de alto poder computacional para cuantificar procesos litosféricos, evolución térmica, tectónica y su impacto en cuencas sedimentarias.",
+      "en": "High-performance simulations to quantify lithospheric processes, thermal evolution, tectonics and their impact on sedimentary basins."
+    }
+  },
+  {
+    "icon": "A",
+    "title": {
+      "es": "Nuevas metodologías de análisis estructural",
+      "en": "New structural analysis methodologies"
+    },
+    "description": {
+      "es": "Análisis de campos de velocidades en modelos análogos, actualización de modelos cinemáticos y reconocimiento del grano estructural mediante ASM y nuevas tecnologías.",
+      "en": "Velocity-field analysis in analogue models, updated kinematic models and structural fabric recognition through AMS and new survey technologies."
     }
   }
 ]

@@ -1,8 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
   <rect width="800" height="500" rx="36" fill="#122d42"/>
-  <g opacity=".8">
-    <rect x="92" y="84" width="616" height="332" rx="28" fill="#0a1822"/>
-    <path d="M140 334c74-112 132-168 184-168 74 0 92 124 156 124 52 0 78-78 130-78 58 0 94 76 140 76" stroke="#66c8c2" stroke-width="8" fill="none"/>
-    <path d="M140 356c54-44 110-62 164-46 52 16 78 58 122 58 58 0 90-70 152-70 44 0 84 40 172 48" stroke="#d7b46a" stroke-width="8" fill="none"/>
+  <rect x="96" y="86" width="608" height="328" rx="30" fill="#0a1822"/>
+  <path d="M138 336c76-118 132-176 182-176 74 0 96 130 160 130 52 0 78-74 132-74 56 0 92 82 142 82" stroke="#66c8c2" stroke-width="8" fill="none"/>
+  <path d="M140 358c56-44 112-62 168-48 54 14 82 54 124 54 58 0 88-64 150-64 50 0 90 30 170 44" stroke="#d7b46a" stroke-width="8" fill="none"/>
+  <g fill="#f4f8fb" opacity=".85">
+    <circle cx="182" cy="132" r="7"/>
+    <circle cx="270" cy="182" r="7"/>
+    <circle cx="342" cy="146" r="7"/>
+    <circle cx="432" cy="210" r="7"/>
+    <circle cx="516" cy="168" r="7"/>
+    <circle cx="612" cy="224" r="7"/>
+  </g>
+  <g stroke="#66c8c2" stroke-width="3" opacity=".4">
+    <path d="M182 132 270 182 342 146 432 210 516 168 612 224" fill="none"/>
   </g>
 </svg>

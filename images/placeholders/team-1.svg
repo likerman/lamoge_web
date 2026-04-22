@@ -2,4 +2,5 @@
   <rect width="600" height="600" fill="#102536"/>
   <circle cx="300" cy="220" r="104" fill="#d7b46a"/>
   <path d="M152 518c20-98 90-160 148-160s128 62 148 160H152Z" fill="#66c8c2"/>
+  <path d="M72 88c56 24 112 24 168 0 56-24 112-24 168 0 40 18 80 22 120 10" stroke="#f4f8fb" stroke-width="3" fill="none" opacity=".35"/>
 </svg>

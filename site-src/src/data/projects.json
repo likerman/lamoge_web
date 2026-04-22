@@ -1,0 +1,94 @@
+[
+  {
+    "id": "andean-tectonics",
+    "featured": true,
+    "status": {
+      "es": "Línea activa",
+      "en": "Active line"
+    },
+    "period": "2004-present",
+    "title": {
+      "es": "Arquitectura tectónica andina y evolución de cuencas",
+      "en": "Andean tectonic architecture and basin evolution"
+    },
+    "summary": {
+      "es": "Integración entre observaciones de campo, modelado análogo y simulación numérica para reconstruir la evolución tectono-mecánica de sistemas andinos complejos.",
+      "en": "Integration of field observations, analogue modelling and numerical simulation to reconstruct the tectono-mechanical evolution of complex Andean systems."
+    },
+    "partners": ["IDEAN", "UBA", "CONICET"],
+    "tags": {
+      "es": ["tectónica", "cuencas", "modelado integrado"],
+      "en": ["tectonics", "basins", "integrated modelling"]
+    },
+    "image": "/images/gallery/DJI_0754.JPG"
+  },
+  {
+    "id": "fracture-prediction",
+    "featured": true,
+    "status": {
+      "es": "Aplicación estratégica",
+      "en": "Strategic application"
+    },
+    "period": "2018-present",
+    "title": {
+      "es": "Predicción de fracturamiento y sweet spots estructurales",
+      "en": "Fracture prediction and structural sweet spots"
+    },
+    "summary": {
+      "es": "Desarrollo de metodologías para estimar conectividad, intensidad y distribución espacial de fracturas naturales en reservorios convencionales y no convencionales.",
+      "en": "Development of methodologies to estimate the connectivity, intensity and spatial distribution of natural fractures in conventional and unconventional reservoirs."
+    },
+    "partners": ["IDEAN", "IGEBA"],
+    "tags": {
+      "es": ["fracturas", "geomecánica", "reservorios"],
+      "en": ["fractures", "geomechanics", "reservoirs"]
+    },
+    "image": "/images/experiments/modelado04-1024x688.jpg"
+  },
+  {
+    "id": "geothermal-systems",
+    "featured": true,
+    "status": {
+      "es": "Transferencia y validación",
+      "en": "Transfer and validation"
+    },
+    "period": "2017-present",
+    "title": {
+      "es": "Modelado estructural de sistemas geotérmicos",
+      "en": "Structural modelling of geothermal systems"
+    },
+    "summary": {
+      "es": "Caracterización estructural y evaluación de reservorios geotérmicos mediante modelos de deformación, análisis de esfuerzos y síntesis geológica aplicada.",
+      "en": "Structural characterisation and reservoir evaluation for geothermal systems through deformation models, stress analysis and applied geological synthesis."
+    },
+    "partners": ["IDEAN", "UBA"],
+    "tags": {
+      "es": ["geotermia", "reservorios", "estructura"],
+      "en": ["geothermal", "reservoirs", "structure"]
+    },
+    "image": "/images/gallery/IMG_20240420_115448779.jpg"
+  },
+  {
+    "id": "magmatism-structure",
+    "featured": false,
+    "status": {
+      "es": "Cooperación internacional",
+      "en": "International cooperation"
+    },
+    "period": "2020-present",
+    "title": {
+      "es": "Interacción entre magmatismo y arquitectura estructural",
+      "en": "Interaction between magmatism and structural architecture"
+    },
+    "summary": {
+      "es": "Estudio de propagación de diques, movilidad magmática y control estructural de intrusiones mediante trabajo experimental y conceptual.",
+      "en": "Study of dyke propagation, magma mobility and the structural control of intrusions through experimental and conceptual work."
+    },
+    "partners": ["University of Oslo", "IDEAN"],
+    "tags": {
+      "es": ["magmatismo", "intrusiones", "volcanismo"],
+      "en": ["magmatism", "intrusions", "volcanism"]
+    },
+    "image": "/images/gallery/IMG_3676.JPG"
+  }
+]

@@ -1,56 +1,77 @@
 ---
-import LanguageSwitcher from "./LanguageSwitcher.astro";
 import type { Locale } from "../lib/i18n";
+import { siteContent } from "../lib/i18n";
 
 interface Props {
   locale: Locale;
-  navigation: Record<string, string>;
+  navigation: {
+    groups: Array<{ label: string; path?: string; items?: Array<{ label: string; path: string }> }>;
+    search: string;
+    intranet: string;
+  };
   footer: {
     tagline: string;
     quickLinks: string;
+    resources: string;
+    contact: string;
     backToTop: string;
     credits: string;
   };
 }
 
 const { locale, navigation, footer } = Astro.props;
+const institutionEmail = siteContent[locale].institution.email;
 
-const links = [
-  { id: "about", label: navigation.about },
-  { id: "research", label: navigation.research },
-  { id: "publications", label: navigation.publications },
-  { id: "news", label: navigation.news },
-  { id: "services", label: navigation.services },
-  { id: "contact", label: navigation.contact }
+const navLinks = navigation.groups.map((group) => ({
+  path: `/${locale}${group.path ?? group.items?.[0]?.path ?? "/"}`,
+  label: group.label
+}));
+
+const resourceLinks = [
+  { path: `/${locale}/search/`, label: navigation.search },
+  { path: `/${locale}/news/`, label: locale === "es" ? "Novedades" : "News" },
+  { path: `/${locale}/contact/`, label: locale === "es" ? "Contacto" : "Contact" },
+  { path: "/intranet/", label: navigation.intranet }
 ];
 ---
 
-<footer class="mt-12 bg-ink-950 py-12 text-white">
-  <div class="shell grid gap-8 md:grid-cols-[1.2fr_0.8fr_0.6fr]">
-    <div>
-      <a href={`/${locale}/`} class="mb-4 inline-flex items-center gap-3">
-        <span class="grid h-11 w-11 place-items-center rounded-2xl bg-white/96 p-1.5">
-          <img src="/brand/lamoge-mark.svg" alt="" class="h-full w-full object-contain" />
-        </span>
-        <img src="/brand/lamoge-logo.svg" alt="LaMoGe" class="h-9 w-auto rounded-xl bg-white/96 px-3 py-1.5" />
+<footer class="site-footer">
+  <div class="shell footer-grid">
+    <div class="footer-brand">
+      <a href={`/${locale}/`} class="brand-link brand-link-footer">
+        <img src="/brand/lamoge-logo.svg" alt="LaMoGe" class="brand-logo" />
       </a>
-      <p class="max-w-md text-sm leading-7 text-mist-200">{footer.tagline}</p>
-      <p class="mt-3 text-sm text-mist-300">{footer.credits}</p>
+      <p class="footer-kicker">IDEAN · UBA · CONICET</p>
+      <p class="footer-tagline">{footer.tagline}</p>
+      <p class="footer-credits">{footer.credits}</p>
     </div>
 
     <div>
-      <h3 class="text-sm font-semibold uppercase tracking-[0.16em] text-teal-400">{footer.quickLinks}</h3>
-      <nav class="mt-4 grid gap-3 text-sm text-mist-300">
-        {links.map((link) => (
-          <a href={`#${link.id}`} class="hover:text-white">{link.label}</a>
+      <h2 class="footer-title">{footer.quickLinks}</h2>
+      <nav class="footer-link-list" aria-label={footer.quickLinks}>
+        {navLinks.map((link) => (
+          <a href={link.path}>{link.label}</a>
         ))}
       </nav>
     </div>
 
     <div>
-      <h3 class="text-sm font-semibold uppercase tracking-[0.16em] text-teal-400">{navigation.languageLabel}</h3>
-      <LanguageSwitcher locale={locale} />
-      <a class="mt-4 inline-flex text-sm text-teal-400 hover:text-white" href="#top">{footer.backToTop}</a>
+      <h2 class="footer-title">{footer.resources}</h2>
+      <nav class="footer-link-list" aria-label={footer.resources}>
+        {resourceLinks.map((link) => (
+          <a href={link.path}>{link.label}</a>
+        ))}
+      </nav>
+    </div>
+
+    <div>
+      <h2 class="footer-title">{footer.contact}</h2>
+      <div class="footer-contact">
+        <p>{institutionEmail}</p>
+        <p>Ciudad Universitaria, Pabellón II, Buenos Aires, Argentina</p>
+        <p>IDEAN · UBA · CONICET</p>
+        <a class="footer-back-link" href="#top">{footer.backToTop}</a>
+      </div>
     </div>
   </div>
 </footer>

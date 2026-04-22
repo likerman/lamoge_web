@@ -1,47 +1,71 @@
 ---
 interface Props {
+  locale: "es" | "en";
   hero: {
     eyebrow: string;
     title: string;
     subtitle: string;
-    summary: string;
     primaryCta: string;
     secondaryCta: string;
-    tertiaryCta: string;
     stats: string[];
   };
 }
 
-const { hero } = Astro.props;
+const { locale, hero } = Astro.props;
 ---
 
-<section class="relative isolate min-h-[92vh] overflow-hidden bg-ink-950 text-white">
-  <div class="absolute inset-0">
-    <img src="/images/placeholders/hero-geology.svg" alt="" loading="eager" class="h-full w-full object-cover" />
+<section class="home-hero">
+  <div class="home-hero-art" aria-hidden="true">
+    <div class="hero-orbit hero-orbit-a"></div>
+    <div class="hero-orbit hero-orbit-b"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-strata"></div>
   </div>
-  <div class="absolute inset-0 bg-[linear-gradient(115deg,rgba(8,19,29,0.92)_12%,rgba(8,19,29,0.64)_56%,rgba(8,19,29,0.88)_100%),linear-gradient(180deg,rgba(8,19,29,0.25),rgba(8,19,29,0.82))]"></div>
 
-  <div class="shell relative z-10 grid min-h-[92vh] items-end gap-8 py-28 md:grid-cols-[minmax(0,1.35fr)_minmax(280px,0.8fr)] md:py-32">
-    <div data-reveal>
-      <div class="mb-6 inline-flex rounded-[1.6rem] bg-white/94 px-4 py-3 shadow-[0_24px_60px_rgba(4,10,16,0.22)]">
-        <img src="/brand/lamoge-logo.svg" alt="LaMoGe" class="h-10 w-auto" />
+  <div class="shell home-hero-shell">
+    <div class="home-hero-copy" data-reveal>
+      <p class="eyebrow">{hero.eyebrow}</p>
+      <h1 class="hero-title">{hero.title}</h1>
+      <p class="hero-subtitle">{hero.subtitle}</p>
+      <div class="hero-actions">
+        <a href={`/${locale}/research-lines/`} class="button-primary">{hero.primaryCta}</a>
+        <a href={`/${locale}/contact/`} class="button-secondary button-secondary-dark">{hero.secondaryCta}</a>
       </div>
-      <p class="eyebrow text-teal-400">{hero.eyebrow}</p>
-      <h1 class="max-w-[11ch] font-serif text-5xl leading-[0.94] md:text-7xl">{hero.title}</h1>
-      <p class="mt-4 max-w-[24ch] text-xl text-mist-200 md:text-2xl">{hero.subtitle}</p>
-      <p class="mt-5 max-w-3xl text-base leading-8 text-mist-300">{hero.summary}</p>
-
-      <div class="mt-8 flex flex-wrap gap-3">
-        <a class="button-primary" href="#research">{hero.primaryCta}</a>
-        <a class="button-secondary" href="#publications">{hero.secondaryCta}</a>
-        <a class="inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold text-mist-200 transition-transform hover:-translate-y-0.5" href="#contact">{hero.tertiaryCta}</a>
+      <div class="hero-kpis">
+        <span class="pill">{locale === "es" ? "Modelado geológico · Tectónica · Geodinámica" : "Geological modelling · Tectonics · Geodynamics"}</span>
+        <div class="hero-kpi-row">
+          <div class="hero-kpi">
+            <strong>2004</strong>
+            <span>{locale === "es" ? "Trayectoria activa" : "Active trajectory"}</span>
+          </div>
+          <div class="hero-kpi">
+            <strong>ES / EN</strong>
+            <span>{locale === "es" ? "Portal bilingüe" : "Bilingual platform"}</span>
+          </div>
+          <div class="hero-kpi">
+            <strong>UBA + CONICET</strong>
+            <span>{locale === "es" ? "Articulación institucional" : "Institutional articulation"}</span>
+          </div>
+        </div>
       </div>
     </div>
 
-    <ul class="grid gap-4" data-reveal>
-      {hero.stats.map((item) => (
-        <li class="card-muted">{item}</li>
-      ))}
-    </ul>
+    <div class="home-hero-aside" data-reveal>
+      <div class="hero-media-frame">
+        <img src="/images/gallery/DSC_0320.JPG" alt="" class="hero-media-main" />
+        <div class="hero-media-secondary">
+          <img src="/images/gallery/DJI_0664.JPG" alt="" />
+        </div>
+      </div>
+
+      <div class="hero-stat-grid">
+        {hero.stats.map((item, index) => (
+          <article class="hero-stat-card">
+            <strong>{index === 0 ? "01" : index === 1 ? "02" : "03"}</strong>
+            <span>{item}</span>
+          </article>
+        ))}
+      </div>
+    </div>
   </div>
 </section>

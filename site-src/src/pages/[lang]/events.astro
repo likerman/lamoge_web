@@ -1,0 +1,82 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import PageHero from "../../components/PageHero.astro";
+import Footer from "../../components/Footer.astro";
+import eventsData from "../../data/events.json";
+import { locales, localizeText, siteContent, type Locale } from "../../lib/i18n";
+import type { EventItem } from "../../types/content";
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const locale = Astro.params.lang as Locale;
+const content = siteContent[locale];
+const events = [...(eventsData as EventItem[])].sort((a, b) => a.date.localeCompare(b.date));
+
+const copy = {
+  es: {
+    title: "Eventos | LaMoGe",
+    description: "Agenda de eventos, seminarios y actividades públicas del laboratorio.",
+    eyebrow: "Actualidad",
+    pageTitle: "Eventos",
+    pageDescription:
+      "Esta sección está preparada para publicar seminarios, jornadas, convocatorias abiertas y actividades institucionales mediante una edición simple.",
+    empty: "No hay eventos publicados en este momento."
+  },
+  en: {
+    title: "Events | LaMoGe",
+    description: "Agenda of events, seminars and public activities from the laboratory.",
+    eyebrow: "Current affairs",
+    pageTitle: "Events",
+    pageDescription:
+      "This section is prepared to publish seminars, workshops, open calls and institutional activities through simple editorial updates.",
+    empty: "There are no published events at the moment."
+  }
+}[locale];
+---
+
+<BaseLayout title={copy.title} description={copy.description} locale={locale} image="/images/gallery/IMG_3683.JPG">
+  <Header locale={locale} navigation={content.navigation} />
+  <main id="main-content" class="pb-14">
+    <PageHero eyebrow={copy.eyebrow} title={copy.pageTitle} description={copy.pageDescription} image="/images/gallery/IMG_3683.JPG" />
+
+    <section class="section shell">
+      <div class="surface-panel">
+        {events.length > 0 ? (
+          <div class="grid gap-5 lg:grid-cols-2">
+            {events.map((item) => (
+              <article class="card" data-reveal>
+                <span class="pill">{localizeText(item.category, locale)}</span>
+                <h2 class="mt-4 text-xl font-semibold text-[color:var(--ink-950)]">{localizeText(item.title, locale)}</h2>
+                <p class="mt-3 text-sm text-[color:var(--ink-500)]">
+                  {new Date(`${item.date}T00:00:00`).toLocaleDateString(locale === "es" ? "es-AR" : "en-GB", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                  })}{" "}
+                  · {localizeText(item.place, locale)}
+                </p>
+                <p class="mt-3 text-sm leading-7 text-[color:var(--ink-700)]">{localizeText(item.description, locale)}</p>
+                {item.registrationUrl && (
+                  <a href={item.registrationUrl} target="_blank" rel="noreferrer" class="mt-5 inline-flex text-sm font-semibold text-[color:var(--accent-strong)]">
+                    {locale === "es" ? "Inscripción / más información" : "Registration / more information"}
+                  </a>
+                )}
+              </article>
+            ))}
+          </div>
+        ) : (
+          <article class="card" data-reveal>
+            <p class="text-sm leading-7 text-[color:var(--ink-700)]">{copy.empty}</p>
+            <a href={`/${locale}/contact/`} class="mt-5 inline-flex text-sm font-semibold text-[color:var(--accent-strong)]">
+              {locale === "es" ? "Contactar al laboratorio" : "Contact the laboratory"}
+            </a>
+          </article>
+        )}
+      </div>
+    </section>
+  </main>
+  <Footer locale={locale} navigation={content.navigation} footer={content.footer} />
+</BaseLayout>

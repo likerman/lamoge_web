@@ -1,0 +1,154 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import PageHero from "../../components/PageHero.astro";
+import Footer from "../../components/Footer.astro";
+import collaborationsData from "../../data/collaborations.json";
+import teamData from "../../data/team.json";
+import galleryData from "../../data/gallery.json";
+import facilitiesData from "../../data/facilities.json";
+import { locales, localizeText, siteContent, type Locale } from "../../lib/i18n";
+import type { CollaborationItem, GalleryItem, TeamMember } from "../../types/content";
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const locale = Astro.params.lang as Locale;
+const content = siteContent[locale];
+const collaborations = collaborationsData as CollaborationItem[];
+const team = teamData as TeamMember[];
+const gallery = (galleryData as GalleryItem[]).slice(0, 3);
+const facilities = facilitiesData as any[];
+
+const copy = {
+  es: {
+    title: "¿Qué es el LaMoGe? | Laboratorio de Modelado Geológico",
+    description: "Identidad institucional, misión, equipo y red académica del Laboratorio de Modelado Geológico.",
+    eyebrow: "¿Quiénes somos?",
+    pageTitle: "¿Qué es el LaMoGe?",
+    pageDescription:
+      "LaMoGe es un laboratorio académico dedicado al modelado geológico, la tectónica y la geodinámica, articulado entre IDEAN, la Universidad de Buenos Aires y CONICET.",
+    missionTitle: "Misión institucional",
+    missionBody: "LaMoGe desarrolla investigación original, formación avanzada y articulación científica en modelado geológico. Integra observaciones de campo, experimentación física y simulación numérica para abordar problemas estructurales y geodinámicos complejos con estándares académicos internacionales.",
+    teamTitle: "Integrantes",
+    teamEyebrow: "Equipo",
+    capabilitiesTitle: "Capacidades e infraestructura",
+    networkTitle: "Red institucional",
+    galleryTitle: "Laboratorio y trabajo de campo"
+  },
+  en: {
+    title: "What is LaMoGe? | Geological Modelling Laboratory",
+    description: "Institutional identity, mission, team and academic network of the Geological Modelling Laboratory.",
+    eyebrow: "Who we are",
+    pageTitle: "What is LaMoGe?",
+    pageDescription:
+      "LaMoGe is an academic laboratory devoted to geological modelling, tectonics and geodynamics, articulated across IDEAN, the University of Buenos Aires and CONICET.",
+    missionTitle: "Institutional mission",
+    missionBody: "LaMoGe develops original research, advanced training and scientific coordination in geological modelling. It connects field observations, physical experimentation and numerical simulation to address complex structural and geodynamic problems under international academic standards.",
+    teamTitle: "Team Members",
+    teamEyebrow: "Team",
+    capabilitiesTitle: "Capabilities and infrastructure",
+    networkTitle: "Institutional network",
+    galleryTitle: "Laboratory and fieldwork"
+  }
+}[locale];
+---
+
+<BaseLayout title={copy.title} description={copy.description} locale={locale} image="/images/gallery/DJI_0754.JPG">
+  <Header locale={locale} navigation={content.navigation} />
+  <main id="main-content" class="pb-14">
+    <PageHero eyebrow={copy.eyebrow} title={copy.pageTitle} description={copy.pageDescription} image="/images/gallery/DJI_0754.JPG" />
+
+    <!-- SECCIÓN: MISIÓN -->
+    <section class="section shell" id="mission">
+      <div class="surface-panel bg-gradient-to-br from-teal-500/5 to-transparent border-teal-500/10">
+        <div class="max-w-3xl">
+          <p class="eyebrow text-teal-600">{copy.missionTitle}</p>
+          <h2 class="section-title text-ink-950 mt-2">{copy.missionTitle}</h2>
+          <p class="mt-6 text-lg leading-relaxed text-ink-700 italic border-l-4 border-teal-400 pl-6">
+            "{copy.missionBody}"
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN: EQUIPO -->
+    <section class="section shell" id="team">
+      <div class="surface-panel">
+        <p class="eyebrow">{copy.teamEyebrow}</p>
+        <h2 class="section-title mb-10">{copy.teamTitle}</h2>
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {team.map((member) => (
+            <article class="card group hover:border-teal-500/30 transition-all shadow-sm hover:shadow-md" data-reveal>
+              <div class="flex items-center gap-4">
+                <div class="h-14 w-14 shrink-0 overflow-hidden rounded-full bg-mist-100 border-2 border-white shadow-inner">
+                  <img src={member.photo || "/images/team/placeholder.jpg"} alt={member.name} class="h-full w-full object-cover grayscale group-hover:grayscale-0 transition-all" />
+                </div>
+                <div>
+                  <h3 class="font-bold text-ink-950 leading-tight">{member.name}</h3>
+                  <p class="text-xs font-medium text-teal-600 mt-1">{localizeText(member.role, locale)}</p>
+                </div>
+              </div>
+              <div class="mt-4 pt-4 border-t border-ink-800/5">
+                <p class="text-xs text-ink-500 line-clamp-2 italic">"{localizeText(member.area, locale)}"</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN: CAPACIDADES E INFRAESTRUCTURA -->
+    <section class="section shell" id="capabilities">
+      <div class="surface-panel bg-mist-50/20">
+        <p class="eyebrow">{locale === "es" ? "Infraestructura" : "Infrastructure"}</p>
+        <h2 class="section-title mb-10">{copy.capabilitiesTitle}</h2>
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {facilities.map((item) => (
+            <article class="card" data-reveal>
+              <div class="flex items-center gap-3 mb-4">
+                <span class="text-xs font-bold uppercase tracking-widest text-teal-600 bg-teal-50 px-2 py-1 rounded">{localizeText(item.category, locale)}</span>
+              </div>
+              <h3 class="text-lg font-bold text-ink-950">{localizeText(item.name, locale)}</h3>
+              <p class="mt-3 text-sm text-ink-700 leading-relaxed">{localizeText(item.description, locale)}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="surface-panel">
+        <p class="eyebrow">{copy.networkTitle}</p>
+        <div class="grid gap-5 lg:grid-cols-2">
+          {collaborations.map((item) => (
+            <article class="card" data-reveal>
+              <h3 class="text-xl font-semibold text-ink-950">{item.name}</h3>
+              <p class="mt-2 text-sm font-bold text-teal-600 uppercase tracking-widest">{localizeText(item.kind, locale)}</p>
+              <p class="mt-3 text-sm leading-relaxed text-ink-700">{localizeText(item.summary, locale)}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="surface-panel bg-mist-50/30">
+        <p class="eyebrow">{copy.galleryTitle}</p>
+        <div class="grid gap-4 md:grid-cols-3 mt-6">
+          {gallery.map((item) => (
+            <article class="card p-0 overflow-hidden shadow-lg" data-reveal>
+              <img src={item.asset} alt={localizeText(item.title, locale)} class="aspect-[4/3] w-full object-cover" />
+              <div class="p-5">
+                <h3 class="text-sm font-bold text-ink-950 uppercase tracking-wider">{localizeText(item.title, locale)}</h3>
+                <p class="mt-2 text-xs leading-relaxed text-ink-600">{localizeText(item.caption, locale)}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer locale={locale} navigation={content.navigation} footer={content.footer} />
+</BaseLayout>

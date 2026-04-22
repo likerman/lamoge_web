@@ -1,0 +1,203 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import PageHero from "../../components/PageHero.astro";
+import Footer from "../../components/Footer.astro";
+import publicationsData from "../../data/publications.json";
+import { locales, siteContent, type Locale } from "../../lib/i18n";
+import type { Publication } from "../../types/content";
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const locale = Astro.params.lang as Locale;
+
+const content = siteContent[locale];
+const publications = publicationsData as Publication[];
+const featured = publications.filter((item) => item.featured);
+const years = [...new Set(publications.map((item) => item.year))].sort((a, b) => b - a);
+const topics = [...new Set(publications.map((item) => item.topic))].sort();
+const types = [...new Set(publications.map((item) => item.type))].sort();
+
+const copy = {
+  es: {
+    title: "Publicaciones | LaMoGe",
+    description: "Archivo de publicaciones, artículos y contribuciones científicas del laboratorio.",
+    eyebrow: "Publicaciones",
+    pageTitle: "Producción científica organizada para consulta pública, académica y editorial.",
+    pageDescription:
+      "El archivo reúne publicaciones destacadas y el listado completo del laboratorio con filtros por año, tema y tipo de contribución.",
+    featuredTitle: "Artículos destacados",
+    archiveTitle: "Archivo completo",
+    search: "Buscar",
+    searchPlaceholder: "Título, autor o revista",
+    year: "Año",
+    topic: "Tema",
+    type: "Tipo",
+    allYears: "Todos",
+    allTopics: "Todos",
+    allTypes: "Todos",
+    noResults: "No se encontraron publicaciones con los filtros activos.",
+    results: "resultados"
+  },
+  en: {
+    title: "Publications | LaMoGe",
+    description: "Archive of publications, papers and scientific contributions from the laboratory.",
+    eyebrow: "Publications",
+    pageTitle: "Scientific output organised for public, academic and editorial consultation.",
+    pageDescription:
+      "The archive gathers featured publications and the laboratory’s full list with filters by year, topic and contribution type.",
+    featuredTitle: "Featured papers",
+    archiveTitle: "Full archive",
+    search: "Search",
+    searchPlaceholder: "Title, author or journal",
+    year: "Year",
+    topic: "Topic",
+    type: "Type",
+    allYears: "All",
+    allTopics: "All",
+    allTypes: "All",
+    noResults: "No publications match the active filters.",
+    results: "results"
+  }
+}[locale];
+---
+
+<BaseLayout title={copy.title} description={copy.description} locale={locale} image="/images/gallery/DSC_0134.JPG">
+  <Header locale={locale} navigation={content.navigation} />
+  <main id="main-content" class="pb-14">
+    <PageHero eyebrow={copy.eyebrow} title={copy.pageTitle} description={copy.pageDescription} image="/images/gallery/DSC_0134.JPG" />
+
+    <section class="section shell">
+      <div class="surface-panel">
+        <p class="eyebrow">{copy.featuredTitle}</p>
+        <div class="grid gap-5 lg:grid-cols-2">
+          {featured.map((pub) => (
+            <article class="card" data-reveal>
+              <div class="flex flex-wrap gap-2">
+                <span class="pill">{pub.year}</span>
+                <span class="pill">{pub.topic.replace(/-/g, " ")}</span>
+              </div>
+              <h2 class="mt-4 text-xl font-semibold text-[color:var(--ink-950)]">{pub.title}</h2>
+              <p class="mt-3 text-sm leading-7 text-[color:var(--ink-700)]">{pub.authors}</p>
+              <p class="mt-1 text-sm text-[color:var(--ink-500)]">{pub.journal}</p>
+              {pub.url && (
+                <a href={pub.url} class="mt-4 inline-flex text-sm font-semibold text-[color:var(--accent-strong)]" target="_blank" rel="noreferrer">
+                  DOI / link
+                </a>
+              )}
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="surface-panel">
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p class="eyebrow">{copy.archiveTitle}</p>
+            <h2 class="section-title">{locale === "es" ? "Consulta y filtrado" : "Browse and filter"}</h2>
+          </div>
+          <p class="text-sm text-[color:var(--ink-500)]"><span data-results-count>{publications.length}</span> {copy.results}</p>
+        </div>
+
+        <div class="mt-8 grid gap-4 xl:grid-cols-4" data-publications-filters>
+          <label class="grid gap-2 text-sm font-semibold text-[color:var(--ink-700)]">
+            {copy.search}
+            <input class="search-input" type="search" placeholder={copy.searchPlaceholder} data-filter-search />
+          </label>
+          <label class="grid gap-2 text-sm font-semibold text-[color:var(--ink-700)]">
+            {copy.year}
+            <select class="field" data-filter-year>
+              <option value="">{copy.allYears}</option>
+              {years.map((year) => <option value={year}>{year}</option>)}
+            </select>
+          </label>
+          <label class="grid gap-2 text-sm font-semibold text-[color:var(--ink-700)]">
+            {copy.topic}
+            <select class="field" data-filter-topic>
+              <option value="">{copy.allTopics}</option>
+              {topics.map((topic) => <option value={topic}>{topic.replace(/-/g, " ")}</option>)}
+            </select>
+          </label>
+          <label class="grid gap-2 text-sm font-semibold text-[color:var(--ink-700)]">
+            {copy.type}
+            <select class="field" data-filter-type>
+              <option value="">{copy.allTypes}</option>
+              {types.map((type) => <option value={type}>{type}</option>)}
+            </select>
+          </label>
+        </div>
+
+        <div class="mt-8 grid gap-4" data-publications-grid>
+          {publications.map((pub) => (
+            <article
+              class="card"
+              data-publication-card
+              data-year={pub.year}
+              data-topic={pub.topic}
+              data-type={pub.type}
+              data-search={`${pub.title} ${pub.authors} ${pub.journal}`.toLowerCase()}
+            >
+              <div class="flex flex-wrap gap-2">
+                <span class="pill">{pub.year}</span>
+                <span class="pill">{pub.type}</span>
+                <span class="pill">{pub.topic.replace(/-/g, " ")}</span>
+              </div>
+              <h3 class="mt-4 text-lg font-semibold text-[color:var(--ink-950)]">{pub.title}</h3>
+              <p class="mt-2 text-sm leading-7 text-[color:var(--ink-700)]">{pub.authors}</p>
+              <p class="mt-1 text-sm text-[color:var(--ink-500)]">{pub.journal}</p>
+              {pub.doi && <p class="mt-3 text-xs tracking-[0.08em] uppercase text-[color:var(--ink-500)]">{pub.doi}</p>}
+              {pub.url && (
+                <a href={pub.url} class="mt-4 inline-flex text-sm font-semibold text-[color:var(--accent-strong)]" target="_blank" rel="noreferrer">
+                  DOI / link
+                </a>
+              )}
+            </article>
+          ))}
+        </div>
+
+        <article class="card hidden mt-8" data-no-publication-results>
+          <p class="text-sm leading-7 text-[color:var(--ink-700)]">{copy.noResults}</p>
+        </article>
+      </div>
+    </section>
+  </main>
+  <Footer locale={locale} navigation={content.navigation} footer={content.footer} />
+
+  <script>
+    const wrapper = document.querySelector("[data-publications-filters]");
+    if (wrapper) {
+      const search = wrapper.querySelector("[data-filter-search]");
+      const year = wrapper.querySelector("[data-filter-year]");
+      const topic = wrapper.querySelector("[data-filter-topic]");
+      const type = wrapper.querySelector("[data-filter-type]");
+      const cards = document.querySelectorAll("[data-publication-card]");
+      const count = document.querySelector("[data-results-count]");
+      const empty = document.querySelector("[data-no-publication-results]");
+
+      const run = () => {
+        const searchValue = search?.value?.toLowerCase?.() ?? "";
+        let visible = 0;
+        cards.forEach((card) => {
+          const matches =
+            (!searchValue || card.dataset.search.includes(searchValue)) &&
+            (!year?.value || card.dataset.year === year.value) &&
+            (!topic?.value || card.dataset.topic === topic.value) &&
+            (!type?.value || card.dataset.type === type.value);
+          card.classList.toggle("hidden", !matches);
+          if (matches) visible += 1;
+        });
+        if (count) count.textContent = String(visible);
+        empty?.classList.toggle("hidden", visible > 0);
+      };
+
+      search?.addEventListener("input", run);
+      year?.addEventListener("change", run);
+      topic?.addEventListener("change", run);
+      type?.addEventListener("change", run);
+    }
+  </script>
+</BaseLayout>

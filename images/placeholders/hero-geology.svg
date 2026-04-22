@@ -2,22 +2,36 @@
   <defs>
     <linearGradient id="bg" x1="0%" x2="100%" y1="0%" y2="100%">
       <stop offset="0%" stop-color="#08131d" />
-      <stop offset="50%" stop-color="#123047" />
-      <stop offset="100%" stop-color="#1e506d" />
+      <stop offset="45%" stop-color="#0d2637" />
+      <stop offset="100%" stop-color="#153e59" />
     </linearGradient>
-    <linearGradient id="ridge" x1="0%" x2="100%" y1="0%" y2="0%">
-      <stop offset="0%" stop-color="#66c8c2" stop-opacity=".4" />
-      <stop offset="100%" stop-color="#d7b46a" stop-opacity=".28" />
+    <linearGradient id="surface" x1="0%" x2="100%" y1="0%" y2="0%">
+      <stop offset="0%" stop-color="#66c8c2" stop-opacity=".28" />
+      <stop offset="100%" stop-color="#d7b46a" stop-opacity=".2" />
+    </linearGradient>
+    <linearGradient id="fault" x1="0%" x2="0%" y1="0%" y2="1">
+      <stop offset="0%" stop-color="#f4f8fb" stop-opacity=".9" />
+      <stop offset="100%" stop-color="#66c8c2" stop-opacity=".2" />
     </linearGradient>
   </defs>
-  <rect width="1600" height="960" fill="url(#bg)" />
-  <g opacity=".55">
-    <path d="M0 640C140 560 220 520 360 540c120 18 164 82 286 72 152-12 180-116 332-124 154-8 188 92 348 112 110 14 170-20 274-76V960H0V640Z" fill="#0d2331" />
-    <path d="M0 714c128-48 222-74 348-42 118 30 148 110 286 108 158-4 202-102 358-114 132-10 212 48 324 60 88 10 162-8 284-62V960H0V714Z" fill="#16384d" />
+  <rect width="1600" height="960" fill="url(#bg)"/>
+  <circle cx="1310" cy="170" r="124" fill="#d7b46a" opacity=".12"/>
+  <circle cx="1430" cy="124" r="28" fill="#f4f8fb" opacity=".3"/>
+  <g opacity=".95">
+    <path d="M0 690c166-74 286-96 416-64 170 42 226 164 394 152 180-14 252-166 430-184 120-12 224 30 360 92V960H0Z" fill="#18384e"/>
+    <path d="M0 748c178-52 290-42 428 4 140 46 206 122 344 118 162-4 262-122 434-148 152-22 256 8 394 58V960H0Z" fill="#234861"/>
+    <path d="M0 818c154-30 268-22 394 12 164 44 252 92 396 88 166-6 270-90 438-102 130-10 236 4 372 40V960H0Z" fill="#2e5b75"/>
   </g>
-  <g stroke="url(#ridge)" stroke-width="4" fill="none" opacity=".75">
-    <path d="M80 608c112-94 216-130 326-108 138 28 178 136 318 130 148-6 208-122 356-134 124-10 228 54 356 74 54 8 102 8 160-6" />
-    <path d="M124 708c98-54 184-70 284-48 132 30 202 126 326 122 142-4 210-120 366-144 114-18 214 24 328 42 58 10 106 10 172-2" />
+  <g fill="none" stroke-linecap="round">
+    <path d="M90 612c122-78 252-104 382-76 124 28 194 116 316 114 164-2 214-116 382-134 144-16 246 24 344 58" stroke="url(#surface)" stroke-width="6"/>
+    <path d="M110 734c108-50 208-62 306-38 126 30 198 106 330 102 148-4 222-92 382-116 122-18 236 4 356 28" stroke="#d7b46a" stroke-width="5" opacity=".45"/>
+    <path d="M744 272 650 802" stroke="url(#fault)" stroke-width="12"/>
+    <path d="M882 250 760 840" stroke="#66c8c2" stroke-width="4" opacity=".55" stroke-dasharray="10 14"/>
+    <path d="M566 504c40-28 88-40 138-24 46 14 64 48 106 54 54 8 86-20 126-48" stroke="#f4f8fb" stroke-width="3" opacity=".45"/>
   </g>
-  <text x="96" y="136" fill="#d7e7f1" font-size="40" font-family="IBM Plex Sans, sans-serif" opacity=".7">Placeholder visual for geological modelling imagery</text>
+  <g opacity=".25" fill="none" stroke="#f4f8fb">
+    <path d="M84 214c60 28 120 28 180 0 60-28 120-28 180 0 60 28 120 28 180 0" stroke-width="2"/>
+    <path d="M84 254c60 28 120 28 180 0 60-28 120-28 180 0 60 28 120 28 180 0" stroke-width="2"/>
+    <path d="M84 294c60 28 120 28 180 0 60-28 120-28 180 0 60 28 120 28 180 0" stroke-width="2"/>
+  </g>
 </svg>

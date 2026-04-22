@@ -18,6 +18,7 @@ export interface ResearchLine {
 }
 
 export interface TeamLink {
+  platform?: string;
   label: string;
   url: string;
 }
@@ -28,6 +29,7 @@ export interface TeamMember {
   role: LocalizedText;
   affiliation: string;
   area: LocalizedText;
+  bio?: LocalizedText;
   email?: string;
   photo?: string;
   links: TeamLink[];
@@ -38,11 +40,12 @@ export interface Publication {
   year: number;
   type: string;
   topic: string;
+  tags?: string[];
   title: string;
   authors: string;
   journal: string;
   doi?: string;
-  url: string;
+  url?: string;
 }
 
 export interface ServiceItem {
@@ -95,5 +98,47 @@ export interface NewsItem {
   category: LocalizedText;
   title: LocalizedText;
   summary: LocalizedText;
+  image?: string;
   url?: string;
+}
+
+export interface ProjectItem {
+  id: string;
+  featured: boolean;
+  status: LocalizedText;
+  period: string;
+  title: LocalizedText;
+  summary: LocalizedText;
+  partners: string[];
+  tags: LocalizedList;
+  image?: string;
+  url?: string;
+}
+
+export interface EventItem {
+  id: string;
+  date: string;
+  place: LocalizedText;
+  title: LocalizedText;
+  description: LocalizedText;
+  category: LocalizedText;
+  registrationUrl?: string;
+}
+
+export interface OpportunityItem {
+  id: string;
+  type: LocalizedText;
+  title: LocalizedText;
+  summary: LocalizedText;
+  deadline?: string;
+  status: LocalizedText;
+  url?: string;
+}
+
+export interface DownloadItem {
+  id: string;
+  title: LocalizedText;
+  description: LocalizedText;
+  kind: LocalizedText;
+  file: string;
 }

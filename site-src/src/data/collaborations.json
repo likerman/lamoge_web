@@ -14,7 +14,7 @@
       "en": "Main institutional node for Andean research, geology and interdisciplinary collaboration."
     },
     "url": "https://idean.conicet.gov.ar/",
-    "logo": "/images/placeholders/logo-1.svg"
+    "logo": "/images/institutional/Logo_IDEAN_nuevo.jpg"
   },
   {
     "name": "Universidad de Buenos Aires",
@@ -27,27 +27,41 @@
       "en": "Argentina"
     },
     "summary": {
-      "es": "Espacio para destacar vínculos con docencia, investigación y formación de estudiantes.",
-      "en": "Space to highlight links to teaching, research and student training."
+      "es": "Marco académico de referencia para docencia, formación de grado y posgrado, dirección de tesis y desarrollo de investigación en ciencias geológicas.",
+      "en": "Academic framework for teaching, undergraduate and graduate training, thesis supervision and research development in geological sciences."
     },
-    "url": "https://www.uba.ar/",
-    "logo": "/images/placeholders/logo-2.svg"
+    "url": "https://www.uba.ar/"
   },
   {
-    "name": "Partner Institution Placeholder",
+    "name": "IGEBA",
     "kind": {
-      "es": "Colaboración internacional",
-      "en": "International collaboration"
+      "es": "Colaboración científica",
+      "en": "Scientific collaboration"
     },
     "scope": {
-      "es": "Internacional",
-      "en": "International"
+      "es": "Argentina",
+      "en": "Argentina"
     },
     "summary": {
-      "es": "Reemplazar por proyecto o institución asociada con colaboración activa.",
-      "en": "Replace with an active partner project or institution."
+      "es": "Vínculo activo en temas de anisotropía de susceptibilidad magnética, paleomagnetismo y análisis estructural, con participación de investigadores y becarios asociados.",
+      "en": "Active link in anisotropy of magnetic susceptibility, palaeomagnetism and structural analysis, with participation of associated researchers and fellows."
     },
-    "url": "https://example.org/",
-    "logo": "/images/placeholders/logo-3.svg"
+    "url": "https://igeba.gl.fcen.uba.ar/"
+  },
+  {
+    "name": "University of Oslo",
+    "kind": {
+      "es": "Cooperación metodológica internacional",
+      "en": "International methodological cooperation"
+    },
+    "scope": {
+      "es": "Noruega",
+      "en": "Norway"
+    },
+    "summary": {
+      "es": "Intercambio metodológico en modelos de intrusiones magmáticas y sistemas volcánicos, con colaboración especializada en el desarrollo experimental de esta línea.",
+      "en": "Methodological exchange on magmatic intrusion and volcanic system models, with specialised collaboration in the experimental development of this line."
+    },
+    "url": "https://www.uio.no/english/"
   }
 ]

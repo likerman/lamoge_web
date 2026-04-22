@@ -1,0 +1,123 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import PageHero from "../../components/PageHero.astro";
+import Footer from "../../components/Footer.astro";
+import servicesData from "../../data/services.json";
+import collaborationsData from "../../data/collaborations.json";
+import newsData from "../../data/news.json";
+import { locales, localizeArray, localizeText, siteContent, type Locale } from "../../lib/i18n";
+import type { CollaborationItem, NewsItem, ServiceItem } from "../../types/content";
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const locale = Astro.params.lang as Locale;
+
+const content = siteContent[locale];
+const services = (servicesData as ServiceItem[]).slice(0, 3);
+const collaborations = (collaborationsData as CollaborationItem[]).slice(0, 4);
+const news = (newsData as NewsItem[]).slice(0, 3);
+
+const copy = {
+  es: {
+    title: "Sociedad | LaMoGe",
+    description: "Vinculación, transferencia, articulación institucional y aporte del laboratorio hacia la sociedad.",
+    eyebrow: "Sociedad",
+    pageTitle: "Conocimiento científico en diálogo con instituciones, formación y transferencia.",
+    pageDescription:
+      "LaMoGe articula investigación, servicios y comunicación para sostener vínculos con universidades, agencias públicas, equipos técnicos y actores del sector productivo.",
+    servicesTitle: "Capacidades con impacto externo",
+    servicesDescription:
+      "El laboratorio traduce experiencia metodológica en acompañamiento científico, análisis estructural y transferencia especializada.",
+    networkTitle: "Red de vinculación",
+    networkDescription:
+      "Las colaboraciones sostienen circulación de conocimiento, proyectos compartidos y visibilidad institucional a escala nacional e internacional.",
+    newsTitle: "Actualidad con proyección pública"
+  },
+  en: {
+    title: "Society | LaMoGe",
+    description: "Outreach, transfer, institutional links and the laboratory’s broader contribution to society.",
+    eyebrow: "Society",
+    pageTitle: "Scientific knowledge in dialogue with institutions, training and transfer.",
+    pageDescription:
+      "LaMoGe connects research, services and communication to engage with universities, public agencies, technical teams and actors from the productive sector.",
+    servicesTitle: "Capabilities with external impact",
+    servicesDescription:
+      "The laboratory translates methodological expertise into scientific support, structural analysis and specialised transfer.",
+    networkTitle: "Engagement network",
+    networkDescription:
+      "Collaborations sustain knowledge circulation, shared projects and institutional visibility at national and international scales.",
+    newsTitle: "Current activity with public reach"
+  }
+}[locale];
+---
+
+<BaseLayout title={copy.title} description={copy.description} locale={locale} image="/images/gallery/DSC_0450.JPG">
+  <Header locale={locale} navigation={content.navigation} />
+  <main id="main-content" class="pb-14">
+    <PageHero eyebrow={copy.eyebrow} title={copy.pageTitle} description={copy.pageDescription} image="/images/gallery/DSC_0450.JPG" />
+
+    <section class="section shell">
+      <div class="surface-panel">
+        <p class="eyebrow">{copy.servicesTitle}</p>
+        <h2 class="section-title">{locale === "es" ? "Servicios, transferencia y acompañamiento técnico" : "Services, transfer and technical support"}</h2>
+        <p class="section-copy">{copy.servicesDescription}</p>
+        <div class="mt-8 grid gap-5 lg:grid-cols-3">
+          {services.map((item) => (
+            <article class="card" data-reveal>
+              <span class="pill">{localizeText(item.status, locale)}</span>
+              <h3 class="mt-4 text-xl font-semibold text-[color:var(--ink-950)]">{localizeText(item.title, locale)}</h3>
+              <p class="mt-3 text-sm leading-7 text-[color:var(--ink-700)]">{localizeText(item.summary, locale)}</p>
+              <div class="mt-4 flex flex-wrap gap-2">
+                {localizeArray(item.applications, locale).slice(0, 3).map((entry) => (
+                  <span class="pill">{entry}</span>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="surface-panel surface-panel-dark">
+        <p class="eyebrow">{copy.networkTitle}</p>
+        <h2 class="section-title">{locale === "es" ? "Instituciones, universidades y proyectos compartidos" : "Institutions, universities and shared projects"}</h2>
+        <p class="section-copy">{copy.networkDescription}</p>
+        <div class="mt-8 grid gap-5 lg:grid-cols-2">
+          {collaborations.map((item) => (
+            <article class="card-dark" data-reveal>
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <span class="pill !bg-white/6 !border-white/8 !text-white/80">{localizeText(item.kind, locale)}</span>
+                  <h3 class="mt-4 text-xl font-semibold text-white">{item.name}</h3>
+                </div>
+                {item.logo && <img src={item.logo} alt={item.name} class="h-14 w-14 rounded-2xl object-cover bg-white p-2 shadow-sm" />}
+              </div>
+              <p class="mt-4 text-sm leading-7 text-white/74">{localizeText(item.summary, locale)}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="surface-panel">
+        <p class="eyebrow">{copy.newsTitle}</p>
+        <h2 class="section-title">{locale === "es" ? "Noticias, actividades y comunicación institucional" : "News, activities and institutional communication"}</h2>
+        <div class="mt-8 grid gap-5 lg:grid-cols-3">
+          {news.map((item) => (
+            <article class="card" data-reveal>
+              <span class="pill">{localizeText(item.category, locale)}</span>
+              <h3 class="mt-4 text-xl font-semibold text-[color:var(--ink-950)]">{localizeText(item.title, locale)}</h3>
+              <p class="mt-3 text-sm leading-7 text-[color:var(--ink-700)]">{localizeText(item.summary, locale)}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer locale={locale} navigation={content.navigation} footer={content.footer} />
+</BaseLayout>

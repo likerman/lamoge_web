@@ -1,85 +1,205 @@
 [
   {
     "category": "leadership",
-    "name": "Dra. Nombre Apellido",
+    "name": "Dr. Ernesto Cristallini",
     "role": {
-      "es": "Directora del laboratorio",
+      "es": "Director del laboratorio",
       "en": "Laboratory director"
     },
-    "affiliation": "IDEAN · UBA · CONICET",
+    "affiliation": "Profesor Titular FCEN, UBA · Investigador Principal CONICET · IDEAN · LaMoGe",
     "area": {
-      "es": "Tectónica, geología estructural y coordinación científica",
-      "en": "Tectonics, structural geology and scientific coordination"
+      "es": "Dirección científica, modelado geológico, tectónica y geología estructural",
+      "en": "Scientific leadership, geological modelling, tectonics and structural geology"
     },
-    "email": "direccion.lamoge@idean.uba.ar",
+    "bio": {
+      "es": "Conduce la agenda científica del laboratorio y su articulación entre modelado análogo, simulación numérica y validación geológica regional.",
+      "en": "Leads the laboratory’s scientific agenda and its articulation between analogue modelling, numerical simulation and regional geological validation."
+    },
+    "email": "",
     "photo": "/images/placeholders/team-1.svg",
     "links": [
       {
+        "platform": "orcid",
         "label": "ORCID",
-        "url": "https://orcid.org/"
+        "url": "https://orcid.org/0000-0002-3381-2852"
       },
       {
-        "label": "Google Scholar",
-        "url": "https://scholar.google.com/"
+        "platform": "scholar",
+        "label": "Scholar",
+        "url": "https://scholar.google.com/citations?user=xErIfEYAAAAJ&hl=es"
       }
     ]
   },
   {
     "category": "researchers",
-    "name": "Dr. Nombre Investigador",
+    "name": "Dr. Daniel Yagupsky",
     "role": {
-      "es": "Investigador",
-      "en": "Researcher"
+      "es": "Investigador integrante",
+      "en": "Research staff"
     },
-    "affiliation": "IDEAN · CONICET",
+    "affiliation": "Profesor Adjunto FCEN, UBA · Investigador Independiente CONICET · IDEAN · LaMoGe",
     "area": {
-      "es": "Modelado numérico y análisis de procesos",
-      "en": "Numerical modelling and process analysis"
+      "es": "Modelado tectónico-estructural y evolución de prototipos geológicos",
+      "en": "Tectonic-structural modelling and geological prototype evolution"
     },
-    "email": "investigador@idean.uba.ar",
+    "bio": {
+      "es": "Trabaja en reconstrucción tectónica, arquitectura estructural y evolución de sistemas geológicos complejos.",
+      "en": "Works on tectonic reconstruction, structural architecture and the evolution of complex geological systems."
+    },
+    "email": "",
     "photo": "/images/placeholders/team-2.svg",
-    "links": [
-      {
-        "label": "CONICET",
-        "url": "https://www.conicet.gov.ar/"
-      }
-    ]
+    "links": []
   },
   {
-    "category": "fellows",
-    "name": "Lic. Nombre Becaria",
+    "category": "researchers",
+    "name": "Dr. Jeremías Likerman",
     "role": {
-      "es": "Becaria doctoral",
-      "en": "Doctoral fellow"
+      "es": "Investigador integrante",
+      "en": "Research staff"
     },
-    "affiliation": "UBA",
+    "affiliation": "Profesor Adjunto FCEN, UBA · Investigador Adjunto CONICET · IDEAN · LaMoGe",
     "area": {
-      "es": "Modelado análogo y evolución estructural",
-      "en": "Analogue modelling and structural evolution"
+      "es": "Fracturamiento, modelado numérico y mecánica estructural",
+      "en": "Fracturing, numerical modelling and structural mechanics"
+    },
+    "bio": {
+      "es": "Desarrolla herramientas cuantitativas para geomecánica, análisis de fracturas y simulación estructural.",
+      "en": "Develops quantitative tools for geomechanics, fracture analysis and structural simulation."
     },
     "email": "",
     "photo": "/images/placeholders/team-3.svg",
     "links": [
       {
-        "label": "CV",
-        "url": "https://example.org/"
+        "platform": "orcid",
+        "label": "ORCID",
+        "url": "https://orcid.org/0000-0003-3844-2085"
       }
     ]
   },
   {
-    "category": "students",
-    "name": "Nombre Estudiante",
+    "category": "researchers",
+    "name": "Dr. Felipe Tapia",
     "role": {
-      "es": "Estudiante de grado",
-      "en": "Undergraduate student"
+      "es": "Investigador integrante",
+      "en": "Research staff"
     },
-    "affiliation": "FCEN · UBA",
+    "affiliation": "Jefe de Trabajos Prácticos FCEN, UBA · Investigador Asistente CONICET · IDEAN · LaMoGe",
     "area": {
-      "es": "Procesamiento de datos y visualización",
-      "en": "Data processing and visualisation"
+      "es": "Modelado estructural, docencia y análisis tectónico aplicado",
+      "en": "Structural modelling, teaching and applied tectonic analysis"
+    },
+    "bio": {
+      "es": "Integra docencia, trabajo de campo y desarrollo metodológico aplicado a problemas tectónicos y de cuencas.",
+      "en": "Integrates teaching, fieldwork and methodological development applied to tectonic and basin-scale problems."
     },
     "email": "",
     "photo": "/images/placeholders/team-4.svg",
+    "links": []
+  },
+  {
+    "category": "researchers",
+    "name": "Dra. Cecilia Guzmán",
+    "role": {
+      "es": "Investigadora integrante",
+      "en": "Research staff"
+    },
+    "affiliation": "Investigadora Asistente CONICET · IDEAN · LaMoGe",
+    "area": {
+      "es": "Campos de esfuerzos, tectónica y análisis regional",
+      "en": "Stress fields, tectonics and regional analysis"
+    },
+    "bio": {
+      "es": "Investiga campos de esfuerzos actuales y su relación con la evolución tectónica regional.",
+      "en": "Researches present-day stress fields and their relationship with regional tectonic evolution."
+    },
+    "email": "",
+    "photo": "/images/placeholders/team-1.svg",
+    "links": []
+  },
+  {
+    "category": "researchers",
+    "name": "Dr. Hernán Barcelona",
+    "role": {
+      "es": "Investigador integrante",
+      "en": "Research staff"
+    },
+    "affiliation": "Investigador Asistente CONICET · IDEAN · LaMoGe",
+    "area": {
+      "es": "Modelado termo-mecánico, geodinámica y simulación numérica",
+      "en": "Thermo-mechanical modelling, geodynamics and numerical simulation"
+    },
+    "bio": {
+      "es": "Aborda procesos litosféricos y evolución térmica mediante simulaciones físicas y numéricas de alta complejidad.",
+      "en": "Addresses lithospheric processes and thermal evolution through high-complexity physical and numerical simulations."
+    },
+    "email": "",
+    "photo": "/images/placeholders/team-2.svg",
+    "links": [
+      {
+        "platform": "orcid",
+        "label": "ORCID",
+        "url": "https://orcid.org/0000-0003-4137-7085"
+      }
+    ]
+  },
+  {
+    "category": "fellows",
+    "name": "Dra. Clara Correa Luna",
+    "role": {
+      "es": "Becaria posdoctoral",
+      "en": "Postdoctoral fellow"
+    },
+    "affiliation": "Ayudante de Primera FCEN, UBA · Becaria Posdoctoral CONICET · IDEAN · LaMoGe",
+    "area": {
+      "es": "Fracturamiento en reservorios convencionales y no convencionales",
+      "en": "Fracturing in conventional and unconventional reservoirs"
+    },
+    "bio": {
+      "es": "Desarrolla investigación aplicada sobre redes de fracturas naturales y caracterización estructural de reservorios.",
+      "en": "Develops applied research on natural fracture networks and reservoir-scale structural characterisation."
+    },
+    "email": "claracorrealu [at] gmail.com",
+    "photo": "/images/placeholders/team-3.svg",
+    "links": []
+  },
+  {
+    "category": "fellows",
+    "name": "Lic. Fiorella Insaurralde",
+    "role": {
+      "es": "Becaria doctoral",
+      "en": "Doctoral fellow"
+    },
+    "affiliation": "Ayudante de Segunda FCEN, UBA · Becaria Doctoral CONICET · IDEAN · LaMoGe",
+    "area": {
+      "es": "Investigación doctoral en modelado geológico y análisis estructural",
+      "en": "Doctoral research in geological modelling and structural analysis"
+    },
+    "bio": {
+      "es": "Participa en líneas de investigación activas vinculadas a modelado, deformación y análisis estructural.",
+      "en": "Contributes to active research lines related to modelling, deformation and structural analysis."
+    },
+    "email": "",
+    "photo": "/images/placeholders/team-4.svg",
+    "links": []
+  },
+  {
+    "category": "collaborators",
+    "name": "Juan Cruz Mannarino",
+    "role": {
+      "es": "Personal de apoyo",
+      "en": "Technical support staff"
+    },
+    "affiliation": "Personal de Apoyo (CPA) CONICET · IDEAN · LaMoGe",
+    "area": {
+      "es": "Soporte técnico y operativo del laboratorio",
+      "en": "Technical and operational laboratory support"
+    },
+    "bio": {
+      "es": "Asegura la continuidad operativa del laboratorio, la infraestructura experimental y el soporte técnico cotidiano.",
+      "en": "Ensures day-to-day operational continuity, experimental infrastructure and technical support across the laboratory."
+    },
+    "email": "",
+    "photo": "/images/placeholders/team-1.svg",
     "links": []
   }
 ]

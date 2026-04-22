@@ -1,42 +1,42 @@
 [
   {
     "title": {
-      "es": "Diseño y ejecución de modelado geológico",
-      "en": "Design and execution of geological modelling"
+      "es": "Diseño y ejecución de modelos análogos y numéricos",
+      "en": "Design and execution of analogue and numerical models"
     },
     "summary": {
-      "es": "Placeholder: confirmar alcance exacto, escala de trabajo y modalidad de contratación.",
-      "en": "Placeholder: confirm exact scope, working scale and engagement modality."
+      "es": "Desarrollo de esquemas de modelado geológico para problemas tectónico-estructurales, con integración entre experimentación física, simulación numérica y contraste con casos naturales.",
+      "en": "Development of geological modelling schemes for tectonic-structural problems, integrating physical experimentation, numerical simulation and comparison with natural case studies."
     },
     "audience": {
-      "es": "Grupos académicos, organismos públicos y equipos técnicos especializados.",
-      "en": "Academic groups, public agencies and specialised technical teams."
+      "es": "Grupos académicos, organismos públicos y equipos técnicos con problemas de deformación, geometría estructural o evolución tectónica.",
+      "en": "Academic groups, public agencies and technical teams dealing with deformation, structural geometry or tectonic evolution problems."
     },
     "applications": {
-      "es": ["evaluación tectónica", "escenarios de deformación", "apoyo a investigación"],
-      "en": ["tectonic assessment", "deformation scenarios", "research support"]
+      "es": ["evaluación tectónica", "escenarios de deformación", "prototipos de subsuelo", "apoyo a investigación"],
+      "en": ["tectonic assessment", "deformation scenarios", "subsurface prototypes", "research support"]
     },
     "status": {
-      "es": "Requiere validación institucional",
-      "en": "Requires institutional validation"
+      "es": "Disponible bajo consulta institucional",
+      "en": "Available through institutional enquiry"
     }
   },
   {
     "title": {
-      "es": "Consultoría científica y análisis estructural",
-      "en": "Scientific consulting and structural analysis"
+      "es": "Análisis estructural, fracturamiento y geomecánica predictiva",
+      "en": "Structural analysis, fracturing and predictive geomechanics"
     },
     "summary": {
-      "es": "Interpretación geológica y estructural orientada a proyectos académicos o aplicados.",
-      "en": "Geological and structural interpretation oriented to academic or applied projects."
+      "es": "Interpretación estructural y evaluación de zonas de fracturamiento, campos de esfuerzos y sweet-spots estructurales en reservorios convencionales y no convencionales.",
+      "en": "Structural interpretation and evaluation of fracture zones, stress fields and structural sweet spots in conventional and unconventional reservoirs."
     },
     "audience": {
-      "es": "Instituciones de investigación, organismos técnicos y terceros con necesidades específicas.",
-      "en": "Research institutions, technical agencies and external partners with specific needs."
+      "es": "Instituciones de investigación, organismos técnicos y consultas especializadas vinculadas a energía, geotermia o caracterización estructural.",
+      "en": "Research institutions, technical agencies and specialised enquiries related to energy, geothermal systems or structural characterisation."
     },
     "applications": {
-      "es": ["interpretación de datos", "síntesis estructural", "asesoramiento especializado"],
-      "en": ["data interpretation", "structural synthesis", "specialised advice"]
+      "es": ["interpretación de datos", "redes de fracturas", "geomecánica", "síntesis estructural"],
+      "en": ["data interpretation", "fracture networks", "geomechanics", "structural synthesis"]
     },
     "status": {
       "es": "Disponible bajo consulta",
@@ -45,24 +45,24 @@
   },
   {
     "title": {
-      "es": "Capacitaciones y talleres",
-      "en": "Training courses and workshops"
+      "es": "Capacitación y desarrollo metodológico",
+      "en": "Training and methodological development"
     },
     "summary": {
-      "es": "Instancias de formación en herramientas, conceptos y metodologías del modelado geológico.",
-      "en": "Training activities in tools, concepts and methodologies for geological modelling."
+      "es": "Instancias de formación en modelado geológico, análisis estructural, herramientas cuantitativas y metodologías experimentales aplicadas a problemas reales.",
+      "en": "Training activities in geological modelling, structural analysis, quantitative tools and experimental methodologies applied to real-world problems."
     },
     "audience": {
-      "es": "Estudiantes, investigadores en formación y equipos técnicos.",
-      "en": "Students, early-career researchers and technical teams."
+      "es": "Estudiantes, becarios, investigadores en formación y equipos técnicos.",
+      "en": "Students, fellows, early-career researchers and technical teams."
     },
     "applications": {
-      "es": ["formación de recursos humanos", "actualización metodológica", "talleres temáticos"],
-      "en": ["human resource training", "methodological updates", "thematic workshops"]
+      "es": ["formación de recursos humanos", "actualización metodológica", "talleres temáticos", "entrenamiento técnico"],
+      "en": ["human resource training", "methodological updates", "thematic workshops", "technical training"]
     },
     "status": {
-      "es": "Formato y frecuencia a definir",
-      "en": "Format and frequency to be defined"
+      "es": "Modalidad a coordinar",
+      "en": "Format to be coordinated"
     }
   }
 ]

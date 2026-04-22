@@ -1,48 +1,70 @@
 [
   {
-    "date": "2026-03-12",
+    "date": "2026-04-21",
     "category": {
-      "es": "Proyecto",
-      "en": "Project"
+      "es": "Institucional",
+      "en": "Institutional"
     },
     "title": {
-      "es": "Nueva campaña de integración entre modelado análogo y análisis estructural",
-      "en": "New integration campaign between analogue modelling and structural analysis"
+      "es": "Nuevo portal institucional bilingüe para LaMoGe",
+      "en": "New bilingual institutional portal for LaMoGe"
     },
     "summary": {
-      "es": "Placeholder editorial para anunciar campañas, resultados preliminares, lanzamientos de datasets o hitos institucionales del laboratorio.",
-      "en": "Editorial placeholder to announce campaigns, preliminary results, dataset releases or institutional milestones from the laboratory."
+      "es": "El laboratorio incorpora una nueva plataforma web orientada a visibilizar investigación, publicaciones, infraestructura, servicios y oportunidades de colaboración de forma más clara y mantenible.",
+      "en": "The laboratory now has a new web platform designed to showcase research, publications, infrastructure, services and collaboration opportunities with greater clarity and maintainability."
     },
-    "url": "https://example.org/news-1"
+    "image": "/images/gallery/DJI_0664.JPG",
+    "url": "/es/"
   },
   {
-    "date": "2026-02-04",
+    "date": "2026-03-12",
     "category": {
       "es": "Publicación",
       "en": "Publication"
     },
     "title": {
-      "es": "Sección preparada para destacar artículos recientes y contribuciones relevantes",
-      "en": "Section ready to highlight recent articles and relevant contributions"
+      "es": "Producción científica reciente integrada al archivo público del laboratorio",
+      "en": "Recent scientific output integrated into the laboratory’s public archive"
     },
     "summary": {
-      "es": "Usar este bloque para visibilizar papers destacados, presentaciones en congresos, workshops o colaboraciones activas.",
-      "en": "Use this block to surface featured papers, conference presentations, workshops or active collaborations."
-    }
+      "es": "El archivo editorial ya permite destacar artículos recientes, ordenar por año, filtrar por tema y conectar directamente con DOI y recursos asociados.",
+      "en": "The editorial archive now makes it possible to highlight recent papers, sort by year, filter by topic and link directly to DOI records and related resources."
+    },
+    "image": "/images/gallery/IMG_20240418_114316134.jpg",
+    "url": "/es/publications/"
   },
   {
-    "date": "2025-11-18",
+    "date": "2021-08-23",
     "category": {
-      "es": "Formación",
-      "en": "Training"
+      "es": "Transferencia",
+      "en": "Technology transfer"
     },
     "title": {
-      "es": "Espacio para anunciar cursos, tesis, convocatorias y nuevas incorporaciones",
-      "en": "Space to announce courses, theses, calls and new team members"
+      "es": "Andino 3D y la proyección tecnológica del modelado geológico",
+      "en": "Andino 3D and the technological projection of geological modelling"
     },
     "summary": {
-      "es": "El contenido queda desacoplado para que agregar una novedad sea tan simple como sumar un objeto JSON.",
-      "en": "The content is decoupled so adding a news item is as simple as appending one JSON object."
-    }
+      "es": "La proyección pública de Andino 3D destacó la capacidad del laboratorio para articular investigación, desarrollo tecnológico y transferencia aplicada en geociencias.",
+      "en": "The public projection of Andino 3D highlighted the laboratory’s ability to connect research, technological development and applied transfer in geosciences."
+    },
+    "image": "/images/gallery/DJI_0754.JPG",
+    "url": "https://www.unidiversidad.com.ar/andino-3d-el-software-que-permite-la-deteccion-y-exploracion-de-hidrocarburos"
+  },
+  {
+    "date": "2013-11-04",
+    "category": {
+      "es": "Divulgación",
+      "en": "Outreach"
+    },
+    "title": {
+      "es": "La máquina de hacer montañas: divulgación sobre modelado análogo en Exactas UBA",
+      "en": "The machine that makes mountains: outreach on analogue modelling at Exactas UBA"
+    },
+    "summary": {
+      "es": "Una nota de divulgación de Exactas UBA presentó el trabajo experimental del laboratorio y su aporte a la comprensión de procesos tectónicos y estructurales.",
+      "en": "An outreach feature from Exactas UBA presented the laboratory’s experimental work and its contribution to understanding tectonic and structural processes."
+    },
+    "image": "/images/gallery/DSC_0320.JPG",
+    "url": "https://exactas.uba.ar/la-maquina-de-hacer-montanas/"
   }
 ]

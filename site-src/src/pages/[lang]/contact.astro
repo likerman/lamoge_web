@@ -1,0 +1,116 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import PageHero from "../../components/PageHero.astro";
+import Footer from "../../components/Footer.astro";
+import { locales, siteContent, type Locale } from "../../lib/i18n";
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const locale = Astro.params.lang as Locale;
+
+const content = siteContent[locale];
+const institutionEmail = content.institution.email;
+const copy = {
+  es: {
+    title: "Contacto | LaMoGe",
+    description: "Contacto institucional, colaboraciones y consultas para el laboratorio.",
+    eyebrow: "Contacto",
+    pageTitle: "Un punto de entrada claro para colaboraciones, consultas y articulaciones institucionales.",
+    pageDescription:
+      "La pagina de contacto esta pensada para investigadores, instituciones, estudiantes y equipos tecnicos que buscan vincularse con el laboratorio.",
+    cards: [
+      "Consultas institucionales y cientificas",
+      "Propuestas de colaboracion y transferencia",
+      "Interes en formacion, tesis o proyectos compartidos"
+    ],
+    formTitle: "Contacto institucional",
+    emailTitle: "Correo institucional",
+    locationTitle: "Ubicacion",
+    guidanceTitle: "Como escribirnos",
+    steps: [
+      "Usar el correo institucional que figura en esta pagina.",
+      "Reemplazar [at] por @ al redactar el mensaje.",
+      "Incluir nombre, institucion y motivo de contacto para agilizar la respuesta."
+    ],
+    note: "La direccion se publica ofuscada para reducir recoleccion automatica y spam mientras se define una integracion backend institucional."
+  },
+  en: {
+    title: "Contact | LaMoGe",
+    description: "Institutional contact, collaborations and enquiries for the laboratory.",
+    eyebrow: "Contact",
+    pageTitle: "A clear entry point for collaborations, enquiries and institutional links.",
+    pageDescription:
+      "The contact page is designed for researchers, institutions, students and technical teams seeking to connect with the laboratory.",
+    cards: [
+      "Institutional and scientific enquiries",
+      "Collaboration and transfer proposals",
+      "Interest in training, theses or shared projects"
+    ],
+    formTitle: "Institutional contact",
+    emailTitle: "Institutional email",
+    locationTitle: "Location",
+    guidanceTitle: "How to contact us",
+    steps: [
+      "Use the institutional email shown on this page.",
+      "Replace [at] with @ when writing your message.",
+      "Include your name, institution and reason for contacting us to streamline the reply."
+    ],
+    note: "The address is intentionally obfuscated to reduce automated harvesting and spam while a dedicated institutional backend integration is defined."
+  }
+}[locale];
+---
+
+<BaseLayout title={copy.title} description={copy.description} locale={locale} image="/images/gallery/TTAX0862.JPG">
+  <Header locale={locale} navigation={content.navigation} />
+  <main id="main-content" class="pb-14">
+    <PageHero eyebrow={copy.eyebrow} title={copy.pageTitle} description={copy.pageDescription} image="/images/gallery/TTAX0862.JPG" />
+
+    <section class="section shell">
+      <div class="grid gap-6 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+        <div class="surface-panel surface-panel-dark">
+          <div class="grid gap-4">
+            {copy.cards.map((card) => (
+              <article class="card-dark" data-reveal>
+                <p class="text-base leading-8 text-white">{card}</p>
+              </article>
+            ))}
+            <article class="card-dark" data-reveal>
+              <span class="pill !bg-white/6 !border-white/8 !text-white/80">{copy.emailTitle}</span>
+              <p class="mt-4 text-lg font-semibold text-white">{institutionEmail}</p>
+            </article>
+            <article class="card-dark" data-reveal>
+              <span class="pill !bg-white/6 !border-white/8 !text-white/80">{copy.locationTitle}</span>
+              <p class="mt-4 text-lg font-semibold text-white">Ciudad Universitaria, Pabellón II, Buenos Aires, Argentina</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="surface-panel">
+          <p class="eyebrow">{copy.formTitle}</p>
+          <div class="card" data-reveal>
+            <span class="pill">{copy.guidanceTitle}</span>
+            <ol class="mt-5 grid gap-4">
+              {copy.steps.map((step, index) => (
+                <li class="flex items-start gap-3">
+                  <span class="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-cyan-500/10 text-sm font-extrabold text-[color:var(--accent-strong)]">
+                    {index + 1}
+                  </span>
+                  <span class="text-sm leading-7 text-[color:var(--ink-700)]">{step}</span>
+                </li>
+              ))}
+            </ol>
+            <div class="mt-6 rounded-[1.2rem] border border-[color:var(--border-soft)] bg-white/70 p-4">
+              <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-[color:var(--accent-strong)]">{copy.emailTitle}</p>
+              <p class="mt-2 text-lg font-semibold text-[color:var(--ink-950)]">{institutionEmail}</p>
+            </div>
+          </div>
+          <p class="mt-4 text-sm leading-7 text-[color:var(--ink-500)]">{copy.note}</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer locale={locale} navigation={content.navigation} footer={content.footer} />
+</BaseLayout>

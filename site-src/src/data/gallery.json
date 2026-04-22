@@ -2,38 +2,85 @@
   {
     "type": "image",
     "title": {
-      "es": "Vista general del laboratorio",
-      "en": "Laboratory overview"
+      "es": "Caja de arena de realidad aumentada",
+      "en": "Augmented reality sandbox"
     },
     "caption": {
-      "es": "Placeholder para fotografía institucional del espacio de trabajo.",
-      "en": "Placeholder for an institutional photograph of the workspace."
+      "es": "Visualización interactiva de topografía y flujo de agua en tiempo real sobre modelos físicos.",
+      "en": "Interactive real-time topography and water flow visualisation over physical models."
     },
-    "asset": "/images/placeholders/gallery-1.svg"
+    "asset": "/images/gallery/DSC_0320.JPG"
   },
   {
     "type": "image",
     "title": {
-      "es": "Experimento de modelado",
-      "en": "Modelling experiment"
+      "es": "Campaña de campo y relevamiento",
+      "en": "Field campaign and survey"
     },
     "caption": {
-      "es": "Placeholder para imagen de experimentación o montaje instrumental.",
-      "en": "Placeholder for an experimental setup or instrumentation image."
+      "es": "Vista aérea del equipo de trabajo y equipamiento en zonas de alta montaña.",
+      "en": "Aerial view of the fieldwork team and equipment in high mountain areas."
     },
-    "asset": "/images/placeholders/gallery-2.svg"
+    "asset": "/images/gallery/DJI_0664.JPG"
   },
   {
-    "type": "video",
+    "type": "image",
     "title": {
-      "es": "Animación o video institucional",
-      "en": "Animation or institutional video"
+      "es": "Paisaje geológico y estructuras",
+      "en": "Geological landscape and structures"
     },
     "caption": {
-      "es": "Preparado para reemplazar por un video corto o render de resultados.",
-      "en": "Ready to be replaced by a short video or results render."
+      "es": "Toma aérea de afloramientos espectaculares mostrando la complejidad estructural natural.",
+      "en": "Aerial shot of spectacular outcrops showing natural structural complexity."
     },
-    "asset": "/images/placeholders/gallery-3.svg",
-    "embedUrl": ""
+    "asset": "/images/gallery/DJI_0754.JPG"
+  },
+  {
+    "type": "image",
+    "title": {
+      "es": "Modelado experimental en laboratorio",
+      "en": "Experimental laboratory modelling"
+    },
+    "caption": {
+      "es": "Detalle de capas estratigráficas en un experimento análogo de deformación.",
+      "en": "Detail of stratigraphic layers in an analogue deformation experiment."
+    },
+    "asset": "/images/gallery/DSC_0450.JPG"
+  },
+  {
+    "type": "image",
+    "title": {
+      "es": "Tecnología de drones para geología",
+      "en": "Drone technology for geology"
+    },
+    "caption": {
+      "es": "Uso de vehículos aéreos no tripulados para el mapeo digital de afloramientos.",
+      "en": "Use of unmanned aerial vehicles for digital outcrop mapping."
+    },
+    "asset": "/images/gallery/DSC_0134.JPG"
+  },
+  {
+    "type": "image",
+    "title": {
+      "es": "Análisis de afloramientos en ruta",
+      "en": "Roadside outcrop analysis"
+    },
+    "caption": {
+      "es": "Sección estructural expuesta mostrando plegamiento y fallamiento a gran escala.",
+      "en": "Exposed structural section showing large-scale folding and faulting."
+    },
+    "asset": "/images/gallery/IMG_3676.JPG"
+  },
+  {
+    "type": "image",
+    "title": {
+      "es": "Logística y trabajo de campo",
+      "en": "Logistics and fieldwork"
+    },
+    "caption": {
+      "es": "Despliegue logístico para la toma de datos en terrenos de difícil acceso.",
+      "en": "Logistical deployment for data collection in difficult-to-access terrains."
+    },
+    "asset": "/images/gallery/IMG_8814.JPG"
   }
 ]

@@ -2,526 +2,211 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
 import HeroSection from "../../components/HeroSection.astro";
-import SectionHeader from "../../components/SectionHeader.astro";
 import Footer from "../../components/Footer.astro";
-import activitiesData from "../../data/activities.json";
-import researchLinesData from "../../data/research-lines.json";
-import teamData from "../../data/team.json";
-import publicationsData from "../../data/publications.json";
-import servicesData from "../../data/services.json";
 import facilitiesData from "../../data/facilities.json";
-import galleryData from "../../data/gallery.json";
-import collaborationsData from "../../data/collaborations.json";
+import activitiesData from "../../data/activities.json";
 import newsData from "../../data/news.json";
-import teachingData from "../../data/teaching.json";
-import faqData from "../../data/faq.json";
-import { locales, localizeArray, localizeText, siteContent, type Locale } from "../../lib/i18n";
-import type {
-  ActivityItem,
-  CollaborationItem,
-  FacilityItem,
-  FaqItem,
-  GalleryItem,
-  NewsItem,
-  Publication,
-  ResearchLine,
-  ServiceItem,
-  TeachingItem,
-  TeamMember
-} from "../../types/content";
+import collaborationsData from "../../data/collaborations.json";
+import { locales, localizeText, siteContent, type Locale } from "../../lib/i18n";
+import type { ActivityItem, CollaborationItem, FacilityItem, NewsItem } from "../../types/content";
 
 export function getStaticPaths() {
   return locales.map((lang) => ({ params: { lang } }));
 }
 
 const locale = Astro.params.lang as Locale;
-
-if (!locales.includes(locale)) {
-  return Astro.redirect("/es/");
-}
-
 const content = siteContent[locale];
-const activities = activitiesData as ActivityItem[];
-const researchLines = researchLinesData as ResearchLine[];
-const team = teamData as TeamMember[];
-const publications = publicationsData as Publication[];
-const services = servicesData as ServiceItem[];
-const facilities = facilitiesData as FacilityItem[];
-const gallery = galleryData as GalleryItem[];
-const collaborations = collaborationsData as CollaborationItem[];
-const news = newsData as NewsItem[];
-const teaching = teachingData as TeachingItem[];
-const faq = faqData as FaqItem[];
-const featuredPublications = publications.filter((publication) => publication.featured);
-const archivedPublications = publications.filter((publication) => !publication.featured);
 
-const roleOptions = Array.from(new Set(team.map((member) => member.category)));
-const publicationYears = Array.from(new Set(publications.map((publication) => publication.year))).sort((a, b) => b - a);
-const publicationTopics = Array.from(new Set(publications.map((publication) => publication.topic)));
-const publicationTypes = Array.from(new Set(publications.map((publication) => publication.type)));
+const facilities = (facilitiesData as FacilityItem[]).slice(0, 3);
+const activities = (activitiesData as ActivityItem[]).slice(0, 3);
+const news = [...(newsData as NewsItem[])].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3);
+const collaborations = (collaborationsData as CollaborationItem[]).slice(0, 4);
 
-const roleLabels: Record<string, Record<Locale, string>> = {
-  leadership: { es: "Dirección", en: "Leadership" },
-  researchers: { es: "Investigadores", en: "Researchers" },
-  fellows: { es: "Becarios", en: "Fellows" },
-  students: { es: "Estudiantes", en: "Students" },
-  collaborators: { es: "Colaboradores", en: "Collaborators" }
-};
-
-const shortLabels = {
-  audience: locale === "es" ? "Dirigido a" : "For",
-  status: locale === "es" ? "Estado" : "Status",
-  category: locale === "es" ? "Categoría" : "Category",
-  use: locale === "es" ? "Uso principal" : "Primary use",
-  kind: locale === "es" ? "Tipo" : "Kind",
-  scope: locale === "es" ? "Escala" : "Scope",
-  audienceGroup: locale === "es" ? "Destinatarios" : "Audience",
-  map: locale === "es" ? "Mapa" : "Map",
-  visit: locale === "es" ? "Visitar" : "Visit",
-  link: locale === "es" ? "Enlace" : "Link",
-  embeddedVideo: locale === "es" ? "Video embebido" : "Embedded video",
-  embedReady: locale === "es" ? "Este bloque está listo para reemplazar por un embed real." : "This block is ready to be replaced by a real embed."
-};
+const copy = {
+  es: {
+    title: "LaMoGe | Laboratorio de Modelado Geológico",
+    description:
+      "Portal institucional bilingüe del Laboratorio de Modelado Geológico con información institucional, capacidades y noticias.",
+    identityEyebrow: "¿Qué es el LaMoGe?",
+    identityTitle: "Una plataforma académica para modelado geológico, tectónica y análisis estructural.",
+    identityBody:
+      "LaMoGe es un laboratorio de investigación articulado entre IDEAN, UBA y CONICET. Integra observaciones de campo, modelado análogo, simulación numérica y análisis cuantitativo para estudiar sistemas geológicos complejos, formar recursos humanos y sostener una agenda científica de alto nivel.",
+    identityPoints: [
+      "Trayectoria académica e institucional consolidada",
+      "Trabajo interdisciplinario entre investigación, docencia y soporte metodológico",
+      "Proyección regional e internacional en problemas geológicos complejos"
+    ],
+    networkTitle: "Inserción institucional",
+    capabilitiesEyebrow: "Capacidades",
+    capabilitiesTitle: "Capacidades experimentales, metodológicas y computacionales",
+    capabilitiesBody:
+      "La plataforma institucional resume infraestructura, recursos de análisis y capacidades aplicadas del laboratorio para investigación, servicios y colaboración externa.",
+    capabilitiesCta: "Ver capacidades",
+    newsEyebrow: "Noticias",
+    newsTitle: "Actualidad institucional y novedades científicas",
+    newsBody:
+      "Noticias, anuncios y novedades editoriales del laboratorio en un formato simple de actualizar.",
+    newsCta: "Ver noticias",
+    emptyNews: "No hay noticias publicadas por el momento."
+  },
+  en: {
+    title: "LaMoGe | Geological Modelling Laboratory",
+    description:
+      "Bilingual institutional portal of the Geological Modelling Laboratory with institutional information, capabilities and news.",
+    identityEyebrow: "What is LaMoGe?",
+    identityTitle: "An academic platform for geological modelling, tectonics and structural analysis.",
+    identityBody:
+      "LaMoGe is a research laboratory articulated across IDEAN, UBA and CONICET. It combines field observations, analogue modelling, numerical simulation and quantitative analysis to study complex geological systems, train researchers and sustain a high-level scientific agenda.",
+    identityPoints: [
+      "Consolidated academic and institutional trajectory",
+      "Interdisciplinary work across research, teaching and methodological support",
+      "Regional and international projection on complex geological problems"
+    ],
+    networkTitle: "Institutional embedding",
+    capabilitiesEyebrow: "Capabilities",
+    capabilitiesTitle: "Experimental, methodological and computational capabilities",
+    capabilitiesBody:
+      "The institutional platform summarises the laboratory’s infrastructure, analysis resources and applied capabilities for research, services and external collaboration.",
+    capabilitiesCta: "View capabilities",
+    newsEyebrow: "News",
+    newsTitle: "Institutional updates and scientific news",
+    newsBody:
+      "News, announcements and editorial updates from the laboratory in a format that is simple to maintain.",
+    newsCta: "View news",
+    emptyNews: "There are no published news items at the moment."
+  }
+}[locale];
 ---
 
-<BaseLayout title={content.meta.title} description={content.meta.description} locale={locale}>
+<BaseLayout title={copy.title} description={copy.description} locale={locale} image="/images/gallery/DJI_0664.JPG">
   <Header locale={locale} navigation={content.navigation} />
-  <HeroSection hero={content.hero} />
 
-  <main class="relative z-10 -mt-12 grid gap-8 pb-4">
-    {content.sectionOrder.map((sectionKey) => (
-      <>
-        {sectionKey === "about" && (
-          <section id="about" class="shell py-2">
-            <div class="surface-panel">
-              <SectionHeader eyebrow={content.about.eyebrow} title={content.about.title} description={content.about.description} />
-              <div class="grid gap-5 md:grid-cols-2">
-                {[
-                  { eyebrow: content.about.missionTitle, title: content.about.missionTitle, copy: content.about.mission },
-                  { eyebrow: content.about.visionTitle, title: content.about.visionTitle, copy: content.about.vision },
-                  { eyebrow: content.about.institutionTitle, title: content.about.institutionTitle, copy: content.about.institution },
-                  { eyebrow: content.about.historyTitle, title: content.about.historyTitle, copy: content.about.history }
-                ].map((item) => (
-                  <article class="card" data-reveal>
-                    <p class="eyebrow">{item.eyebrow}</p>
-                    <h3 class="text-xl font-semibold text-ink-900">{item.title}</h3>
-                    <p class="mt-3 text-sm leading-7 text-ink-700">{item.copy}</p>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
+  <HeroSection locale={locale} hero={content.hero} />
 
-        {sectionKey === "activities" && (
-          <section id="activities" class="shell py-2">
-            <div class="surface-panel">
-              <SectionHeader eyebrow={content.activities.eyebrow} title={content.activities.title} description={content.activities.description} />
-              <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-                {activities.map((item) => (
-                  <article class="card" data-reveal>
-                    <span class="mb-4 grid h-11 w-11 place-items-center rounded-2xl bg-[linear-gradient(135deg,rgba(102,200,194,0.16),rgba(215,180,106,0.24))] font-bold text-teal-500">{item.icon}</span>
-                    <h3 class="text-xl font-semibold text-ink-900">{localizeText(item.title, locale)}</h3>
-                    <p class="mt-3 text-sm leading-7 text-ink-700">{localizeText(item.description, locale)}</p>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
+  <main id="main-content" class="pb-24">
+    <section class="section shell">
+      <div class="surface-panel grid gap-10 xl:grid-cols-[minmax(0,1.1fr)_minmax(18rem,0.9fr)]">
+        <div data-reveal>
+          <p class="eyebrow">{copy.identityEyebrow}</p>
+          <h2 class="section-title">{copy.identityTitle}</h2>
+          <p class="section-copy">{copy.identityBody}</p>
 
-        {sectionKey === "research" && (
-          <section id="research" class="shell py-2">
-            <div class="surface-panel">
-              <SectionHeader eyebrow={content.research.eyebrow} title={content.research.title} description={content.research.description} />
-              <div class="grid gap-5 lg:grid-cols-3">
-                {researchLines.map((line) => (
-                  <article class="card overflow-hidden p-0" data-reveal>
-                    {line.image && <img src={line.image} alt="" class="aspect-[16/10] w-full object-cover" />}
-                    <div class="p-5">
-                      <h3 class="text-xl font-semibold text-ink-900">{localizeText(line.title, locale)}</h3>
-                      <p class="mt-3 text-sm leading-7 text-ink-700">{localizeText(line.summary, locale)}</p>
-                      <ul class="mt-4 flex flex-wrap gap-2">
-                        {localizeArray(line.keywords, locale).map((keyword) => (
-                          <li class="chip">{keyword}</li>
-                        ))}
-                      </ul>
-                      <details class="research-details mt-5 rounded-[1.2rem] border border-ink-800/8 bg-mist-50/90 px-4 py-3">
-                        <summary class="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold text-ink-900">
-                          <span data-open-label={content.research.expandLabel} data-close-label={content.research.collapseLabel}>
-                            {content.research.expandLabel}
-                          </span>
-                          <span class="text-lg leading-none text-teal-500">+</span>
-                        </summary>
-                        <p class="mt-3 text-sm leading-7 text-ink-700">{localizeText(line.detail, locale)}</p>
-                      </details>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
+          <ul class="mt-8 grid gap-4">
+            {copy.identityPoints.map((item) => (
+              <li class="flex items-start gap-3">
+                <span class="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-cyan-500/10 text-cyan-600">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="h-4 w-4" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m5 13 4 4L19 7"></path>
+                  </svg>
+                </span>
+                <span class="text-sm leading-7 text-[color:var(--ink-700)]">{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-        {sectionKey === "team" && (
-          <section id="team" class="shell py-2">
-            <div class="surface-panel">
-              <SectionHeader eyebrow={content.team.eyebrow} title={content.team.title} description={content.team.description} />
-
-              <div class="mb-6 flex flex-wrap gap-4">
-                <label class="grid gap-2 text-sm font-medium text-ink-800" for="team-filter">
-                  <span>{content.team.filterLabel}</span>
-                  <select id="team-filter" data-team-filter class="rounded-full border border-ink-800/10 bg-mist-50 px-4 py-3 text-sm text-ink-800">
-                    <option value="">{content.team.allRoles}</option>
-                    {roleOptions.map((role) => (
-                      <option value={role}>{localizeText(roleLabels[role] ?? { es: role, en: role }, locale)}</option>
-                    ))}
-                  </select>
-                </label>
-              </div>
-
-              <div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-                {team.map((member) => (
-                  <article class="card" data-reveal data-team-member data-category={member.category}>
-                    {member.photo && <img src={member.photo} alt={member.name} class="mb-4 aspect-square w-full rounded-[1.2rem] object-cover" />}
-                    <p class="text-sm font-semibold text-teal-500">{localizeText(member.role, locale)}</p>
-                    <h3 class="mt-2 text-xl font-semibold text-ink-900">{member.name}</h3>
-                    <div class="mt-3 grid gap-1.5 text-sm leading-6 text-ink-700">
-                      <span>{member.affiliation}</span>
-                      <span>{localizeText(member.area, locale)}</span>
-                      {member.email && <a class="text-teal-500 hover:text-ink-900" href={`mailto:${member.email}`}>{member.email}</a>}
-                    </div>
-                    {member.links.length > 0 && (
-                      <ul class="mt-4 flex flex-wrap gap-2">
-                        {member.links.map((link) => (
-                          <li><a class="chip hover:bg-mist-200" href={link.url} target="_blank" rel="noreferrer">{link.label}</a></li>
-                        ))}
-                      </ul>
-                    )}
-                  </article>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {sectionKey === "publications" && (
-          <section id="publications" class="shell py-2">
-            <div class="surface-panel">
-              <SectionHeader eyebrow={content.publications.eyebrow} title={content.publications.title} description={content.publications.description} />
-
-              <div class="mb-8 grid gap-5 lg:grid-cols-2">
-                {featuredPublications.map((publication) => (
-                  <article class="card grid gap-3" data-reveal>
-                    <div class="flex flex-wrap items-center gap-2">
-                      <span class="chip">{publication.year}</span>
-                      <span class="chip">{publication.type}</span>
-                      <span class="chip border-amber-300/30 bg-amber-300/20 text-[#61420b]">{content.publications.featuredLabel}</span>
-                    </div>
-                    <p class="eyebrow !mb-0">{content.publications.featuredTitle}</p>
-                    <h3 class="text-xl font-semibold text-ink-900">{publication.title}</h3>
-                    <p class="text-sm leading-7 text-ink-700">{publication.authors}</p>
-                    <p class="text-sm leading-7 text-ink-700">{publication.journal}</p>
-                    {publication.doi && <p class="text-sm leading-6 text-ink-700">DOI: {publication.doi}</p>}
-                    <a href={publication.url} target="_blank" rel="noreferrer" class="text-sm font-semibold text-teal-500 hover:text-ink-900">{shortLabels.link}</a>
-                  </article>
-                ))}
-              </div>
-
-              <div class="mb-6 flex flex-wrap gap-4" data-filter-target="#publication-list">
-                <label class="grid gap-2 text-sm font-medium text-ink-800" for="publication-year">
-                  <span>{content.publications.filterYear}</span>
-                  <select id="publication-year" class="rounded-full border border-ink-800/10 bg-mist-50 px-4 py-3 text-sm text-ink-800">
-                    <option value="">{content.publications.allYears}</option>
-                    {publicationYears.map((year) => (
-                      <option value={String(year)}>{year}</option>
-                    ))}
-                  </select>
-                </label>
-                <label class="grid gap-2 text-sm font-medium text-ink-800" for="publication-topic">
-                  <span>{content.publications.filterTopic}</span>
-                  <select id="publication-topic" class="rounded-full border border-ink-800/10 bg-mist-50 px-4 py-3 text-sm text-ink-800">
-                    <option value="">{content.publications.allTopics}</option>
-                    {publicationTopics.map((topic) => (
-                      <option value={topic}>{topic}</option>
-                    ))}
-                  </select>
-                </label>
-                <label class="grid gap-2 text-sm font-medium text-ink-800" for="publication-type">
-                  <span>{content.publications.filterType}</span>
-                  <select id="publication-type" class="rounded-full border border-ink-800/10 bg-mist-50 px-4 py-3 text-sm text-ink-800">
-                    <option value="">{content.publications.allTypes}</option>
-                    {publicationTypes.map((type) => (
-                      <option value={type}>{type}</option>
-                    ))}
-                  </select>
-                </label>
-              </div>
-
-              <div class="mb-4 flex items-center justify-between gap-3">
-                <p class="text-sm font-semibold uppercase tracking-[0.16em] text-ink-700">{content.publications.archiveTitle}</p>
-              </div>
-
-              <div id="publication-list" class="grid gap-4">
-                {archivedPublications.map((publication) => (
-                  <article
-                    class="card grid gap-3"
-                    data-reveal
-                    data-publication
-                    data-year={String(publication.year)}
-                    data-topic={publication.topic}
-                    data-type={publication.type}
-                  >
-                    <div class="flex flex-wrap items-center gap-2">
-                      <span class="chip">{publication.year}</span>
-                      <span class="chip">{publication.type}</span>
-                      <span class="chip">{publication.topic}</span>
-                      {publication.featured && <span class="chip border-amber-300/30 bg-amber-300/20 text-[#61420b]">{content.publications.featuredLabel}</span>}
-                    </div>
-                    <h3 class="text-xl font-semibold text-ink-900">{publication.title}</h3>
-                    <p class="text-sm leading-7 text-ink-700">{publication.authors}</p>
-                    <p class="text-sm leading-7 text-ink-700">{publication.journal}</p>
-                    {publication.doi && <p class="text-sm leading-6 text-ink-700">DOI: {publication.doi}</p>}
-                    <a href={publication.url} target="_blank" rel="noreferrer" class="text-sm font-semibold text-teal-500 hover:text-ink-900">{shortLabels.link}</a>
-                  </article>
-                ))}
-              </div>
-              <p class="mt-4 hidden rounded-[1.2rem] border border-dashed border-ink-800/12 bg-mist-50 px-4 py-3 text-sm text-ink-700" data-publication-empty>
-                {content.publications.emptyArchive}
-              </p>
-              <button
-                class="button-light mt-5"
-                type="button"
-                data-show-more-publications
-                data-initial-count="4"
-                data-more-label={content.publications.showMore}
-                data-less-label={content.publications.showLess}
-                aria-expanded="false"
-              >
-                {content.publications.showMore}
-              </button>
-            </div>
-          </section>
-        )}
-
-        {sectionKey === "services" && (
-          <section id="services" class="shell py-2">
-            <div class="surface-panel">
-              <SectionHeader eyebrow={content.services.eyebrow} title={content.services.title} description={content.services.description} />
-              <div class="grid gap-5 lg:grid-cols-3">
-                {services.map((service) => (
-                  <article class="card" data-reveal>
-                    <h3 class="text-xl font-semibold text-ink-900">{localizeText(service.title, locale)}</h3>
-                    <p class="mt-3 text-sm leading-7 text-ink-700">{localizeText(service.summary, locale)}</p>
-                    <div class="mt-4 grid gap-2 text-sm leading-6 text-ink-700">
-                      <span><strong class="text-ink-900">{shortLabels.audience}:</strong> {localizeText(service.audience, locale)}</span>
-                      <span><strong class="text-ink-900">{shortLabels.status}:</strong> {localizeText(service.status, locale)}</span>
-                    </div>
-                    <ul class="mt-4 flex flex-wrap gap-2">
-                      {localizeArray(service.applications, locale).map((application) => (
-                        <li class="chip">{application}</li>
-                      ))}
-                    </ul>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {sectionKey === "facilities" && (
-          <section id="facilities" class="shell py-2">
-            <div class="surface-panel">
-              <SectionHeader eyebrow={content.facilities.eyebrow} title={content.facilities.title} description={content.facilities.description} />
-              <div class="grid gap-5 lg:grid-cols-3">
-                {facilities.map((item) => (
-                  <article class="card overflow-hidden p-0" data-reveal>
-                    {item.image && <img src={item.image} alt="" class="aspect-[16/10] w-full object-cover" />}
-                    <div class="p-5">
-                      <h3 class="text-xl font-semibold text-ink-900">{localizeText(item.name, locale)}</h3>
-                      <div class="mt-3 grid gap-2 text-sm leading-6 text-ink-700">
-                        <span><strong class="text-ink-900">{shortLabels.category}:</strong> {localizeText(item.category, locale)}</span>
-                        <span><strong class="text-ink-900">{shortLabels.use}:</strong> {localizeText(item.use, locale)}</span>
-                      </div>
-                      <p class="mt-3 text-sm leading-7 text-ink-700">{localizeText(item.description, locale)}</p>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {sectionKey === "gallery" && (
-          <section id="gallery" class="shell py-2">
-            <div class="surface-panel">
-              <SectionHeader eyebrow={content.gallery.eyebrow} title={content.gallery.title} description={content.gallery.description} />
-              <div class="grid gap-5 lg:grid-cols-3">
-                {gallery.map((item) => (
-                  <article class="card overflow-hidden p-0" data-reveal>
-                    <div class="relative">
-                      <span class="chip absolute top-4 left-4 z-10 bg-white/90">{item.type}</span>
-                      {item.type === "video" && item.embedUrl ? (
-                        <iframe
-                          src={item.embedUrl}
-                          title={localizeText(item.title, locale)}
-                          loading="lazy"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowfullscreen
-                          class="aspect-video w-full border-0"
-                        ></iframe>
-                      ) : (
-                        <img src={item.asset} alt={localizeText(item.title, locale)} class="aspect-[16/10] w-full object-cover" />
-                      )}
-                    </div>
-                    <div class="p-5">
-                      <h3 class="text-xl font-semibold text-ink-900">{localizeText(item.title, locale)}</h3>
-                      <p class="mt-3 text-sm leading-7 text-ink-700">{localizeText(item.caption, locale)}</p>
-                      {item.type === "video" && !item.embedUrl && (
-                        <p class="mt-3 text-xs uppercase tracking-[0.14em] text-teal-500">{shortLabels.embedReady}</p>
-                      )}
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {sectionKey === "collaborations" && (
-          <section id="collaborations" class="shell py-2">
-            <div class="surface-panel">
-              <SectionHeader eyebrow={content.collaborations.eyebrow} title={content.collaborations.title} description={content.collaborations.description} />
-              <div class="grid gap-5 lg:grid-cols-3">
-                {collaborations.map((item) => (
-                  <article class="card overflow-hidden p-0" data-reveal>
-                    {item.logo && <img src={item.logo} alt={`${item.name} logo`} class="aspect-[16/10] w-full object-cover bg-mist-50" />}
-                    <div class="p-5">
-                      <h3 class="text-xl font-semibold text-ink-900">{item.name}</h3>
-                      <div class="mt-3 grid gap-2 text-sm leading-6 text-ink-700">
-                        <span><strong class="text-ink-900">{shortLabels.kind}:</strong> {localizeText(item.kind, locale)}</span>
-                        <span><strong class="text-ink-900">{shortLabels.scope}:</strong> {localizeText(item.scope, locale)}</span>
-                      </div>
-                      <p class="mt-3 text-sm leading-7 text-ink-700">{localizeText(item.summary, locale)}</p>
-                      <a href={item.url} target="_blank" rel="noreferrer" class="mt-4 inline-flex text-sm font-semibold text-teal-500 hover:text-ink-900">{shortLabels.visit}</a>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {sectionKey === "news" && (
-          <section id="news" class="shell py-2">
-            <div class="surface-panel">
-              <SectionHeader eyebrow={content.news.eyebrow} title={content.news.title} description={content.news.description} />
-              <div class="grid gap-5 lg:grid-cols-3">
-                {news.map((item) => (
-                  <article class="card" data-reveal>
-                    <div class="flex flex-wrap items-center gap-2">
-                      <span class="chip">{localizeText(item.category, locale)}</span>
-                      <time class="text-xs font-medium uppercase tracking-[0.14em] text-ink-700" datetime={item.date}>
-                        {new Date(`${item.date}T00:00:00`).toLocaleDateString(locale === "es" ? "es-AR" : "en-GB", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric"
-                        })}
-                      </time>
-                    </div>
-                    <h3 class="mt-4 text-xl font-semibold text-ink-900">{localizeText(item.title, locale)}</h3>
-                    <p class="mt-3 text-sm leading-7 text-ink-700">{localizeText(item.summary, locale)}</p>
-                    {item.url && (
-                      <a href={item.url} target="_blank" rel="noreferrer" class="mt-4 inline-flex text-sm font-semibold text-teal-500 hover:text-ink-900">
-                        {content.news.readMore}
-                      </a>
-                    )}
-                  </article>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {sectionKey === "teaching" && (
-          <section id="teaching" class="shell py-2">
-            <div class="surface-panel">
-              <SectionHeader eyebrow={content.teaching.eyebrow} title={content.teaching.title} description={content.teaching.description} />
-              <div class="grid gap-5 lg:grid-cols-3">
-                {teaching.map((item) => (
-                  <article class="card" data-reveal>
-                    <p class="eyebrow">{localizeText(item.format, locale)}</p>
-                    <h3 class="text-xl font-semibold text-ink-900">{localizeText(item.title, locale)}</h3>
-                    <p class="mt-3 text-sm leading-7 text-ink-700">{localizeText(item.description, locale)}</p>
-                    <p class="mt-3 text-sm leading-6 text-ink-700"><strong class="text-ink-900">{shortLabels.audienceGroup}:</strong> {localizeText(item.audience, locale)}</p>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {sectionKey === "faq" && (
-          <section id="faq" class="shell py-2">
-            <div class="surface-panel">
-              <SectionHeader eyebrow={content.faq.eyebrow} title={content.faq.title} description={content.faq.description} />
-              <div class="grid gap-5 md:grid-cols-2">
-                {faq.map((item) => (
-                  <article class="card" data-reveal>
-                    <h3 class="text-xl font-semibold text-ink-900">{localizeText(item.question, locale)}</h3>
-                    <p class="mt-3 text-sm leading-7 text-ink-700">{localizeText(item.answer, locale)}</p>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {sectionKey === "contact" && (
-          <section id="contact" class="shell py-2">
-            <div class="surface-panel">
-              <SectionHeader eyebrow={content.contact.eyebrow} title={content.contact.title} description={content.contact.description} />
-              <div class="grid gap-5 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
-                <aside class="rounded-[1.8rem] bg-ink-900 p-6 text-white" data-reveal>
-                  <p class="text-sm leading-7 text-mist-200"><strong class="mb-1 block text-white">{content.contact.emailLabel}</strong>{content.contact.email}</p>
-                  <p class="mt-4 text-sm leading-7 text-mist-200"><strong class="mb-1 block text-white">{content.contact.addressLabel}</strong>{content.contact.address}</p>
-                  <p class="mt-4 text-sm leading-7 text-mist-200"><strong class="mb-1 block text-white">{content.contact.affiliationLabel}</strong>{content.contact.affiliation}</p>
-                  <div class="mt-6 flex flex-wrap gap-3">
-                    <a class="button-primary" href={`mailto:${content.contact.email}`}>Email</a>
-                    <a class="button-secondary" href="https://maps.google.com/" target="_blank" rel="noreferrer">{shortLabels.map}</a>
+        <div class="grid gap-4" data-reveal>
+          <article class="card overflow-hidden p-0">
+            <img src="/images/gallery/DJI_0754.JPG" alt="LaMoGe" class="aspect-[4/3] w-full object-cover" />
+          </article>
+          <article class="card">
+            <p class="eyebrow">{copy.networkTitle}</p>
+            <div class="grid gap-3">
+              {collaborations.map((item) => (
+                <div class="flex items-center justify-between gap-4 border-b border-ink-100 pb-3 last:border-b-0 last:pb-0">
+                  <div>
+                    <h3 class="font-semibold text-[color:var(--ink-950)]">{item.name}</h3>
+                    <p class="text-sm text-[color:var(--ink-500)]">{localizeText(item.kind, locale)}</p>
                   </div>
-                </aside>
-
-                <div class="rounded-[1.8rem] bg-ink-900 p-6 text-white" data-reveal>
-                  <p class="mb-5 text-sm leading-7 text-mist-200">{content.contact.formNote}</p>
-                  <form class="grid gap-4">
-                    <div class="grid gap-4 md:grid-cols-2">
-                      <label class="grid gap-2 text-sm text-mist-200">
-                        <span>{content.contact.formName}</span>
-                        <input class="input-base" name="name" type="text" placeholder={content.contact.formName} />
-                      </label>
-                      <label class="grid gap-2 text-sm text-mist-200">
-                        <span>{content.contact.formEmail}</span>
-                        <input class="input-base" name="email" type="email" placeholder="nombre@institucion.org" />
-                      </label>
-                    </div>
-                    <label class="grid gap-2 text-sm text-mist-200">
-                      <span>{content.contact.formOrganization}</span>
-                      <input class="input-base" name="organization" type="text" placeholder={content.contact.formOrganization} />
-                    </label>
-                    <label class="grid gap-2 text-sm text-mist-200">
-                      <span>{content.contact.formMessage}</span>
-                      <textarea class="input-base min-h-36 resize-y" name="message" placeholder={content.contact.formMessage}></textarea>
-                    </label>
-                    <button class="button-primary w-fit" type="submit">{content.contact.formSubmit}</button>
-                  </form>
+                  {item.logo && <img src={item.logo} alt={item.name} class="h-10 w-auto grayscale opacity-75" />}
                 </div>
-              </div>
+              ))}
             </div>
-          </section>
-        )}
-      </>
-    ))}
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell" id="capabilities">
+      <div class="surface-panel">
+        <div class="flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <p class="eyebrow">{copy.capabilitiesEyebrow}</p>
+            <h2 class="section-title">{copy.capabilitiesTitle}</h2>
+            <p class="section-copy">{copy.capabilitiesBody}</p>
+          </div>
+          <a href={`/${locale}/capabilities/`} class="button-light">{copy.capabilitiesCta}</a>
+        </div>
+
+        <div class="mt-10 grid gap-5 xl:grid-cols-3">
+          {facilities.map((item) => (
+            <article class="card" data-reveal>
+              <span class="pill">{localizeText(item.category, locale)}</span>
+              <h3 class="mt-4 text-xl font-semibold text-[color:var(--ink-950)]">{localizeText(item.name, locale)}</h3>
+              <p class="mt-3 text-sm leading-7 text-[color:var(--ink-700)]">{localizeText(item.description, locale)}</p>
+            </article>
+          ))}
+        </div>
+
+        <div class="mt-5 grid gap-5 xl:grid-cols-3">
+          {activities.map((item) => (
+            <article class="card" data-reveal>
+              <span class="pill">{item.icon}</span>
+              <h3 class="mt-4 text-xl font-semibold text-[color:var(--ink-950)]">{localizeText(item.title, locale)}</h3>
+              <p class="mt-3 text-sm leading-7 text-[color:var(--ink-700)]">{localizeText(item.description, locale)}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell" id="news">
+      <div class="surface-panel">
+        <div class="flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <p class="eyebrow">{copy.newsEyebrow}</p>
+            <h2 class="section-title">{copy.newsTitle}</h2>
+            <p class="section-copy">{copy.newsBody}</p>
+          </div>
+          <a href={`/${locale}/news/`} class="button-light">{copy.newsCta}</a>
+        </div>
+
+        <div class="mt-10 grid gap-5 lg:grid-cols-3">
+          {news.map((item) => (
+            <article class="card" data-reveal>
+              <div class="flex flex-wrap items-center gap-3">
+                <span class="pill">{localizeText(item.category, locale)}</span>
+                <time class="text-sm text-[color:var(--ink-500)]">
+                  {new Date(`${item.date}T00:00:00`).toLocaleDateString(locale === "es" ? "es-AR" : "en-GB", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                  })}
+                </time>
+              </div>
+              <h3 class="mt-4 text-xl font-semibold text-[color:var(--ink-950)]">{localizeText(item.title, locale)}</h3>
+              <p class="mt-3 text-sm leading-7 text-[color:var(--ink-700)]">{localizeText(item.summary, locale)}</p>
+              {item.url && (
+                <a
+                  href={item.url}
+                  target={item.url.startsWith("http") ? "_blank" : undefined}
+                  rel={item.url.startsWith("http") ? "noreferrer" : undefined}
+                  class="mt-5 inline-flex text-sm font-semibold text-[color:var(--accent-strong)]"
+                >
+                  {locale === "es" ? "Ver más" : "Read more"}
+                </a>
+              )}
+            </article>
+          ))}
+
+          {news.length === 0 && (
+            <article class="card lg:col-span-3" data-reveal>
+              <p class="text-sm leading-7 text-[color:var(--ink-700)]">{copy.emptyNews}</p>
+            </article>
+          )}
+        </div>
+      </div>
+    </section>
   </main>
 
   <Footer locale={locale} navigation={content.navigation} footer={content.footer} />

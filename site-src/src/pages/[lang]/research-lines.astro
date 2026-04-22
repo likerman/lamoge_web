@@ -1,0 +1,66 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import PageHero from "../../components/PageHero.astro";
+import Footer from "../../components/Footer.astro";
+import researchLinesData from "../../data/research-lines.json";
+import { locales, localizeArray, localizeText, siteContent, type Locale } from "../../lib/i18n";
+import type { ResearchLine } from "../../types/content";
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const locale = Astro.params.lang as Locale;
+const content = siteContent[locale];
+const researchLines = researchLinesData as ResearchLine[];
+
+const copy = {
+  es: {
+    title: "Líneas de investigación | LaMoGe",
+    description: "Agenda científica y líneas de investigación del laboratorio.",
+    eyebrow: "Investigación",
+    pageTitle: "Líneas de investigación",
+    pageDescription:
+      "La agenda científica del LaMoGe vincula problemas tectónicos fundamentales con innovación metodológica, validación de campo y modelado cuantitativo."
+  },
+  en: {
+    title: "Research lines | LaMoGe",
+    description: "Scientific agenda and research lines of the laboratory.",
+    eyebrow: "Research",
+    pageTitle: "Research lines",
+    pageDescription:
+      "LaMoGe’s scientific agenda connects fundamental tectonic problems with methodological innovation, field validation and quantitative modelling."
+  }
+}[locale];
+---
+
+<BaseLayout title={copy.title} description={copy.description} locale={locale} image="/images/gallery/IMG_20240418_114316134.jpg">
+  <Header locale={locale} navigation={content.navigation} />
+  <main id="main-content" class="pb-14">
+    <PageHero eyebrow={copy.eyebrow} title={copy.pageTitle} description={copy.pageDescription} image="/images/gallery/IMG_20240418_114316134.jpg" />
+
+    <section class="section shell">
+      <div class="surface-panel">
+        <div class="grid gap-5 xl:grid-cols-2">
+          {researchLines.map((line) => (
+            <article class="card overflow-hidden p-0" data-reveal>
+              {line.image && <img src={line.image} alt="" class="aspect-[16/10] w-full object-cover" />}
+              <div class="p-6">
+                <h2 class="text-2xl font-semibold text-[color:var(--ink-950)]">{localizeText(line.title, locale)}</h2>
+                <p class="mt-4 text-sm leading-7 text-[color:var(--ink-700)]">{localizeText(line.summary, locale)}</p>
+                <p class="mt-4 text-sm leading-7 text-[color:var(--ink-600)]">{localizeText(line.detail, locale)}</p>
+                <div class="mt-5 flex flex-wrap gap-2">
+                  {localizeArray(line.keywords, locale).map((keyword) => (
+                    <span class="pill">{keyword}</span>
+                  ))}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer locale={locale} navigation={content.navigation} footer={content.footer} />
+</BaseLayout>

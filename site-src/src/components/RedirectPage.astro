@@ -1,0 +1,27 @@
+---
+interface Props {
+  locale: "es" | "en";
+  to: string;
+  title?: string;
+}
+
+const { locale, to, title } = Astro.props;
+const destination = `/${locale}${to}`;
+const pageTitle = title ?? (locale === "es" ? "Redireccionando" : "Redirecting");
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0;url=${destination}`} />
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={destination} />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <p>
+      <a href={destination}>{locale === "es" ? "Continuar" : "Continue"}</a>
+    </p>
+  </body>
+</html>

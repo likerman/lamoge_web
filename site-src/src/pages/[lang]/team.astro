@@ -1,0 +1,153 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import PageHero from "../../components/PageHero.astro";
+import Footer from "../../components/Footer.astro";
+import teamData from "../../data/team.json";
+import opportunitiesData from "../../data/opportunities.json";
+import { locales, localizeText, siteContent, type Locale } from "../../lib/i18n";
+import type { OpportunityItem, TeamMember } from "../../types/content";
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const locale = Astro.params.lang as Locale;
+
+const content = siteContent[locale];
+const team = teamData as TeamMember[];
+const opportunities = opportunitiesData as OpportunityItem[];
+
+const profileLabels: Record<string, Record<Locale, string>> = {
+  github: { es: "GitHub", en: "GitHub" },
+  scholar: { es: "Scholar", en: "Scholar" },
+  "google-scholar": { es: "Scholar", en: "Scholar" },
+  orcid: { es: "ORCID", en: "ORCID" }
+};
+
+const categoryLabels: Record<string, Record<Locale, string>> = {
+  leadership: { es: "Direccion", en: "Leadership" },
+  researchers: { es: "Investigadores", en: "Researchers" },
+  fellows: { es: "Becarios", en: "Fellows" },
+  students: { es: "Estudiantes", en: "Students" },
+  collaborators: { es: "Apoyo tecnico", en: "Technical support" }
+};
+
+const copy = {
+  es: {
+    title: "Integrantes | LaMoGe",
+    description: "Equipo de investigacion, becarios y soporte tecnico del Laboratorio de Modelado Geologico.",
+    eyebrow: "Integrantes",
+    pageTitle: "Investigadores, becarios y soporte tecnico en una misma plataforma de trabajo.",
+    pageDescription:
+      "La estructura del laboratorio combina direccion cientifica, trabajo de investigacion, formacion avanzada y sosten tecnico para asegurar continuidad metodologica y calidad academica.",
+    filterLabel: "Filtrar por categoria",
+    all: "Todas las categorias",
+    profilesLabel: "Perfiles",
+    profilesHelp: "Podés agregar GitHub, Scholar y ORCID para cada integrante desde el archivo de datos del equipo.",
+    opportunitiesTitle: "Oportunidades y convocatorias",
+    opportunitiesEmpty: "No hay convocatorias publicadas por el momento."
+  },
+  en: {
+    title: "Team | LaMoGe",
+    description: "Research staff, fellows and technical support of the Geological Modelling Laboratory.",
+    eyebrow: "Team",
+    pageTitle: "Researchers, fellows and technical support within a single working platform.",
+    pageDescription:
+      "The laboratory structure combines scientific leadership, research work, advanced training and technical support to ensure methodological continuity and academic quality.",
+    filterLabel: "Filter by category",
+    all: "All categories",
+    profilesLabel: "Profiles",
+    profilesHelp: "You can add GitHub, Scholar and ORCID for each member in the team data file.",
+    opportunitiesTitle: "Opportunities and calls",
+    opportunitiesEmpty: "There are no published calls at the moment."
+  }
+}[locale];
+---
+
+<BaseLayout title={copy.title} description={copy.description} locale={locale} image="/images/gallery/IMG_8323.jpg">
+  <Header locale={locale} navigation={content.navigation} />
+  <main id="main-content" class="pb-14">
+    <PageHero eyebrow={copy.eyebrow} title={copy.pageTitle} description={copy.pageDescription} image="/images/gallery/IMG_8323.jpg" />
+
+    <section class="section shell">
+      <div class="surface-panel">
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p class="eyebrow">{copy.eyebrow}</p>
+            <h2 class="section-title">{locale === "es" ? "Equipo institucional" : "Institutional team"}</h2>
+          </div>
+          <label class="grid gap-2 text-sm font-semibold text-[color:var(--ink-700)]">
+            {copy.filterLabel}
+            <select class="field max-w-[18rem]" data-team-filter>
+              <option value="">{copy.all}</option>
+              {Object.entries(categoryLabels).map(([key, value]) => (
+                <option value={key}>{value[locale]}</option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <div class="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {team.map((member) => (
+            <article class="card" data-team-member data-category={member.category} data-reveal>
+              {member.photo && <img src={member.photo} alt={member.name} class="aspect-square w-full rounded-[1.2rem] object-cover bg-[color:var(--mist-100)]" />}
+              <div class="mt-5 flex items-center justify-between gap-3">
+                <span class="pill">{categoryLabels[member.category]?.[locale] ?? member.category}</span>
+              </div>
+              <h3 class="mt-4 text-xl font-semibold text-[color:var(--ink-950)]">{member.name}</h3>
+              <p class="mt-1 text-sm font-semibold text-[color:var(--accent-strong)]">{localizeText(member.role, locale)}</p>
+              <p class="mt-3 text-sm leading-7 text-[color:var(--ink-700)]">{localizeText(member.bio ?? member.area, locale)}</p>
+              <p class="mt-4 text-sm text-[color:var(--ink-500)]">{member.affiliation}</p>
+              {(member.email || member.links.length > 0) && (
+                <div class="team-meta">
+                  {member.email && <span class="team-contact-link">{member.email}</span>}
+                  {member.links.length > 0 && (
+                    <div class="team-profiles">
+                      <span class="team-profiles-label">{copy.profilesLabel}</span>
+                      <div class="team-profile-links">
+                        {member.links.map((link) => {
+                          const platformKey = (link.platform ?? link.label).toLowerCase();
+                          const label = profileLabels[platformKey]?.[locale] ?? link.label;
+
+                          return (
+                            <a href={link.url} target="_blank" rel="noreferrer" class={`team-profile-link platform-${platformKey}`}>
+                              {label}
+                            </a>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </article>
+          ))}
+        </div>
+        <p class="mt-8 text-sm leading-7 text-[color:var(--ink-500)]">{copy.profilesHelp}</p>
+      </div>
+    </section>
+
+    <section class="section shell" id="opportunities">
+      <div class="surface-panel">
+        <p class="eyebrow">{copy.opportunitiesTitle}</p>
+        <h2 class="section-title">{locale === "es" ? "Formacion y nuevas incorporaciones" : "Training and new opportunities"}</h2>
+        {opportunities.length > 0 ? (
+          <div class="mt-8 grid gap-5 lg:grid-cols-2">
+            {opportunities.map((item) => (
+              <article class="card" data-reveal>
+                <span class="pill">{localizeText(item.status, locale)}</span>
+                <h3 class="mt-4 text-xl font-semibold text-[color:var(--ink-950)]">{localizeText(item.title, locale)}</h3>
+                <p class="mt-3 text-sm leading-7 text-[color:var(--ink-700)]">{localizeText(item.summary, locale)}</p>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <article class="card mt-8" data-reveal>
+            <p class="text-sm leading-7 text-[color:var(--ink-700)]">{copy.opportunitiesEmpty}</p>
+          </article>
+        )}
+      </div>
+    </section>
+  </main>
+  <Footer locale={locale} navigation={content.navigation} footer={content.footer} />
+</BaseLayout>

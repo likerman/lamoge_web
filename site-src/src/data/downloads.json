@@ -1,0 +1,34 @@
+[
+  {
+    "id": "ubacyt-plan",
+    "title": {
+      "es": "Plan de trabajo UBACYT 2026",
+      "en": "UBACYT 2026 work plan"
+    },
+    "description": {
+      "es": "Documento institucional de referencia con lineamientos de trabajo y planificación académica asociada.",
+      "en": "Institutional reference document with work guidelines and associated academic planning."
+    },
+    "kind": {
+      "es": "Documento",
+      "en": "Document"
+    },
+    "file": "/Plan-de-Trabajo_Anexo-A_UBACYT_2026-Cristallini.pdf"
+  },
+  {
+    "id": "idean-conicet-brand",
+    "title": {
+      "es": "Identidad institucional IDEAN / UBA / CONICET",
+      "en": "IDEAN / UBA / CONICET institutional identity"
+    },
+    "description": {
+      "es": "Material institucional disponible para referencias visuales y uso académico.",
+      "en": "Institutional material available for visual references and academic use."
+    },
+    "kind": {
+      "es": "Identidad visual",
+      "en": "Visual identity"
+    },
+    "file": "/images/institutional/IDEAN-UBA-CONICET.pdf"
+  }
+]

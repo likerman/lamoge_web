@@ -1,0 +1,86 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import PageHero from "../../components/PageHero.astro";
+import Footer from "../../components/Footer.astro";
+import newsData from "../../data/news.json";
+import { locales, localizeText, siteContent, type Locale } from "../../lib/i18n";
+import type { NewsItem } from "../../types/content";
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const locale = Astro.params.lang as Locale;
+
+const content = siteContent[locale];
+const news = [...(newsData as NewsItem[])].sort((a, b) => b.date.localeCompare(a.date));
+
+const copy = {
+  es: {
+    title: "Noticias | LaMoGe",
+    description: "Noticias institucionales y novedades editoriales del laboratorio.",
+    eyebrow: "Noticias",
+    pageTitle: "Actualidad institucional, producción editorial y agenda del laboratorio.",
+    pageDescription:
+      "La sección de noticias reúne anuncios, hitos de investigación, participación en congresos y novedades relevantes en un formato simple de actualizar.",
+    empty: "No hay noticias publicadas por el momento."
+  },
+  en: {
+    title: "News | LaMoGe",
+    description: "Institutional news and editorial updates from the laboratory.",
+    eyebrow: "News",
+    pageTitle: "Institutional updates, editorial output and laboratory agenda.",
+    pageDescription:
+      "The news section brings together announcements, research milestones, conference participation and other relevant updates in a structure prepared for simple editorial maintenance.",
+    empty: "There are no published news items at the moment."
+  }
+}[locale];
+---
+
+<BaseLayout title={copy.title} description={copy.description} locale={locale} image="/images/gallery/IMG_3683.JPG">
+  <Header locale={locale} navigation={content.navigation} />
+  <main id="main-content" class="pb-14">
+    <PageHero eyebrow={copy.eyebrow} title={copy.pageTitle} description={copy.pageDescription} image="/images/gallery/IMG_3683.JPG" />
+
+    <section class="section shell">
+      <div class="surface-panel">
+        {news.length > 0 ? (
+          <div class="grid gap-5">
+            {news.map((item) => (
+              <article class="card" data-reveal>
+                <div class="flex flex-wrap items-center gap-3">
+                  <span class="pill">{localizeText(item.category, locale)}</span>
+                  <time class="text-sm text-[color:var(--ink-500)]">
+                    {new Date(`${item.date}T00:00:00`).toLocaleDateString(locale === "es" ? "es-AR" : "en-GB", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric"
+                    })}
+                  </time>
+                </div>
+                <h2 class="mt-4 text-2xl font-semibold text-[color:var(--ink-950)]">{localizeText(item.title, locale)}</h2>
+                <p class="mt-4 text-sm leading-7 text-[color:var(--ink-700)]">{localizeText(item.summary, locale)}</p>
+                {item.url && (
+                  <a
+                    href={item.url}
+                    target={item.url.startsWith("http") ? "_blank" : undefined}
+                    rel={item.url.startsWith("http") ? "noreferrer" : undefined}
+                    class="mt-5 inline-flex text-sm font-semibold text-[color:var(--accent-strong)]"
+                  >
+                    {locale === "es" ? "Ver más" : "Read more"}
+                  </a>
+                )}
+              </article>
+            ))}
+          </div>
+        ) : (
+          <article class="card" data-reveal>
+            <p class="text-sm leading-7 text-[color:var(--ink-700)]">{copy.empty}</p>
+          </article>
+        )}
+      </div>
+    </section>
+  </main>
+  <Footer locale={locale} navigation={content.navigation} footer={content.footer} />
+</BaseLayout>

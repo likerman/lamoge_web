@@ -6,27 +6,24 @@ interface Props {
 }
 
 const { locale } = Astro.props;
+const pathname = Astro.url.pathname;
+const esPath = pathname.replace(/^\/(es|en)(\/|$)/, "/es$2");
+const enPath = pathname.replace(/^\/(es|en)(\/|$)/, "/en$2");
 ---
 
-<div class="language-switcher inline-flex rounded-full border border-white/8 bg-white/6 p-1" aria-label={locale === "es" ? "Selector de idioma" : "Language switcher"}>
+<div class="language-switcher" aria-label={locale === "es" ? "Selector de idioma" : "Language switcher"}>
   <a
-    href="/es/"
+    href={esPath}
     data-locale-link
-    class:list={[
-      "rounded-full px-3 py-1.5 text-xs font-bold tracking-[0.16em] transition-colors",
-      locale === "es" ? "bg-teal-400 text-ink-950" : "text-mist-300 hover:text-white"
-    ]}
+    class:list={["language-pill", locale === "es" && "is-active"]}
     aria-current={locale === "es" ? "page" : undefined}
   >
     ES
   </a>
   <a
-    href="/en/"
+    href={enPath}
     data-locale-link
-    class:list={[
-      "rounded-full px-3 py-1.5 text-xs font-bold tracking-[0.16em] transition-colors",
-      locale === "en" ? "bg-teal-400 text-ink-950" : "text-mist-300 hover:text-white"
-    ]}
+    class:list={["language-pill", locale === "en" && "is-active"]}
     aria-current={locale === "en" ? "page" : undefined}
   >
     EN

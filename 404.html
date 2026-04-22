@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LaMoGe | Página no encontrada</title>
+    <meta
+      name="description"
+      content="La página solicitada no existe o fue reorganizada dentro del portal institucional de LaMoGe."
+    />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#0f172a" />
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg" />
+    <style>
+      :root {
+        --surface: #f8fafc;
+        --panel: rgba(255, 255, 255, 0.92);
+        --panel-strong: rgba(15, 23, 42, 0.9);
+        --ink-950: #0b1320;
+        --ink-700: #334155;
+        --ink-500: #64748b;
+        --accent: #06b6d4;
+        --accent-strong: #0891b2;
+        --earth: #8b5e3c;
+        --border: rgba(15, 23, 42, 0.1);
+        --shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+      }
+
+      * { box-sizing: border-box; }
+
+      html { color: var(--ink-950); background: var(--surface); }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Public Sans", system-ui, sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(6, 182, 212, 0.12), transparent 24rem),
+          radial-gradient(circle at 88% 10%, rgba(139, 94, 60, 0.09), transparent 16rem),
+          linear-gradient(180deg, #f8fafc 0%, #eef4f8 55%, #f8fafc 100%);
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.34;
+        background:
+          linear-gradient(90deg, rgba(15, 23, 42, 0.05) 1px, transparent 1px),
+          linear-gradient(rgba(15, 23, 42, 0.05) 1px, transparent 1px);
+        background-size: 72px 72px;
+        mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.48), transparent 85%);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .shell {
+        width: min(100% - 2rem, 96rem);
+        margin: 0 auto;
+      }
+
+      .page {
+        padding: clamp(2rem, 5vw, 3rem) 0 clamp(4rem, 9vw, 7rem);
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.9rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .brand img {
+        height: 2.9rem;
+        width: auto;
+      }
+
+      .brand-name {
+        display: block;
+        font-family: "Sora", "Public Sans", system-ui, sans-serif;
+        font-size: 1.05rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+      }
+
+      .brand-kicker {
+        display: block;
+        color: var(--ink-500);
+        font-size: 0.7rem;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .panel {
+        display: grid;
+        gap: 1.5rem;
+        padding: clamp(1.5rem, 3vw, 3rem);
+        border: 1px solid rgba(255, 255, 255, 0.72);
+        border-radius: 2rem;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 250, 252, 0.88)),
+          linear-gradient(135deg, rgba(6, 182, 212, 0.04), transparent 45%);
+        box-shadow: var(--shadow);
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        margin: 0 0 1rem;
+        color: var(--accent-strong);
+        font-size: 0.74rem;
+        font-weight: 800;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 2.2rem;
+        height: 1px;
+        background: currentColor;
+        opacity: 0.45;
+      }
+
+      h1, h2, strong {
+        font-family: "Sora", "Public Sans", system-ui, sans-serif;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2.3rem, 6vw, 4.6rem);
+        line-height: 0.96;
+        letter-spacing: -0.04em;
+      }
+
+      .lead {
+        margin: 1rem 0 0;
+        max-width: 44rem;
+        color: var(--ink-700);
+        font-size: clamp(1rem, 1.8vw, 1.12rem);
+        line-height: 1.85;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.85rem;
+        margin-top: 2rem;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 3rem;
+        padding: 0.85rem 1.25rem;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .button-primary {
+        color: #fff;
+        background: linear-gradient(135deg, #0891b2, #06b6d4);
+        box-shadow: 0 16px 32px rgba(8, 145, 178, 0.24);
+      }
+
+      .button-secondary {
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.76);
+      }
+
+      .grid {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .card {
+        height: 100%;
+        padding: 1.2rem;
+        border: 1px solid var(--border);
+        border-radius: 1.4rem;
+        background: rgba(255, 255, 255, 0.76);
+      }
+
+      .card strong {
+        display: block;
+        font-size: 1.05rem;
+      }
+
+      .card span {
+        display: block;
+        margin-top: 0.45rem;
+        color: var(--ink-700);
+        font-size: 0.95rem;
+        line-height: 1.7;
+      }
+
+      .aside-note {
+        padding: 1rem 1.1rem;
+        border: 1px solid var(--border);
+        border-radius: 1.2rem;
+        background: rgba(255, 255, 255, 0.66);
+      }
+
+      .aside-note small {
+        display: block;
+        color: var(--accent-strong);
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+
+      .aside-note p {
+        margin: 0.7rem 0 0;
+        color: var(--ink-700);
+        line-height: 1.7;
+      }
+
+      .footer {
+        margin-top: 1.5rem;
+        color: var(--ink-500);
+        font-size: 0.9rem;
+      }
+
+      @media (min-width: 980px) {
+        .panel {
+          grid-template-columns: minmax(0, 1.05fr) minmax(19rem, 0.95fr);
+          gap: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <div class="shell">
+        <a href="/es/" class="brand" aria-label="LaMoGe">
+          <img src="/brand/lamoge-logo.svg" alt="LaMoGe" />
+          <span>
+            <span class="brand-name">LaMoGe</span>
+            <span class="brand-kicker">Laboratorio de Modelado Geológico</span>
+          </span>
+        </a>
+
+        <section class="panel">
+          <div>
+            <p class="eyebrow">404</p>
+            <h1>La página que buscás no está disponible.</h1>
+            <p class="lead">
+              El sitio fue reorganizado para mejorar su lectura, navegación y mantenimiento. Es posible que la dirección anterior
+              haya cambiado o que el contenido ahora se encuentre dentro de otra sección institucional.
+            </p>
+            <div class="actions">
+              <a href="/es/" class="button button-primary">Volver al inicio</a>
+              <a href="/es/search/" class="button button-secondary">Buscar contenido</a>
+              <a href="/en/" class="button button-secondary">English site</a>
+            </div>
+          </div>
+
+          <aside class="grid">
+            <a href="/es/about/" class="card">
+              <strong>¿Quiénes somos?</strong>
+              <span>Identidad institucional, qué es LaMoGe, qué hacemos, integrantes y contacto.</span>
+            </a>
+            <a href="/es/research/" class="card">
+              <strong>Investigación</strong>
+              <span>Líneas de investigación, capacidades, publicaciones y proyectos.</span>
+            </a>
+            <a href="/es/news/" class="card">
+              <strong>Actualidad</strong>
+              <span>Noticias, eventos y novedades institucionales del laboratorio.</span>
+            </a>
+            <div class="aside-note">
+              <small>ES / EN</small>
+              <p>If you were looking for the English version, continue from the bilingual homepage or use the site search.</p>
+            </div>
+          </aside>
+        </section>
+
+        <p class="footer">LaMoGe · IDEAN · UBA · CONICET</p>
+      </div>
+    </main>
+  </body>
+</html>

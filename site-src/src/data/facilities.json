@@ -13,10 +13,10 @@
       "en": "Physical simulation of deformation processes and tectonic evolution."
     },
     "description": {
-      "es": "Placeholder: completar dimensiones, materiales y capacidades instrumentales de la plataforma.",
-      "en": "Placeholder: complete dimensions, materials and instrumental capabilities of the platform."
+      "es": "Infraestructura experimental para reproducir geometrías tectónicas y procesos deformativos mediante modelos físicos, con registro visual y análisis geométrico de alta resolución.",
+      "en": "Experimental infrastructure for reproducing tectonic geometries and deformational processes through physical models, with visual acquisition and high-resolution geometric analysis."
     },
-    "image": "/images/placeholders/facility-1.svg"
+    "image": "/images/experiments/modelado02-1024x683.jpg"
   },
   {
     "name": {
@@ -35,7 +35,7 @@
       "es": "Conjunto de herramientas para análisis geoespacial, modelado, scripting y visualización científica.",
       "en": "Set of tools for geospatial analysis, modelling, scripting and scientific visualisation."
     },
-    "image": "/images/placeholders/facility-2.svg"
+    "image": "/images/gallery/DSC_0134.JPG"
   },
   {
     "name": {
@@ -51,9 +51,9 @@
       "en": "Running simulations, processing datasets and automating workflows."
     },
     "description": {
-      "es": "Placeholder: detallar hardware disponible, acceso remoto y limitaciones operativas.",
-      "en": "Placeholder: detail available hardware, remote access and operational constraints."
+      "es": "Capacidad para ejecutar simulaciones, procesar campos de velocidad, comparar modelos análogos y numéricos y automatizar flujos de trabajo de análisis estructural.",
+      "en": "Capacity to run simulations, process velocity fields, compare analogue and numerical models and automate structural-analysis workflows."
     },
-    "image": "/images/placeholders/facility-3.svg"
+    "image": "/images/gallery/modelado05-1024x821.jpg"
   }
 ]

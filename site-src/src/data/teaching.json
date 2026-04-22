@@ -13,14 +13,14 @@
       "en": "Students in geology, related disciplines and graduate programmes."
     },
     "description": {
-      "es": "Participación en cursos y espacios de formación vinculados a tectónica, modelado y análisis geológico.",
-      "en": "Participation in courses and training spaces related to tectonics, modelling and geological analysis."
+      "es": "Participación en espacios de enseñanza vinculados a tectónica, modelado geológico, análisis estructural y metodologías cuantitativas dentro del ámbito académico de FCEN-UBA.",
+      "en": "Participation in teaching activities related to tectonics, geological modelling, structural analysis and quantitative methodologies within the FCEN-UBA academic environment."
     }
   },
   {
     "title": {
-      "es": "Dirección de tesis y estudiantes",
-      "en": "Supervision of theses and students"
+      "es": "Dirección de tesis, becas y trabajos finales",
+      "en": "Supervision of theses, fellowships and final dissertations"
     },
     "format": {
       "es": "Mentoría",
@@ -31,14 +31,14 @@
       "en": "Thesis students, fellows and trainees."
     },
     "description": {
-      "es": "Acompañamiento en proyectos de investigación, trabajos finales y desarrollo metodológico.",
-      "en": "Support for research projects, final dissertations and methodological development."
+      "es": "Acompañamiento en proyectos de investigación, tesis doctorales, trabajos finales de licenciatura y formación de becarios en líneas activas del laboratorio.",
+      "en": "Support for research projects, doctoral theses, undergraduate final dissertations and fellow training within active laboratory lines."
     }
   },
   {
     "title": {
-      "es": "Talleres técnicos especializados",
-      "en": "Specialised technical workshops"
+      "es": "Entrenamiento metodológico especializado",
+      "en": "Specialised methodological training"
     },
     "format": {
       "es": "Capacitación",
@@ -49,8 +49,8 @@
       "en": "Academic and technical teams."
     },
     "description": {
-      "es": "Instancias prácticas sobre herramientas de modelado, visualización y análisis de datos.",
-      "en": "Practical sessions on modelling tools, visualisation and data analysis."
+      "es": "Instancias prácticas sobre modelado análogo, modelado numérico, visualización, análisis de campos de velocidades, ASM y otras herramientas de cuantificación estructural.",
+      "en": "Hands-on activities on analogue modelling, numerical modelling, visualisation, velocity-field analysis, AMS and other structural quantification tools."
     }
   }
 ]

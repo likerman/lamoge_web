@@ -1,0 +1,23 @@
+---
+import { locales } from "../../lib/i18n";
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const locale = Astro.params.lang ?? "es";
+const destination = `/${locale}/lab/#gallery`;
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0;url=${destination}`} />
+    <link rel="canonical" href={destination} />
+    <title>Redirecting…</title>
+  </head>
+  <body>
+    <p><a href={destination}>Redirecting…</a></p>
+  </body>
+</html>

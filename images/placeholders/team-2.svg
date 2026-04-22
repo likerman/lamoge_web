@@ -2,4 +2,6 @@
   <rect width="600" height="600" fill="#0e2131"/>
   <circle cx="300" cy="216" r="104" fill="#66c8c2"/>
   <path d="M152 518c20-98 90-160 148-160s128 62 148 160H152Z" fill="#d7b46a"/>
+  <path d="M84 124h432" stroke="#f4f8fb" stroke-width="3" stroke-dasharray="8 12" opacity=".26"/>
+  <path d="M104 166c42-16 84-16 126 0 42 16 84 16 126 0 42-16 84-16 126 0" stroke="#66c8c2" stroke-width="3" fill="none" opacity=".24"/>
 </svg>

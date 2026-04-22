@@ -1,10 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
   <rect width="800" height="500" rx="36" fill="#142f43"/>
-  <rect x="124" y="120" width="552" height="260" rx="22" fill="#0a1822"/>
+  <rect x="124" y="120" width="552" height="260" rx="24" fill="#0a1822"/>
   <g fill="#66c8c2">
-    <rect x="170" y="166" width="86" height="168" rx="16"/>
-    <rect x="280" y="166" width="86" height="168" rx="16" opacity=".75"/>
-    <rect x="390" y="166" width="86" height="168" rx="16" opacity=".55"/>
-    <rect x="500" y="166" width="86" height="168" rx="16" opacity=".35"/>
+    <rect x="168" y="172" width="80" height="160" rx="16"/>
+    <rect x="272" y="150" width="80" height="182" rx="16" opacity=".82"/>
+    <rect x="376" y="188" width="80" height="144" rx="16" opacity=".62"/>
+    <rect x="480" y="132" width="80" height="200" rx="16" opacity=".78"/>
+    <rect x="584" y="208" width="44" height="124" rx="12" opacity=".45"/>
   </g>
+  <path d="M156 346h486" stroke="#d7b46a" stroke-width="6" opacity=".7"/>
+  <path d="M198 156v184M302 156v184M406 156v184M510 156v184" stroke="#f4f8fb" stroke-width="3" opacity=".22"/>
 </svg>

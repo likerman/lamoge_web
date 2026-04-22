@@ -1,59 +1,135 @@
 [
   {
     "title": {
-      "es": "Evolución tectónica andina y deformación cortical",
-      "en": "Andean tectonic evolution and crustal deformation"
+      "es": "Predicción de geometrías estructurales",
+      "en": "Structural geometry prediction"
     },
     "summary": {
-      "es": "Estudio integrado de estructuras, cinemática y control mecánico de la deformación en sistemas orogénicos.",
-      "en": "Integrated study of structures, kinematics and mechanical controls on deformation in orogenic systems."
+      "es": "Reconstrucción de geometrías complejas y de su evolución espacio-temporal para estructuras no completamente resueltas por sísmica u otros métodos geofísicos.",
+      "en": "Reconstruction of complex geometries and their space-time evolution for structures not fully resolved by seismic data or other geophysical methods."
     },
     "detail": {
-      "es": "Placeholder ampliable: incorporar objetivos específicos, escalas analizadas, metodologías combinadas y vínculos con casos andinos concretos. La estructura queda lista para crecer sin tocar el componente.",
-      "en": "Expandable placeholder: add specific objectives, analysed scales, combined methodologies and links to concrete Andean case studies. The structure is ready to grow without touching the component."
+      "es": "Esta línea integra modelado análogo y numérico para entender qué geometría pueden adoptar estructuras profundas, trampas o arreglos tectónicos cuya resolución geofísica es limitada. El objetivo no es solo reproducir geometrías, sino también reconstruir su historia tectónica y térmica y evaluar su impacto sobre sistemas geológicos y energéticos.",
+      "en": "This line integrates analogue and numerical modelling to understand which geometry deep structures, traps or tectonic arrangements may adopt when geophysical resolution is limited. The aim is not only to reproduce geometries, but also to reconstruct tectonic and thermal histories and evaluate their impact on geological and energy systems."
     },
     "keywords": {
-      "es": ["tectónica andina", "deformación", "orógenos"],
-      "en": ["Andean tectonics", "deformation", "orogens"]
+      "es": ["tectónica estructural", "evolución térmica", "prototipos de subsuelo"],
+      "en": ["structural tectonics", "thermal evolution", "subsurface prototypes"]
     },
-    "image": "/images/placeholders/research-1.svg"
+    "image": "/images/gallery/IMG_20240418_114316134.jpg"
   },
   {
     "title": {
-      "es": "Modelado análogo de procesos superficiales y profundos",
-      "en": "Analogue modelling of shallow and deep processes"
+      "es": "Predicción de zonas de fracturamiento",
+      "en": "Fracture zone prediction"
     },
     "summary": {
-      "es": "Experimentos físicos para explorar interacción entre tectónica, sedimentación y evolución del relieve.",
-      "en": "Physical experiments to explore the interaction between tectonics, sedimentation and landscape evolution."
+      "es": "Desarrollo y comparación de métodos para estimar dónde se concentran fracturas naturales y cuál es su intensidad en reservorios convencionales y no convencionales.",
+      "en": "Development and comparison of methods to estimate where natural fractures concentrate and how intense they are in conventional and unconventional reservoirs."
     },
     "detail": {
-      "es": "Placeholder ampliable: describir materiales, escalas, variables de control y ejemplos de experimentos representativos para campañas docentes, proyectos y colaboración externa.",
-      "en": "Expandable placeholder: describe materials, scales, control variables and representative experiments for teaching campaigns, projects and external collaboration."
+      "es": "El laboratorio trabaja sobre la predicción de fracturamiento en rocas con porosidad y permeabilidad dominadas por fracturas, incluyendo arenas de baja permeabilidad y shale reservoirs. Esta línea combina métodos numéricos predictivos, simulaciones mecánicas y contrastes con historias tectónicas posibles para reducir incertidumbre en exploración y explotación.",
+      "en": "The laboratory works on fracture prediction in rocks whose porosity and permeability are dominated by fractures, including low-permeability sandstones and shale reservoirs. This line combines predictive numerical methods, mechanical simulations and comparisons with possible tectonic histories to reduce uncertainty in exploration and production."
     },
     "keywords": {
-      "es": ["modelado análogo", "geomorfología", "sedimentación"],
-      "en": ["analogue modelling", "geomorphology", "sedimentation"]
+      "es": ["fracturas naturales", "reservorios", "simulación mecánica"],
+      "en": ["natural fractures", "reservoirs", "mechanical simulation"]
     },
-    "image": "/images/placeholders/research-2.svg"
+    "image": "/images/experiments/modelado04-1024x688.jpg"
   },
   {
     "title": {
-      "es": "Modelado numérico y análisis cuantitativo",
-      "en": "Numerical modelling and quantitative analysis"
+      "es": "Sweet-spots estructurales y mapeo de esfuerzos",
+      "en": "Structural sweet spots and stress mapping"
     },
     "summary": {
-      "es": "Simulaciones y análisis de sensibilidad para evaluar hipótesis geodinámicas y escenarios tectónicos.",
-      "en": "Simulations and sensitivity analyses to evaluate geodynamic hypotheses and tectonic scenarios."
+      "es": "Análisis del campo actual de esfuerzos, breakout de pozos y distribución local de tensiones para comprender la apertura o cierre de familias de fracturas.",
+      "en": "Analysis of the present-day stress field, well breakouts and local stress distributions to understand the opening or closing of fracture sets."
     },
     "detail": {
-      "es": "Placeholder ampliable: sumar modelos, flujos computacionales, software, capacidades de procesamiento y tipos de datos integrados para contrastar hipótesis y resultados experimentales.",
-      "en": "Expandable placeholder: add models, computational workflows, software, processing capabilities and integrated data types used to contrast hypotheses and experimental results."
+      "es": "Esta línea busca identificar sweet-spots estructurales en sistemas no convencionales, especialmente donde el fracturamiento inducido interactúa con una fábrica natural previa. El grupo integra datos de breakout, esfuerzos horizontales y variaciones locales del campo de esfuerzos para mejorar la comprensión de cuencas como la Neuquina y la Austral.",
+      "en": "This line aims to identify structural sweet spots in unconventional systems, especially where induced fracturing interacts with a pre-existing natural fabric. The group integrates breakout data, horizontal stresses and local stress-field variations to improve the understanding of basins such as Neuquén and Austral."
     },
     "keywords": {
-      "es": ["simulación", "geodinámica", "análisis cuantitativo"],
-      "en": ["simulation", "geodynamics", "quantitative analysis"]
+      "es": ["breakout de pozos", "campo de esfuerzos", "shale oil y gas"],
+      "en": ["well breakouts", "stress field", "shale oil and gas"]
     },
-    "image": "/images/placeholders/research-3.svg"
+    "image": "/images/gallery/modelado05-1024x821.jpg"
+  },
+  {
+    "title": {
+      "es": "Interacción entre estructura y magmatismo",
+      "en": "Structure-magmatism interaction"
+    },
+    "summary": {
+      "es": "Estudio de generación y propagación de diques, movilidad magmática y geometría del aparato volcánico bajo distintos regímenes estructurales.",
+      "en": "Study of dyke generation and propagation, magma mobility and volcanic edifice geometry under different structural regimes."
+    },
+    "detail": {
+      "es": "El laboratorio investiga cómo el arreglo estructural condiciona la intrusión magmática, la apertura de nuevas bocas eruptivas y la localización de zonas de daño asociadas a diques y filones. Esta problemática es relevante tanto para volcanología como para áreas donde intrusivos afectan unidades de interés hidrocarburífero y mineral.",
+      "en": "The laboratory investigates how structural architecture controls magmatic intrusion, the opening of new eruptive vents and the location of damage zones associated with dykes and sills. This topic is relevant both for volcanology and for areas where intrusions affect hydrocarbon- and mineral-bearing units."
+    },
+    "keywords": {
+      "es": ["diques", "intrusivos", "volcanismo estructural"],
+      "en": ["dykes", "intrusions", "structural volcanism"]
+    },
+    "image": "/images/gallery/IMG_20240420_115448779.jpg"
+  },
+  {
+    "title": {
+      "es": "Modelado numérico termo-mecánico",
+      "en": "Thermo-mechanical numerical modelling"
+    },
+    "summary": {
+      "es": "Simulaciones de alta complejidad para resolver procesos tectónicos, térmicos y litosféricos gobernados por ecuaciones físicas.",
+      "en": "High-complexity simulations to solve tectonic, thermal and lithospheric processes governed by physical equations."
+    },
+    "detail": {
+      "es": "Los modelos termo-mecánicos permiten cuantificar la interacción entre evolución térmica, tectónica, procesos superficiales y arreglo estructural profundo. Esta línea fortalece el sustento físico de la interpretación geológica y aporta herramientas para entender cuencas sedimentarias, generación de hidrocarburos y evolución geodinámica.",
+      "en": "Thermo-mechanical models allow quantifying the interaction between thermal evolution, tectonics, surface processes and deep structural architecture. This line strengthens the physical basis of geological interpretation and provides tools to understand sedimentary basins, hydrocarbon generation and geodynamic evolution."
+    },
+    "keywords": {
+      "es": ["geodinámica", "simulación física", "cuencas sedimentarias"],
+      "en": ["geodynamics", "physical simulation", "sedimentary basins"]
+    },
+    "image": "/images/experiments/modelado02-1024x683.jpg"
+  },
+  {
+    "title": {
+      "es": "Campos de velocidades y modelado cinemático-mecánico",
+      "en": "Velocity fields and kinematic-mechanical modelling"
+    },
+    "summary": {
+      "es": "Uso de campos de velocidades en modelos análogos para revisar modelos cinemáticos existentes y proponer nuevos algoritmos estructurales.",
+      "en": "Use of velocity fields from analogue models to revisit existing kinematic models and propose new structural algorithms."
+    },
+    "detail": {
+      "es": "A partir del análisis cuantitativo de experimentos análogos, el grupo modifica y desarrolla formulaciones cinemáticas con enfoque mecánico para mejorar la reconstrucción de pliegues y fallas. El objetivo final es traducir estos resultados a herramientas aplicables en softwares de modelado estructural usados en exploración y evaluación de trampas.",
+      "en": "Based on the quantitative analysis of analogue experiments, the group modifies and develops kinematic formulations with a mechanical perspective to improve fold and fault reconstruction. The final goal is to translate these results into tools applicable to structural modelling software used in exploration and trap assessment."
+    },
+    "keywords": {
+      "es": ["campos de velocidad", "pliegues", "algoritmos estructurales"],
+      "en": ["velocity fields", "folds", "structural algorithms"]
+    },
+    "image": "/images/gallery/DSC_0134.JPG"
+  },
+  {
+    "title": {
+      "es": "Reconocimiento del grano estructural y ASM",
+      "en": "Structural fabric recognition and AMS"
+    },
+    "summary": {
+      "es": "Integración de tecnologías de relevamiento y anisotropía de susceptibilidad magnética para caracterizar deformación y campos de esfuerzo.",
+      "en": "Integration of survey technologies and anisotropy of magnetic susceptibility to characterise deformation and stress fields."
+    },
+    "detail": {
+      "es": "Además de metodologías no invasivas recientes como drones, sensores portátiles y LIDAR, el laboratorio incorpora estudios de anisotropía de susceptibilidad magnética para identificar direcciones principales de acortamiento y estiramiento en rocas con deformación débil o no penetrativa. Esta línea extiende la capacidad del grupo para analizar fajas plegadas, estratos de crecimiento e intrusiones magmáticas.",
+      "en": "In addition to recent non-invasive methods such as drones, portable sensors and LiDAR, the laboratory incorporates anisotropy of magnetic susceptibility studies to identify principal shortening and stretching directions in weakly or non-penetratively deformed rocks. This line extends the group’s capacity to analyse fold-and-thrust belts, growth strata and magmatic intrusions."
+    },
+    "keywords": {
+      "es": ["ASM", "deformación", "grano estructural"],
+      "en": ["AMS", "deformation", "structural fabric"]
+    },
+    "image": "/images/gallery/modelado05-1024x821.jpg"
   }
 ]

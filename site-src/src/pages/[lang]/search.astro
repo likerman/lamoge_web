@@ -1,0 +1,119 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import PageHero from "../../components/PageHero.astro";
+import Footer from "../../components/Footer.astro";
+import teamData from "../../data/team.json";
+import publicationsData from "../../data/publications.json";
+import projectsData from "../../data/projects.json";
+import newsData from "../../data/news.json";
+import servicesData from "../../data/services.json";
+import { locales, localizeText, siteContent, type Locale } from "../../lib/i18n";
+import type { NewsItem, ProjectItem, Publication, ServiceItem, TeamMember } from "../../types/content";
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const locale = Astro.params.lang as Locale;
+
+const content = siteContent[locale];
+
+const items = [
+  ...(teamData as TeamMember[]).map((item) => ({
+    category: locale === "es" ? "Integrantes" : "Team",
+    title: item.name,
+    summary: localizeText(item.bio ?? item.area, locale),
+    href: `/${locale}/team/`
+  })),
+  ...(publicationsData as Publication[]).slice(0, 20).map((item) => ({
+    category: locale === "es" ? "Publicaciones" : "Publications",
+    title: item.title,
+    summary: item.authors,
+    href: `/${locale}/publications/`
+  })),
+  ...(projectsData as ProjectItem[]).map((item) => ({
+    category: locale === "es" ? "Proyectos" : "Projects",
+    title: localizeText(item.title, locale),
+    summary: localizeText(item.summary, locale),
+    href: `/${locale}/projects/`
+  })),
+  ...(newsData as NewsItem[]).map((item) => ({
+    category: locale === "es" ? "Novedades" : "News",
+    title: localizeText(item.title, locale),
+    summary: localizeText(item.summary, locale),
+    href: `/${locale}/news/`
+  })),
+  ...(servicesData as ServiceItem[]).map((item) => ({
+    category: locale === "es" ? "Servicios" : "Services",
+    title: localizeText(item.title, locale),
+    summary: localizeText(item.summary, locale),
+    href: `/${locale}/services/`
+  }))
+];
+
+const copy = {
+  es: {
+    title: "Buscar | LaMoGe",
+    description: "Busqueda interna del sitio institucional de LaMoGe.",
+    eyebrow: "Buscar",
+    pageTitle: "Busqueda rapida sobre contenidos institucionales y cientificos.",
+    pageDescription: "Filtra publicaciones, proyectos, integrantes, servicios y novedades desde una unica pantalla.",
+    placeholder: "Buscar por tema, persona, proyecto o publicacion",
+    empty: "No hay coincidencias con la busqueda actual."
+  },
+  en: {
+    title: "Search | LaMoGe",
+    description: "Internal search for the LaMoGe institutional website.",
+    eyebrow: "Search",
+    pageTitle: "Quick search across institutional and scientific content.",
+    pageDescription: "Filter publications, projects, team members, services and news from a single screen.",
+    placeholder: "Search by topic, person, project or publication",
+    empty: "There are no matches for the current search."
+  }
+}[locale];
+---
+
+<BaseLayout title={copy.title} description={copy.description} locale={locale}>
+  <Header locale={locale} navigation={content.navigation} />
+  <main id="main-content" class="pb-14">
+    <PageHero eyebrow={copy.eyebrow} title={copy.pageTitle} description={copy.pageDescription} />
+    <section class="section shell">
+      <div class="surface-panel">
+        <label class="grid gap-2 text-sm font-semibold text-[color:var(--ink-700)]">
+          {copy.eyebrow}
+          <input class="search-input" type="search" placeholder={copy.placeholder} data-site-search />
+        </label>
+        <div class="mt-8 grid gap-4" data-site-results>
+          {items.map((item) => (
+            <a class="card block" href={item.href} data-search-item data-search-text={`${item.category} ${item.title} ${item.summary}`.toLowerCase()}>
+              <span class="pill">{item.category}</span>
+              <h2 class="mt-4 text-xl font-semibold text-[color:var(--ink-950)]">{item.title}</h2>
+              <p class="mt-3 text-sm leading-7 text-[color:var(--ink-700)]">{item.summary}</p>
+            </a>
+          ))}
+        </div>
+        <article class="card hidden mt-8" data-search-empty>
+          <p class="text-sm leading-7 text-[color:var(--ink-700)]">{copy.empty}</p>
+        </article>
+      </div>
+    </section>
+  </main>
+  <Footer locale={locale} navigation={content.navigation} footer={content.footer} />
+
+  <script>
+    const input = document.querySelector("[data-site-search]");
+    const items = document.querySelectorAll("[data-search-item]");
+    const empty = document.querySelector("[data-search-empty]");
+    input?.addEventListener("input", () => {
+      const value = input.value.toLowerCase();
+      let visible = 0;
+      items.forEach((item) => {
+        const match = !value || item.dataset.searchText.includes(value);
+        item.classList.toggle("hidden", !match);
+        if (match) visible += 1;
+      });
+      empty?.classList.toggle("hidden", visible > 0);
+    });
+  </script>
+</BaseLayout>
