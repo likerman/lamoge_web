@@ -310,3 +310,4 @@ Ese script:
 - cargar enlaces oficiales de GitHub, Google Scholar y ORCID en el header/footer si el laboratorio define perfiles institucionales
 - reemplazar placeholders fotograficos de integrantes por retratos reales
 - poblar `events.json` y `opportunities.json` cuando haya agenda o convocatorias publicas
+# idean_web
